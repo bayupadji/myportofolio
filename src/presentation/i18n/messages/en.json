@@ -12,10 +12,12 @@
   "hero": {
     "available": "Available for full-time & freelance projects",
     "role": "Generalist Product Designer (UI/UX)",
-    "valueStatement": "Designing intuitive, high-impact digital experiences across web, mobile, and complex systems.",
+    "valueStatement": "Designer with an Engineer's Mindset",
     "ctaWork": "View selected work",
     "ctaContact": "Get in touch",
-    "scrollPrompt": "Scroll to explore"
+    "scrollPrompt": "Scroll to explore",
+    "localTime": "Jakarta (WIB · GMT+7)",
+    "activeWorkingHours": "Active 09:00 - 18:00 WIB · Responds within 24h"
   },
   "metrics": {
     "title": "Proven Impact & Craft Velocity",
@@ -30,6 +32,12 @@
     "subtitle": "Deep-dives into problem framing, design systems, and measurable business outcomes.",
     "viewAll": "Explore all case studies",
     "viewProject": "Read case study",
+    "quickView": "Quick View",
+    "closeQuickView": "Close preview",
+    "tldrProblem": "Problem Framing",
+    "tldrSolution": "Design Solution",
+    "tldrImpact": "Measurable Impact",
+    "viewFullStudy": "Read Full Case Study",
     "sampleProjectBadge": "Sample project",
     "sampleProjectNotice": "Proprietary client data disguised per NDA agreement. Case study demonstrates actual design processes & methodology.",
     "filterAll": "All Projects",

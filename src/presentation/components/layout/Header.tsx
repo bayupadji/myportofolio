@@ -20,9 +20,9 @@ export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
   const { toggleMobileDrawer } = useUiStore();
 
   const navLinks = [
+    { href: `/${locale}/about`, label: messages.nav.about },
     { href: `/${locale}/work`, label: messages.nav.work },
     { href: `/${locale}/services`, label: messages.nav.services },
-    { href: `/${locale}/about`, label: messages.nav.about },
     { href: `/${locale}/contact`, label: messages.nav.contact },
   ];
 

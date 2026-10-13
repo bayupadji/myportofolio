@@ -53,6 +53,7 @@ export default async function HomePage({ params }: HomePageProps) {
         messages={messages}
         metrics={profile.keyMetrics}
         availability={availabilityText}
+        avatarUrl={profile.avatarUrl}
       />
 
       {/* 2. Selected Work (3-4 Case Studies with "Sample project" Badges) */}

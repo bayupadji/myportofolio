@@ -12,10 +12,12 @@
   "hero": {
     "available": "Terbuka untuk peluang kerja & freelance terpilih",
     "role": "Product Designer Generalis (UI/UX)",
-    "valueStatement": "Merancang pengalaman digital yang jelas dan berdampak tinggi lintas web, mobile, dan sistem kompleks.",
+    "valueStatement": "Desainer dengan Pola Pikir Engineer",
     "ctaWork": "Lihat karya terpilih",
     "ctaContact": "Hubungi saya",
-    "scrollPrompt": "Gulir untuk eksplorasi"
+    "scrollPrompt": "Gulir untuk eksplorasi",
+    "localTime": "Jakarta (WIB · GMT+7)",
+    "activeWorkingHours": "Aktif 09:00 - 18:00 WIB · Membalas dalam 24 jam"
   },
   "metrics": {
     "title": "Bukti Dampak Nyata & Kecepatan Eksekusi",
@@ -30,6 +32,12 @@
     "subtitle": "Penjelasan mendalam tentang perumusan masalah, sistem desain, dan hasil bisnis terukur.",
     "viewAll": "Jelajahi semua studi kasus",
     "viewProject": "Baca studi kasus",
+    "quickView": "Pratinjau Cepat",
+    "closeQuickView": "Tutup pratinjau",
+    "tldrProblem": "Identifikasi Masalah",
+    "tldrSolution": "Solusi Desain",
+    "tldrImpact": "Dampak Terukur",
+    "viewFullStudy": "Baca Studi Kasus Lengkap",
     "sampleProjectBadge": "Sample project",
     "sampleProjectNotice": "Data kepemilikan klien disamarkan sesuai NDA. Studi kasus mendemonstrasikan metodologi dan proses desain nyata.",
     "filterAll": "Semua Proyek",

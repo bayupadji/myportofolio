@@ -85,6 +85,76 @@ body {
   outline-offset: 3px;
 }
 
+/* Hero & Profile photo animation keyframes */
+@keyframes ik-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Multi-stage organic idle float with subtle micro-sway */
+@keyframes ik-float-smooth {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  22% {
+    transform: translateY(-6px) rotate(0.35deg);
+  }
+  48% {
+    transform: translateY(-14px) rotate(-0.25deg);
+  }
+  72% {
+    transform: translateY(-7px) rotate(0.2deg);
+  }
+  88% {
+    transform: translateY(-11px) rotate(-0.15deg);
+  }
+}
+
+@keyframes ik-float-alt {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  26% {
+    transform: translateY(-11px) rotate(-0.35deg);
+  }
+  52% {
+    transform: translateY(-4px) rotate(0.25deg);
+  }
+  78% {
+    transform: translateY(-13px) rotate(-0.15deg);
+  }
+}
+
+@keyframes ik-march {
+  to {
+    stroke-dashoffset: -11px;
+  }
+}
+
+@keyframes ik-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.ik-orbit-march {
+  animation: 1.4s linear infinite ik-march;
+}
+
+.ik-caret {
+  vertical-align: -0.2em;
+  background: var(--accent);
+  width: 2px;
+  height: 1.15em;
+  margin-left: 2px;
+  animation: 1s step-end infinite ik-blink;
+  display: inline-block;
+}
+
 /* Skip link */
 .skip-to-content {
   position: absolute;

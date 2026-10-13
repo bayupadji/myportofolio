@@ -12,6 +12,7 @@ import { Skill, SkillGroup } from "@/domain/entities/Skill";
 import { Locale, resolveLocalized } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 import { Tag } from "../ui/Tag";
+import { HeroPhoto } from "../ui/HeroPhoto";
 
 export interface AboutSectionProps {
   profile: Profile;
@@ -73,24 +74,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--surface)] shadow-lg aspect-4/5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={profile.avatarUrl}
-                alt="Bayu - Product Designer"
-                className="w-full h-full object-cover"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
-                <div className="text-white">
-                  <span className="font-bold text-lg block">{profile.name}</span>
-                  <span className="text-xs text-white/80">
-                    {resolveLocalized(profile.role, locale).text}
-                  </span>
-                </div>
-              </div>
-            </div>
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <HeroPhoto
+              avatarUrl={profile.avatarUrl}
+              name={profile.name}
+              role={resolveLocalized(profile.role, locale).text}
+              tagline="UI/UX & Systems"
+              variant="about"
+            />
           </div>
         </div>
 
