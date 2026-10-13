@@ -23,7 +23,7 @@ export interface CaseStudyDetailProps {
   project: Project;
   prevProject: Project | null;
   nextProject: Project | null;
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 
@@ -84,7 +84,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
           {/* Back button */}
           <Link
-            href={`/${locale}/work`}
+            href="/work"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent)] hover:underline mb-8 min-h-[44px]"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -214,25 +214,34 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
                   <span className="font-bold text-[var(--text)] uppercase text-xs tracking-wider block mb-0.5 text-rose-500">
                     {messages.caseStudy.problem}
                   </span>
-                  <p className="text-[var(--text)]">
-                    {resolveLocalized(project.tldr.problem, locale).text}
-                  </p>
+                  <div
+                    className="text-[var(--text)] leading-relaxed [&_strong]:font-bold [&_strong]:text-[var(--text)]"
+                    dangerouslySetInnerHTML={{
+                      __html: resolveLocalized(project.tldr.problem, locale).text,
+                    }}
+                  />
                 </div>
                 <div>
                   <span className="font-bold text-[var(--text)] uppercase text-xs tracking-wider block mb-0.5 text-[var(--accent)]">
                     {messages.caseStudy.solution}
                   </span>
-                  <p className="text-[var(--text)]">
-                    {resolveLocalized(project.tldr.solution, locale).text}
-                  </p>
+                  <div
+                    className="text-[var(--text)] leading-relaxed [&_strong]:font-bold [&_strong]:text-[var(--text)]"
+                    dangerouslySetInnerHTML={{
+                      __html: resolveLocalized(project.tldr.solution, locale).text,
+                    }}
+                  />
                 </div>
                 <div>
                   <span className="font-bold text-[var(--text)] uppercase text-xs tracking-wider block mb-0.5 text-emerald-500">
                     {messages.caseStudy.impact}
                   </span>
-                  <p className="text-[var(--text)]">
-                    {resolveLocalized(project.tldr.impact, locale).text}
-                  </p>
+                  <div
+                    className="text-[var(--text)] leading-relaxed [&_strong]:font-bold [&_strong]:text-[var(--text)]"
+                    dangerouslySetInnerHTML={{
+                      __html: resolveLocalized(project.tldr.impact, locale).text,
+                    }}
+                  />
                 </div>
               </div>
             </section>
@@ -248,9 +257,10 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
                     {secTitle}
                   </h2>
 
-                  <p className="text-base sm:text-lg text-[var(--text)] leading-relaxed mb-6 font-normal">
-                    {secBody}
-                  </p>
+                  <div
+                    className="text-base sm:text-lg text-[var(--text)] leading-relaxed mb-6 font-normal prose prose-neutral dark:prose-invert max-w-none [&_strong]:text-[var(--text)] [&_strong]:font-bold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-1.5 [&_p]:my-2"
+                    dangerouslySetInnerHTML={{ __html: secBody }}
+                  />
 
                   {/* Highlights if present */}
                   {sec.highlights && sec.highlights.length > 0 && (
@@ -370,7 +380,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
             <div className="mt-8 pt-8 border-t border-[var(--border)] flex flex-col sm:flex-row items-center justify-between gap-4">
               {prevProject ? (
                 <Link
-                  href={`/${locale}/work/${prevProject.slug}`}
+                  href={`/work/${prevProject.slug}`}
                   className="flex flex-col items-start p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl w-full sm:w-1/2"
                 >
                   <span className="text-xs text-[var(--text-muted)] flex items-center gap-1 mb-1">
@@ -387,7 +397,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
 
               {nextProject && (
                 <Link
-                  href={`/${locale}/work/${nextProject.slug}`}
+                  href={`/work/${nextProject.slug}`}
                   className="flex flex-col items-end p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl w-full sm:w-1/2 text-right"
                 >
                   <span className="text-xs text-[var(--text-muted)] flex items-center gap-1 mb-1">

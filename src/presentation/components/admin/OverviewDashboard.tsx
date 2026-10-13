@@ -73,7 +73,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
             </span>
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-1">
-            Ringkasan metrik portofolio, pesan masuk dari calon klien, dan kesiapan publikasi.
+            Portfolio metrics summary, inbound inquiries from prospective clients, and publication readiness.
           </p>
         </div>
 
@@ -83,15 +83,15 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
             className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 font-semibold rounded-xl text-xs transition-all shadow-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Kelola Proyek</span>
+            <span>Manage Projects</span>
           </Link>
           <Link
-            href="/en"
+            href="/"
             target="_blank"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] text-[var(--text)] font-semibold rounded-xl text-xs transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />
-            <span>Pratinjau Web</span>
+            <span>Live Preview</span>
           </Link>
         </div>
       </div>
@@ -105,7 +105,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[var(--text-muted)]">
-              Total Studi Kasus
+              Total Case Studies
             </span>
             <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
               <FolderGit2 className="w-4 h-4" />
@@ -116,14 +116,14 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </div>
           <div className="flex items-center gap-2 text-[11px]">
             <span className="text-[var(--success)] font-semibold">
-              {publishedCount} Terbit
+              {publishedCount} Published
             </span>
             <span className="text-[var(--text-muted)]">&bull;</span>
-            <span className="text-zinc-500">{draftCount} Draf</span>
+            <span className="text-zinc-500">{draftCount} Drafts</span>
             {sampleCount > 0 && (
               <>
                 <span className="text-[var(--text-muted)]">&bull;</span>
-                <span className="text-amber-500 font-semibold">{sampleCount} Sampel</span>
+                <span className="text-amber-500 font-semibold">{sampleCount} Sample</span>
               </>
             )}
           </div>
@@ -136,7 +136,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[var(--text-muted)]">
-              Pesan Masuk (Brief)
+              Inbound Inquiries
             </span>
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
               <Mail className="w-4 h-4" />
@@ -146,8 +146,8 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
             {messages.length}
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
-            <span className="text-[var(--accent)] font-semibold">Semua Brief</span>
-            <span>tersimpan di inbox</span>
+            <span className="text-[var(--accent)] font-semibold">All Inquiries</span>
+            <span>saved in inbox</span>
           </div>
         </Link>
 
@@ -155,7 +155,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[var(--text-muted)]">
-              Status Freelance
+              Freelance Status
             </span>
             <div
               className={`w-8 h-8 rounded-lg flex items-center justify-center ${
@@ -181,7 +181,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
             disabled={isUpdatingStatus}
             className="text-[11px] font-semibold text-[var(--accent)] hover:underline disabled:opacity-50"
           >
-            {isUpdatingStatus ? "Menyimpan..." : "Klik untuk ganti status"}
+            {isUpdatingStatus ? "Saving..." : "Click to toggle status"}
           </button>
         </div>
 
@@ -189,7 +189,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[var(--text-muted)]">
-              Kualitas Konten
+              Content Quality
             </span>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
               <ShieldCheck className="w-4 h-4" />
@@ -200,7 +200,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </div>
           <div className="flex items-center gap-1 text-[11px] text-[var(--success)] font-semibold">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Memenuhi standar PRD</span>
+            <span>Meets PRD standards</span>
           </div>
         </div>
       </div>
@@ -209,26 +209,26 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
       <div className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex flex-wrap items-center gap-3">
         <span className="text-xs font-bold text-[var(--text)] uppercase tracking-wider mr-2 flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
-          Aksi Cepat:
+          Quick Actions:
         </span>
         <Link
           href="/admin/projects"
           className="px-3 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-medium text-[var(--text)] flex items-center gap-1.5 transition-colors"
         >
           <Plus className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span>Tambah Proyek Baru</span>
+          <span>Add New Project</span>
         </Link>
         <Link
           href="/admin/profile"
           className="px-3 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-medium text-[var(--text)] flex items-center gap-1.5 transition-colors"
         >
-          <span>Ubah Bio & Ketersediaan</span>
+          <span>Edit Bio & Availability</span>
         </Link>
         <Link
           href="/admin/experience"
           className="px-3 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-medium text-[var(--text)] flex items-center gap-1.5 transition-colors"
         >
-          <span>Kelola Pengalaman & Layanan</span>
+          <span>Manage Experience & Services</span>
         </Link>
       </div>
 
@@ -240,21 +240,21 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
             <div className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-[var(--accent)]" />
               <h2 className="font-bold text-sm text-[var(--text)]">
-                Pesan & Brief Masuk Terbaru
+                Recent Inbound Inquiries
               </h2>
             </div>
             <Link
               href="/admin/messages"
               className="text-xs text-[var(--accent)] hover:underline flex items-center gap-1 font-semibold"
             >
-              <span>Lihat Semua</span>
+              <span>View All</span>
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
           {recentMessages.length === 0 ? (
             <div className="py-8 text-center text-xs text-[var(--text-muted)]">
-              Belum ada pesan masuk.
+              No inbound messages received yet.
             </div>
           ) : (
             <div className="space-y-3">
@@ -291,7 +291,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               </h2>
             </div>
             <span className="text-[11px] text-[var(--success)] font-bold">
-              Semua Lulus
+              All Passing
             </span>
           </div>
 
@@ -303,7 +303,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   Zero Unlabeled Placeholder Text
                 </h3>
                 <p className="text-[11px] text-[var(--text-muted)]">
-                  Proyek sampel diberi label jelas &ldquo;Sample project&rdquo; tanpa teks lorem ipsum tersembunyi.
+                  Sample projects are clearly labeled &ldquo;Sample project&rdquo; with no hidden lorem ipsum text.
                 </p>
               </div>
             </div>
@@ -312,10 +312,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0 mt-0.5" />
               <div>
                 <h3 className="text-xs font-bold text-[var(--text)]">
-                  Paritas Bahasa Lengkap (EN & ID)
+                  English-Only Consistency
                 </h3>
                 <p className="text-[11px] text-[var(--text-muted)]">
-                  Semua judul, ringkasan, dan bagian kasus studi mendukung teks dwibahasa Inggris dan Indonesia.
+                  All case studies, summaries, and sections are streamlined for clear, single-input English copy.
                 </p>
               </div>
             </div>
@@ -324,10 +324,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0 mt-0.5" />
               <div>
                 <h3 className="text-xs font-bold text-[var(--text)]">
-                  Aksesibilitas & Gambar Terkompresi
+                  Accessibility & Compressed Assets
                 </h3>
                 <p className="text-[11px] text-[var(--text-muted)]">
-                  Alt text tersedia untuk pembaca layar dan media tersimpan dalam format WebP efisien.
+                  Alt text is present for screen readers and images are compressed into efficient WebP format.
                 </p>
               </div>
             </div>

@@ -15,10 +15,13 @@ import {
   Loader2,
   AlertCircle,
   FileCheck,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
-import { Project } from "@/domain/entities/Project";
+import { Project, ProjectSection } from "@/domain/entities/Project";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
+import { WysiwygEditor } from "@/presentation/components/ui/WysiwygEditor";
 
 interface ProjectManagerProps {
   initialProjects: Project[];
@@ -70,7 +73,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
   };
 
   const handleDelete = async (id: string, title: string) => {
-    if (!window.confirm(`Hapus proyek "${title}" secara permanen?`)) return;
+    if (!window.confirm(`Permanently delete project "${title}"?`)) return;
 
     try {
       const res = await fetch(`/api/admin/projects?id=${id}`, {
@@ -108,7 +111,38 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
         solution: { en: "", id: "" },
         impact: { en: "", id: "" },
       },
-      sections: [],
+      sections: [
+        {
+          id: `sec-${Date.now()}-1`,
+          type: "context",
+          title: { en: "Context & Business Goals", id: "Konteks & Tujuan Bisnis" },
+          body: {
+            en: "<p>Describe the client background, business problem, and core project objectives.</p>",
+            id: "<p>Jelaskan latar belakang klien, masalah bisnis, dan sasaran proyek.</p>",
+          },
+          highlights: [],
+        },
+        {
+          id: `sec-${Date.now()}-2`,
+          type: "research",
+          title: { en: "User Research & Problem Definition", id: "Riset Pengguna & Definisi Masalah" },
+          body: {
+            en: "<p>Highlight discoveries from user interviews, usability tests, and quantitative drop-off metrics.</p>",
+            id: "<p>Sorot temuan dari wawancara pengguna, tes usabilitas, dan metrik drop-off.</p>",
+          },
+          highlights: [],
+        },
+        {
+          id: `sec-${Date.now()}-3`,
+          type: "solution",
+          title: { en: "Design Decisions & Final Solution", id: "Keputusan Desain & Solusi Akhir" },
+          body: {
+            en: "<p>Explain key UX architectural decisions, UI components, and final design delivery.</p>",
+            id: "<p>Jelaskan keputusan arsitektur UX, komponen UI, dan hasil akhir desain.</p>",
+          },
+          highlights: [],
+        },
+      ],
       solutionStates: [],
       learnings: [],
       status: "draft",
@@ -123,7 +157,10 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
   };
 
   const handleEdit = (project: Project) => {
-    setEditingProject({ ...project });
+    setEditingProject({
+      ...project,
+      sections: project.sections || [],
+    });
     setActiveEditorTab("basic");
     setEditorError(null);
     setIsEditorOpen(true);
@@ -134,13 +171,13 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
 
     if (!editingProject.title.en.trim()) {
       setActiveEditorTab("basic");
-      setEditorError("Judul Proyek (English) wajib diisi!");
+      setEditorError("Project title is required!");
       return;
     }
 
     if (!editingProject.slug.trim()) {
       setActiveEditorTab("basic");
-      setEditorError("Slug URL wajib diisi!");
+      setEditorError("Slug URL is required!");
       return;
     }
 
@@ -156,7 +193,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Gagal menyimpan proyek");
+        throw new Error(data.error || "Failed to save project");
       }
 
       setProjects((prev) => {
@@ -169,7 +206,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
 
       setIsEditorOpen(false);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "An error occurred";
       setEditorError(msg);
     } finally {
       setIsSaving(false);
@@ -183,14 +220,14 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold tracking-tight text-[var(--text)]">
-              Manajemen Studi Kasus
+              Case Studies Management
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--text-muted)]">
               {projects.length} Total
             </span>
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-1">
-            Tambah, edit, sesuaikan bahasa, dan ubah visibilitas studi kasus portofolio.
+            Create, edit, organize, and manage portfolio case studies.
           </p>
         </div>
 
@@ -199,7 +236,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 font-semibold rounded-xl text-xs transition-all shadow-xs"
         >
           <Plus className="w-4 h-4" />
-          <span>Tambah Proyek Baru</span>
+          <span>Add New Project</span>
         </button>
       </div>
 
@@ -210,7 +247,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
           <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Cari berdasarkan judul, slug, kategori..."
+            placeholder="Search by title, slug, category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-xs bg-[var(--surface)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
@@ -220,9 +257,9 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
         {/* Filter Tabs */}
         <div className="flex items-center gap-1.5 p-1 bg-[var(--surface)] border border-[var(--border)] rounded-xl w-full sm:w-auto overflow-x-auto">
           {[
-            { id: "all", label: "Semua" },
-            { id: "published", label: "Terbit" },
-            { id: "draft", label: "Draf" },
+            { id: "all", label: "All" },
+            { id: "published", label: "Published" },
+            { id: "draft", label: "Draft" },
             { id: "sample", label: "Sample" },
           ].map((tab) => (
             <button
@@ -245,7 +282,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
         {filteredProjects.length === 0 ? (
           <div className="p-12 text-center text-xs text-[var(--text-muted)] space-y-3">
             <FolderGit2 className="w-8 h-8 mx-auto opacity-30" />
-            <p>Tidak ada proyek yang cocok dengan pencarian.</p>
+            <p>No projects match your search.</p>
           </div>
         ) : (
           filteredProjects.map((p) => (
@@ -289,7 +326,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                       ? "bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/25 hover:bg-[var(--success)]/20"
                       : "bg-zinc-500/10 text-zinc-500 border border-zinc-500/25 hover:bg-zinc-500/20"
                   }`}
-                  title="Klik untuk ubah status publikasi"
+                  title="Click to toggle publish status"
                 >
                   {p.status === "published" ? (
                     <>
@@ -305,17 +342,17 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                 <button
                   onClick={() => handleEdit(p)}
                   className="p-2 rounded-xl border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] min-h-[36px] flex items-center justify-center transition-colors"
-                  title="Edit Proyek"
+                  title="Edit Project"
                 >
                   <Edit3 className="w-4 h-4" />
                 </button>
 
                 {/* Preview Button */}
                 <Link
-                  href={`/en/work/${p.slug}`}
+                  href={`/work/${p.slug}`}
                   target="_blank"
                   className="p-2 rounded-xl border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] min-h-[36px] flex items-center justify-center transition-colors"
-                  title="Pratinjau Halaman Publik"
+                  title="Preview Public Page"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </Link>
@@ -324,7 +361,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                 <button
                   onClick={() => handleDelete(p.id, p.title.en)}
                   className="p-2 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500/10 min-h-[36px] flex items-center justify-center transition-colors"
-                  title="Hapus Proyek"
+                  title="Delete Project"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -343,7 +380,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
               <div className="flex items-center gap-2">
                 <Edit3 className="w-4 h-4 text-[var(--accent)]" />
                 <h2 className="font-bold text-base text-[var(--text)]">
-                  {editingProject.title.en ? `Edit: ${editingProject.title.en}` : "Tambah Proyek Baru"}
+                  {editingProject.title.en ? `Edit: ${editingProject.title.en}` : "Add New Project"}
                 </h2>
               </div>
               <button
@@ -357,9 +394,13 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
             {/* Modal Tab Headers */}
             <div className="flex border-b border-[var(--border)] bg-[var(--background)]/50 px-5 shrink-0 overflow-x-auto">
               {[
-                { id: "basic", label: "1. Info Dasar & Cover" },
-                { id: "tldr", label: "2. TL;DR & Metrik" },
-                { id: "review", label: "3. Review & Publikasi" },
+                { id: "basic", label: "1. Basic Info & Cover" },
+                { id: "tldr", label: "2. TL;DR & Metrics" },
+                {
+                  id: "sections",
+                  label: `3. Case Study Details (${editingProject.sections?.length || 0})`,
+                },
+                { id: "review", label: "4. Review & Publish" },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -388,54 +429,34 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
               {/* TAB 1: BASIC INFO */}
               {activeEditorTab === "basic" && (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Judul Proyek (English) *
-                      </label>
-                      <input
-                        type="text"
-                        value={editingProject.title.en}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          const newSlug = val
-                            .toLowerCase()
-                            .replace(/[^a-z0-9]+/g, "-")
-                            .replace(/(^-|-$)+/g, "");
-                          setEditingProject({
-                            ...editingProject,
-                            title: { ...editingProject.title, en: val },
-                            slug: editingProject.slug || newSlug,
-                          });
-                        }}
-                        placeholder="Contoh: PayPulse Merchant App"
-                        className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Judul Proyek (Indonesian)
-                      </label>
-                      <input
-                        type="text"
-                        value={editingProject.title.id}
-                        onChange={(e) =>
-                          setEditingProject({
-                            ...editingProject,
-                            title: { ...editingProject.title, id: e.target.value },
-                          })
-                        }
-                        placeholder="Contoh: Aplikasi Merchant PayPulse"
-                        className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-                      />
-                    </div>
+                  <div>
+                    <label className="block font-semibold mb-1.5 text-[var(--text)]">
+                      Project Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={editingProject.title.en}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const newSlug = val
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/(^-|-$)+/g, "");
+                        setEditingProject({
+                          ...editingProject,
+                          title: { en: val, id: val },
+                          slug: editingProject.slug || newSlug,
+                        });
+                      }}
+                      placeholder="e.g. PayPulse Merchant App"
+                      className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Slug URL (unik) *
+                        Unique Slug URL *
                       </label>
                       <input
                         type="text"
@@ -453,7 +474,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
 
                     <div>
                       <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Kategori Proyek
+                        Category
                       </label>
                       <select
                         value={editingProject.category}
@@ -476,7 +497,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Peran Desain
+                        Role / Responsibilities
                       </label>
                       <input
                         type="text"
@@ -491,7 +512,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
 
                     <div>
                       <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Durasi
+                        Duration
                       </label>
                       <input
                         type="text"
@@ -499,14 +520,14 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                         onChange={(e) =>
                           setEditingProject({ ...editingProject, duration: e.target.value })
                         }
-                        placeholder="3 bulan"
+                        placeholder="3 months"
                         className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
                       />
                     </div>
 
                     <div>
                       <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                        Struktur Tim
+                        Team Structure
                       </label>
                       <input
                         type="text"
@@ -514,7 +535,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                         onChange={(e) =>
                           setEditingProject({ ...editingProject, team: e.target.value })
                         }
-                        placeholder="1 PM, 4 Devs, 1 QA"
+                        placeholder="1 PM, 4 Engineers, 1 Designer"
                         className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
                       />
                     </div>
@@ -523,7 +544,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                   {/* Summary */}
                   <div>
                     <label className="block font-semibold mb-1.5 text-[var(--text)]">
-                      Ringkasan Singkat (Summary EN)
+                      Summary *
                     </label>
                     <textarea
                       rows={2}
@@ -531,7 +552,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                       onChange={(e) =>
                         setEditingProject({
                           ...editingProject,
-                          summary: { ...editingProject.summary, en: e.target.value },
+                          summary: { en: e.target.value, id: e.target.value },
                         })
                       }
                       placeholder="One-line value summary of the project..."
@@ -543,16 +564,16 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                   <div className="space-y-3 p-4 rounded-2xl border border-[var(--border)] bg-[var(--background)]">
                     <div className="flex items-center justify-between">
                       <label className="block font-semibold text-[var(--text)]">
-                        Cover Image Proyek (Rasio 16:9)
+                        Project Cover Image (16:9 Ratio)
                       </label>
                       <span className="text-[10px] text-[var(--text-muted)] font-mono">
-                        Otomatis WebP & Dimensi 1920x1080
+                        Auto WebP & 1920x1080 resolution
                       </span>
                     </div>
 
                     {/* Integrated Dropzone */}
                     <ImageUploadDropzone
-                      label="Upload & Kompres Cover Proyek ke Supabase"
+                      label="Upload & Compress Project Cover Image"
                       preset="cover"
                       bucket="portfolio-assets"
                       folder="projects"
@@ -574,7 +595,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                         />
                         <div className="flex-1 min-w-0">
                           <span className="text-[10px] font-semibold text-[var(--text-muted)] block mb-1">
-                            URL Gambar Aktif (Bisa diedit manual):
+                            Active Image URL (Editable):
                           </span>
                           <input
                             type="text"
@@ -597,12 +618,12 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                 <div className="space-y-4">
                   <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] space-y-3">
                     <span className="font-bold text-[var(--text)] block">
-                      Metrik Dampak Utama (Metric)
+                      Primary Impact Metric
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[11px] font-semibold mb-1 text-[var(--text-muted)]">
-                          Nilai Metrik (contoh: +34% atau 2.4x)
+                          Metric Value (e.g. +34% or 2.4x)
                         </label>
                         <input
                           type="text"
@@ -611,7 +632,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                             const newMetrics = [...editingProject.metrics];
                             newMetrics[0] = {
                               value: e.target.value,
-                              label: newMetrics[0]?.label || { en: "Conversion", id: "Konversi" },
+                              label: newMetrics[0]?.label || { en: "Conversion", id: "Conversion" },
                             };
                             setEditingProject({ ...editingProject, metrics: newMetrics });
                           }}
@@ -620,7 +641,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                       </div>
                       <div>
                         <label className="block text-[11px] font-semibold mb-1 text-[var(--text-muted)]">
-                          Label Metrik (EN)
+                          Metric Label
                         </label>
                         <input
                           type="text"
@@ -630,9 +651,8 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                             newMetrics[0] = {
                               value: newMetrics[0]?.value || "+0%",
                               label: {
-                                ...newMetrics[0]?.label,
                                 en: e.target.value,
-                                id: newMetrics[0]?.label?.id || e.target.value,
+                                id: e.target.value,
                               },
                             };
                             setEditingProject({ ...editingProject, metrics: newMetrics });
@@ -646,68 +666,246 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                   {/* Problem */}
                   <div>
                     <label className="block font-semibold mb-1 text-[var(--text)]">
-                      Problem (Masalah Pengguna EN)
+                      Problem Statement (WYSIWYG)
                     </label>
-                    <textarea
-                      rows={2}
+                    <WysiwygEditor
                       value={editingProject.tldr.problem.en}
-                      onChange={(e) =>
+                      onChange={(html) =>
                         setEditingProject({
                           ...editingProject,
                           tldr: {
                             ...editingProject.tldr,
-                            problem: { ...editingProject.tldr.problem, en: e.target.value },
+                            problem: { en: html, id: html },
                           },
                         })
                       }
-                      placeholder="What was the user problem?"
-                      className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                      placeholder="What was the user or business problem? Highlight key metrics..."
+                      minHeight="100px"
                     />
                   </div>
 
                   {/* Solution */}
                   <div>
                     <label className="block font-semibold mb-1 text-[var(--text)]">
-                      Solution (Solusi Desain EN)
+                      Design Solution (WYSIWYG)
                     </label>
-                    <textarea
-                      rows={2}
+                    <WysiwygEditor
                       value={editingProject.tldr.solution.en}
-                      onChange={(e) =>
+                      onChange={(html) =>
                         setEditingProject({
                           ...editingProject,
                           tldr: {
                             ...editingProject.tldr,
-                            solution: { ...editingProject.tldr.solution, en: e.target.value },
+                            solution: { en: html, id: html },
                           },
                         })
                       }
-                      placeholder="What was the UX solution?"
-                      className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                      placeholder="What was the core UX/UI solution?"
+                      minHeight="100px"
                     />
                   </div>
 
                   {/* Impact */}
                   <div>
                     <label className="block font-semibold mb-1 text-[var(--text)]">
-                      Impact (Hasil & Dampak EN)
+                      Impact & Outcomes (WYSIWYG)
                     </label>
-                    <textarea
-                      rows={2}
+                    <WysiwygEditor
                       value={editingProject.tldr.impact.en}
-                      onChange={(e) =>
+                      onChange={(html) =>
                         setEditingProject({
                           ...editingProject,
                           tldr: {
                             ...editingProject.tldr,
-                            impact: { ...editingProject.tldr.impact, en: e.target.value },
+                            impact: { en: html, id: html },
                           },
                         })
                       }
-                      placeholder="What measurable impact was achieved?"
-                      className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                      placeholder="What measurable results were achieved?"
+                      minHeight="100px"
                     />
                   </div>
+                </div>
+              )}
+
+              {/* TAB 3: CASE STUDY DETAILS (SECTIONS) */}
+              {activeEditorTab === "sections" && (
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--background)]">
+                    <div>
+                      <h3 className="font-bold text-[var(--text)] text-sm">
+                        Case Study Narrative & Sections
+                      </h3>
+                      <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                        Write in-depth case study stories using WYSIWYG formatting (headings, bold metrics, and lists).
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newSec: ProjectSection = {
+                            id: `sec-${Date.now()}`,
+                            type: "process",
+                            title: { en: "New Section", id: "Seksi Baru" },
+                            body: { en: "<p>Write section narrative here...</p>", id: "" },
+                            highlights: [],
+                          };
+                          setEditingProject({
+                            ...editingProject,
+                            sections: [...(editingProject.sections || []), newSec],
+                          });
+                        }}
+                        className="px-3 py-1.5 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 font-semibold rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Section</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {(!editingProject.sections || editingProject.sections.length === 0) ? (
+                    <div className="p-8 text-center text-xs text-[var(--text-muted)] border border-dashed border-[var(--border)] rounded-xl">
+                      No sections created yet. Click &ldquo;Add Section&rdquo; to begin writing the case study narrative.
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {editingProject.sections.map((sec, secIdx) => (
+                        <div
+                          key={sec.id || secIdx}
+                          className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] space-y-3.5 shadow-xs"
+                        >
+                          {/* Section Card Header */}
+                          <div className="flex items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+                            <div className="flex items-center gap-2">
+                              <span className="w-5 h-5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] font-bold text-[11px] flex items-center justify-center">
+                                {secIdx + 1}
+                              </span>
+                              <span className="font-bold text-xs text-[var(--text)]">
+                                {sec.title.en || `Section ${secIdx + 1}`}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                              {/* Move Up */}
+                              <button
+                                type="button"
+                                disabled={secIdx === 0}
+                                onClick={() => {
+                                  const updated = [...editingProject.sections];
+                                  const temp = updated[secIdx - 1];
+                                  updated[secIdx - 1] = updated[secIdx];
+                                  updated[secIdx] = temp;
+                                  setEditingProject({ ...editingProject, sections: updated });
+                                }}
+                                title="Move Up"
+                                className="p-1 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                              >
+                                <ChevronUp className="w-3.5 h-3.5" />
+                              </button>
+
+                              {/* Move Down */}
+                              <button
+                                type="button"
+                                disabled={secIdx === editingProject.sections.length - 1}
+                                onClick={() => {
+                                  const updated = [...editingProject.sections];
+                                  const temp = updated[secIdx + 1];
+                                  updated[secIdx + 1] = updated[secIdx];
+                                  updated[secIdx] = temp;
+                                  setEditingProject({ ...editingProject, sections: updated });
+                                }}
+                                title="Move Down"
+                                className="p-1 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                              >
+                                <ChevronDown className="w-3.5 h-3.5" />
+                              </button>
+
+                              {/* Delete Section */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const updated = editingProject.sections.filter((_, i) => i !== secIdx);
+                                  setEditingProject({ ...editingProject, sections: updated });
+                                }}
+                                title="Delete Section"
+                                className="p-1 rounded-lg border border-red-500/20 text-red-500 hover:bg-red-500/10 cursor-pointer ml-1"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Section Metadata Inputs */}
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="sm:col-span-2">
+                              <label className="block text-[11px] font-semibold mb-1 text-[var(--text-muted)]">
+                                Section Title (English) *
+                              </label>
+                              <input
+                                type="text"
+                                value={sec.title.en}
+                                onChange={(e) => {
+                                  const updated = [...editingProject.sections];
+                                  updated[secIdx] = {
+                                    ...updated[secIdx],
+                                    title: { en: e.target.value, id: e.target.value },
+                                  };
+                                  setEditingProject({ ...editingProject, sections: updated });
+                                }}
+                                placeholder="e.g. User Research & Usability Testing"
+                                className="w-full px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] text-xs"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[11px] font-semibold mb-1 text-[var(--text-muted)]">
+                                Section Type
+                              </label>
+                              <select
+                                value={sec.type}
+                                onChange={(e) => {
+                                  const updated = [...editingProject.sections];
+                                  updated[secIdx] = {
+                                    ...updated[secIdx],
+                                    type: e.target.value as ProjectSection["type"],
+                                  };
+                                  setEditingProject({ ...editingProject, sections: updated });
+                                }}
+                                className="w-full px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] text-xs"
+                              >
+                                <option value="context">Context & Goals</option>
+                                <option value="research">User Research</option>
+                                <option value="process">Design Process</option>
+                                <option value="solution">Final Solution</option>
+                                <option value="impact">Impact & Results</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* WYSIWYG Editor for Section Body */}
+                          <div>
+                            <label className="block text-[11px] font-semibold mb-1 text-[var(--text-muted)]">
+                              Section Narrative Body (WYSIWYG) *
+                            </label>
+                            <WysiwygEditor
+                              value={sec.body.en}
+                              onChange={(html) => {
+                                const updated = [...editingProject.sections];
+                                updated[secIdx] = {
+                                  ...updated[secIdx],
+                                  body: { en: html, id: html },
+                                };
+                                setEditingProject({ ...editingProject, sections: updated });
+                              }}
+                              placeholder="Write the in-depth story, methodology, design rationale, and findings..."
+                              minHeight="140px"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -718,10 +916,10 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="font-bold text-[var(--text)] block">
-                          Tandai Sebagai Sample Project
+                          Mark as Sample Project
                         </span>
                         <span className="text-[11px] text-[var(--text-muted)]">
-                          Wajib dicentang jika ini adalah data demo/fiktif per aturan AGENTS.md §10.
+                          Flags this case study with a &ldquo;Sample project&rdquo; badge on the portfolio.
                         </span>
                       </div>
                       <input
@@ -740,10 +938,10 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                     <div className="flex items-center justify-between pt-3 border-t border-[var(--border)]">
                       <div>
                         <span className="font-bold text-[var(--text)] block">
-                          Status Publikasi
+                          Publication Status
                         </span>
                         <span className="text-[11px] text-[var(--text-muted)]">
-                          Published agar muncul di portofolio publik, atau Draft untuk draf internal.
+                          Published to display publicly, or Draft for private editing.
                         </span>
                       </div>
                       <select
@@ -756,8 +954,8 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                         }
                         className="px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] font-semibold"
                       >
-                        <option value="draft">Draft (Draf)</option>
-                        <option value="published">Published (Terbit)</option>
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
                       </select>
                     </div>
                   </div>
@@ -765,12 +963,12 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                   <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-2">
                     <span className="font-bold text-xs text-[var(--success)] flex items-center gap-1.5">
                       <FileCheck className="w-4 h-4" />
-                      Checklist Kesiapan:
+                      Readiness Checklist:
                     </span>
                     <ul className="space-y-1 text-[11px] text-[var(--text-muted)] list-disc pl-5">
-                      <li>Judul & Slug lengkap</li>
-                      <li>Cover image terisi</li>
-                      <li>Metrik dan TL;DR terisi</li>
+                      <li>Title & unique slug configured</li>
+                      <li>Cover image attached</li>
+                      <li>Key metric and TL;DR filled</li>
                     </ul>
                   </div>
                 </div>
@@ -784,7 +982,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                 onClick={() => setIsEditorOpen(false)}
                 className="px-4 py-2 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-semibold text-[var(--text)]"
               >
-                Batal
+                Cancel
               </button>
 
               <button
@@ -796,12 +994,12 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                 {isSaving ? (
                   <>
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Menyimpan...</span>
+                    <span>Saving...</span>
                   </>
                 ) : (
                   <>
                     <Save className="w-3.5 h-3.5" />
-                    <span>Simpan Perubahan</span>
+                    <span>Save Changes</span>
                   </>
                 )}
               </button>

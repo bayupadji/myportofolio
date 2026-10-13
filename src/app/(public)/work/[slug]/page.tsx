@@ -1,37 +1,28 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { Locale, resolveLocalized } from "@/domain/value-objects/LocalizedText";
+import { resolveLocalized } from "@/domain/value-objects/LocalizedText";
 import { getMessages } from "@/presentation/i18n";
 import { container } from "@/infrastructure/container";
 import { CaseStudyDetail } from "@/presentation/components/sections/CaseStudyDetail";
 import { CtaCardSection } from "@/presentation/components/sections/CtaCardSection";
 
 interface CaseStudyPageProps {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
   const projects = await container.getPublishedProjects.execute();
-  const params: { locale: string; slug: string }[] = [];
-
-  for (const locale of ["en", "id"]) {
-    for (const project of projects) {
-      params.push({ locale, slug: project.slug });
-    }
-  }
-
-  return params;
+  return projects.map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({ params }: CaseStudyPageProps) {
-  const { locale, slug } = await params;
+  const { slug } = await params;
   const project = await container.getProjectBySlug.execute(slug);
 
   if (!project) return { title: "Case Study Not Found" };
 
-  const validLocale = (locale as Locale) || "en";
-  const title = resolveLocalized(project.title, validLocale).text;
-  const summary = resolveLocalized(project.summary, validLocale).text;
+  const title = resolveLocalized(project.title).text;
+  const summary = resolveLocalized(project.summary).text;
 
   return {
     title: `${title} · Bayu Product Designer`,
@@ -45,9 +36,8 @@ export async function generateMetadata({ params }: CaseStudyPageProps) {
 }
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
-  const { locale, slug } = await params;
-  const validLocale = (locale as Locale) || "en";
-  const messages = getMessages(validLocale);
+  const { slug } = await params;
+  const messages = getMessages();
 
   const [project, allProjects] = await Promise.all([
     container.getProjectBySlug.execute(slug),
@@ -69,10 +59,9 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         project={project}
         prevProject={prevProject}
         nextProject={nextProject}
-        locale={validLocale}
         messages={messages}
       />
-      <CtaCardSection locale={validLocale} messages={messages} />
+      <CtaCardSection messages={messages} />
     </div>
   );
 }

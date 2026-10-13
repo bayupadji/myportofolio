@@ -11,7 +11,7 @@ import { CountUp } from "../motion/CountUp";
 
 export interface ProjectQuickViewModalProps {
   project: Project | null;
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
   isOpen: boolean;
   onClose: () => void;
@@ -163,9 +163,10 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
                 <AlertCircle className="w-4 h-4" />
                 <span>{messages.work.tldrProblem}</span>
               </div>
-              <p className="text-sm text-[var(--text)] leading-relaxed">
-                {problem}
-              </p>
+              <div
+                className="text-sm text-[var(--text)] leading-relaxed [&_strong]:font-bold [&_strong]:text-[var(--text)]"
+                dangerouslySetInnerHTML={{ __html: problem }}
+              />
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-hover)]/60">
@@ -173,9 +174,10 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
                 <CheckCircle2 className="w-4 h-4" />
                 <span>{messages.work.tldrSolution}</span>
               </div>
-              <p className="text-sm text-[var(--text)] leading-relaxed">
-                {solution}
-              </p>
+              <div
+                className="text-sm text-[var(--text)] leading-relaxed [&_strong]:font-bold [&_strong]:text-[var(--text)]"
+                dangerouslySetInnerHTML={{ __html: solution }}
+              />
             </div>
 
             <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-hover)]/60">
@@ -183,9 +185,10 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
                 <TrendingUp className="w-4 h-4" />
                 <span>{messages.work.tldrImpact}</span>
               </div>
-              <p className="text-sm text-[var(--text)] leading-relaxed">
-                {impact}
-              </p>
+              <div
+                className="text-sm text-[var(--text)] leading-relaxed [&_strong]:font-bold [&_strong]:text-[var(--text)]"
+                dangerouslySetInnerHTML={{ __html: impact }}
+              />
             </div>
           </div>
 
@@ -200,7 +203,7 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
             </button>
 
             <Link
-              href={`/${locale}/work/${project.slug}`}
+              href={`/work/${project.slug}`}
               onClick={onClose}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 shadow-md shadow-[var(--accent)]/20 transition-all min-h-[44px] active:scale-[0.98]"
             >

@@ -12,7 +12,7 @@ import { HeroPhoto } from "../ui/HeroPhoto";
 import { CardSpotlight } from "../ui/CardSpotlight";
 
 export interface HeroProps {
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
   metrics: HeroMetric[];
   availability: string;
@@ -85,7 +85,7 @@ export const Hero: React.FC<HeroProps> = ({
               </a>
 
               <Link
-                href={`/${locale}/contact`}
+                href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[16px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{messages.hero.ctaContact}</span>

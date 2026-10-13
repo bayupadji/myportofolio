@@ -13,7 +13,7 @@ import { CountUp } from "../motion/CountUp";
 
 export interface SelectedWorkProps {
   projects: Project[];
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
   showAllLink?: boolean;
 }
@@ -61,7 +61,7 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({
 
           {showAllLink && (
             <Link
-              href={`/${locale}/work`}
+              href="/work"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent)] hover:underline min-h-[44px]"
             >
               <span>{messages.work.viewAll}</span>
@@ -178,7 +178,7 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({
 
                   <h3 className="text-xl font-bold tracking-tight text-[var(--text)] group-hover:text-[var(--accent)] transition-colors mb-2">
                     <Link
-                      href={`/${locale}/work/${project.slug}`}
+                      href={`/work/${project.slug}`}
                       className="focus-visible:outline-2 focus-visible:rounded"
                     >
                       {title}
@@ -201,7 +201,7 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({
                     </button>
 
                     <Link
-                      href={`/${locale}/work/${project.slug}`}
+                      href={`/work/${project.slug}`}
                       className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] group-hover:translate-x-0.5 transition-transform min-h-[44px]"
                     >
                       <span>{messages.work.viewProject}</span>

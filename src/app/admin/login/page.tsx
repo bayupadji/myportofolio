@@ -14,7 +14,7 @@ export default function AdminLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pin.trim()) {
-      setError("Masukkan PIN admin terlebih dahulu");
+      setError("Please enter your admin PIN");
       return;
     }
 
@@ -31,13 +31,13 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "PIN yang dimasukkan salah");
+        throw new Error(data.error || "Invalid PIN entered");
       }
 
       router.push("/admin");
       router.refresh();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal melakukan verifikasi";
+      const msg = err instanceof Error ? err.message : "Authentication failed";
       setError(msg);
       setPin("");
     } finally {
@@ -51,11 +51,11 @@ export default function AdminLoginPage() {
         {/* Back Link */}
         <div className="mb-6">
           <Link
-            href="/en"
+            href="/"
             className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Kembali ke Portofolio Publik</span>
+            <span>Back to Public Portfolio</span>
           </Link>
         </div>
 
@@ -68,7 +68,7 @@ export default function AdminLoginPage() {
             <div>
               <h1 className="text-xl font-bold text-[var(--text)]">Admin Portal</h1>
               <p className="text-xs text-[var(--text-muted)]">
-                Bayu Portfolio CMS &bull; Khusus Owner
+                Bayu Portfolio CMS &bull; Owner Access
               </p>
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function AdminLoginPage() {
                 htmlFor="pin-input"
                 className="block text-xs font-semibold text-[var(--text)] uppercase tracking-wider mb-2"
               >
-                Masukkan PIN Rahasia
+                Enter Secret PIN
               </label>
               <div className="relative">
                 <input
@@ -106,7 +106,7 @@ export default function AdminLoginPage() {
                 <KeyRound className="w-4 h-4 text-[var(--text-muted)] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
               <p className="mt-2 text-[11px] text-[var(--text-muted)] text-center">
-                PIN default pengembangan: <code className="font-mono font-bold text-[var(--accent)]">1234</code>
+                Development default PIN: <code className="font-mono font-bold text-[var(--accent)]">1234</code>
               </p>
             </div>
 
@@ -118,10 +118,10 @@ export default function AdminLoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Memverifikasi...</span>
+                  <span>Verifying...</span>
                 </>
               ) : (
-                <span>Buka Dashboard</span>
+                <span>Open Dashboard</span>
               )}
             </button>
           </form>

@@ -56,18 +56,18 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold tracking-tight text-[var(--text)]">
-              Profil & Ketersediaan
+              Profile & Availability
             </h1>
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-1">
-            Ubah identitas profesional, bio dwibahasa, status ketersediaan kerja, dan tautan resume.
+            Update your professional identity, bio story, work availability status, and resume links.
           </p>
         </div>
 
         {savedSuccess && (
           <div className="px-3.5 py-2 rounded-xl bg-[var(--success)]/10 border border-[var(--success)]/25 text-[var(--success)] text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" />
-            <span>Perubahan berhasil disimpan!</span>
+            <span>Profile changes saved successfully!</span>
           </div>
         )}
       </div>
@@ -82,10 +82,10 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
               </div>
               <div>
                 <h2 className="font-bold text-sm text-[var(--text)]">
-                  Status Ketersediaan Freelance / Hiring
+                  Freelance & Hiring Availability Status
                 </h2>
                 <p className="text-[11px] text-[var(--text-muted)]">
-                  Ditampilkan pada Header publik, banner Hero, dan halaman Services.
+                  Displayed on the public Header, Hero badge, and Services page.
                 </p>
               </div>
             </div>
@@ -98,55 +98,35 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
                   isAvailableForFreelance: !profile.isAvailableForFreelance,
                 })
               }
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors min-h-[36px] ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors min-h-[36px] cursor-pointer ${
                 profile.isAvailableForFreelance
                   ? "bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/25"
                   : "bg-amber-500/10 text-amber-500 border border-amber-500/25"
               }`}
             >
-              {profile.isAvailableForFreelance ? "Open (Tersedia)" : "Limited (Terbatas)"}
+              {profile.isAvailableForFreelance ? "Open (Available)" : "Limited (Booked / Low)"}
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                Teks Status (English)
-              </label>
-              <input
-                type="text"
-                value={profile.availabilityStatus.en}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    availabilityStatus: {
-                      ...profile.availabilityStatus,
-                      en: e.target.value,
-                    },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                Teks Status (Indonesian)
-              </label>
-              <input
-                type="text"
-                value={profile.availabilityStatus.id}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    availabilityStatus: {
-                      ...profile.availabilityStatus,
-                      id: e.target.value,
-                    },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
+          <div className="pt-2">
+            <label className="block font-semibold mb-1 text-[var(--text)]">
+              Availability Status Text
+            </label>
+            <input
+              type="text"
+              value={profile.availabilityStatus.en}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  availabilityStatus: {
+                    en: e.target.value,
+                    id: e.target.value,
+                  },
+                })
+              }
+              placeholder="Available for full-time & freelance projects"
+              className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+            />
           </div>
         </div>
 
@@ -155,154 +135,101 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
           <div className="flex items-center gap-2.5 pb-2 border-b border-[var(--border)]">
             <UserCheck className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="font-bold text-sm text-[var(--text)]">
-              Informasi Utama Desainer
+              Designer Core Information
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block font-semibold mb-1 text-[var(--text)]">
-                Nama Lengkap
+                Full Name
               </label>
               <input
                 type="text"
                 value={profile.name}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
               />
             </div>
             <div>
               <label className="block font-semibold mb-1 text-[var(--text)] flex items-center gap-1">
                 <Mail className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                Email Publik
+                Public Email
               </label>
               <input
                 type="email"
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
               />
             </div>
             <div>
               <label className="block font-semibold mb-1 text-[var(--text)] flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                Lokasi Domisili
+                Location & Timezone
               </label>
               <input
                 type="text"
                 value={profile.location}
                 onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
+                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
               />
             </div>
           </div>
 
-          {/* Role EN & ID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                Jabatan / Role (English)
-              </label>
-              <input
-                type="text"
-                value={profile.role.en}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    role: { ...profile.role, en: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                Jabatan / Role (Indonesian)
-              </label>
-              <input
-                type="text"
-                value={profile.role.id}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    role: { ...profile.role, id: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
+          {/* Role */}
+          <div>
+            <label className="block font-semibold mb-1 text-[var(--text)]">
+              Role / Title
+            </label>
+            <input
+              type="text"
+              value={profile.role.en}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  role: { en: e.target.value, id: e.target.value },
+                })
+              }
+              placeholder="Lead Product Designer"
+              className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+            />
           </div>
 
-          {/* Headline EN & ID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                Headline Hero (English)
-              </label>
-              <textarea
-                rows={2}
-                value={profile.headline.en}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    headline: { ...profile.headline, en: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                Headline Hero (Indonesian)
-              </label>
-              <textarea
-                rows={2}
-                value={profile.headline.id}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    headline: { ...profile.headline, id: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
+          {/* Headline */}
+          <div>
+            <label className="block font-semibold mb-1 text-[var(--text)]">
+              Hero Headline Statement
+            </label>
+            <textarea
+              rows={2}
+              value={profile.headline.en}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  headline: { en: e.target.value, id: e.target.value },
+                })
+              }
+              className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+            />
           </div>
 
-          {/* Bio Summary EN & ID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                About Bio Story (English)
-              </label>
-              <textarea
-                rows={3}
-                value={profile.summary.en}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    summary: { ...profile.summary, en: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-1 text-[var(--text)]">
-                About Bio Story (Indonesian)
-              </label>
-              <textarea
-                rows={3}
-                value={profile.summary.id}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    summary: { ...profile.summary, id: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)]"
-              />
-            </div>
+          {/* Bio Summary */}
+          <div>
+            <label className="block font-semibold mb-1 text-[var(--text)]">
+              About Bio Story
+            </label>
+            <textarea
+              rows={3}
+              value={profile.summary.en}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  summary: { en: e.target.value, id: e.target.value },
+                })
+              }
+              className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+            />
           </div>
         </div>
 
@@ -311,7 +238,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
           <div className="flex items-center gap-2.5 pb-2 border-b border-[var(--border)]">
             <FileText className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="font-bold text-sm text-[var(--text)]">
-              Foto Avatar & Tautan CV
+              Avatar Photo & Resume Links
             </h2>
           </div>
 
@@ -319,10 +246,10 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
             {/* Avatar Dropzone */}
             <div className="space-y-2">
               <label className="block font-semibold text-[var(--text)]">
-                Foto Profil / Headshot Avatar (Rasio 1:1)
+                Profile Headshot / Avatar (1:1 Ratio)
               </label>
               <ImageUploadDropzone
-                label="Upload & Kompres Avatar Profil ke Supabase"
+                label="Upload & Compress Profile Avatar to Supabase"
                 preset="avatar"
                 bucket="portfolio-assets"
                 folder="avatars"
@@ -336,7 +263,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
                 <label className="block font-semibold mb-1 text-[var(--text)]">
-                  URL Foto Profil (Aktif)
+                  Active Profile Photo URL
                 </label>
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -349,7 +276,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
                     type="text"
                     value={profile.avatarUrl}
                     onChange={(e) => setProfile({ ...profile, avatarUrl: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px]"
+                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
                     placeholder="https://..."
                   />
                 </div>
@@ -357,14 +284,14 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
 
               <div>
                 <label className="block font-semibold mb-1 text-[var(--text)]">
-                  URL / Path File CV Resume (PDF)
+                  Resume / CV File URL (PDF)
                 </label>
                 <input
                   type="text"
                   value={profile.cvUrl}
                   onChange={(e) => setProfile({ ...profile, cvUrl: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px]"
-                  placeholder="/cv.pdf atau URL storage..."
+                  className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+                  placeholder="/cv.pdf or Supabase Storage URL..."
                 />
               </div>
             </div>
@@ -376,7 +303,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
           <div className="flex items-center gap-2.5 pb-2 border-b border-[var(--border)]">
             <Globe className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="font-bold text-sm text-[var(--text)]">
-              Tautan Sosial & Portofolio Eksternal
+              Social & External Portfolio Links
             </h2>
           </div>
 
@@ -395,7 +322,7 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
                     newLinks[idx] = { ...newLinks[idx], url: e.target.value };
                     setProfile({ ...profile, socialLinks: newLinks });
                   }}
-                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)]"
+                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
                 />
               </div>
             ))}
@@ -407,17 +334,17 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 font-semibold rounded-xl text-xs flex items-center gap-2 shadow-xs disabled:opacity-50"
+            className="px-6 py-2.5 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 font-semibold rounded-xl text-xs flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
           >
             {isSaving ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Menyimpan Profil...</span>
+                <span>Saving Profile...</span>
               </>
             ) : (
               <>
                 <Save className="w-4 h-4" />
-                <span>Simpan Perubahan Profil</span>
+                <span>Save Profile Changes</span>
               </>
             )}
           </button>

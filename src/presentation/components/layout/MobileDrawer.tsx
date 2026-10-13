@@ -8,14 +8,13 @@ import { useUiStore } from "@/presentation/stores/useUiStore";
 import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 import { ThemeToggle } from "./ThemeToggle";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export interface MobileDrawerProps {
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 
-export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) => {
+export const MobileDrawer: React.FC<MobileDrawerProps> = ({ messages }) => {
   const { isMobileDrawerOpen, setMobileDrawerOpen } = useUiStore();
   const drawerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -42,10 +41,10 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
   if (!isMobileDrawerOpen) return null;
 
   const navLinks = [
-    { href: `/${locale}/work`, label: messages.nav.work },
-    { href: `/${locale}/services`, label: messages.nav.services },
-    { href: `/${locale}/about`, label: messages.nav.about },
-    { href: `/${locale}/contact`, label: messages.nav.contact },
+    { href: "/work", label: messages.nav.work },
+    { href: "/services", label: messages.nav.services },
+    { href: "/about", label: messages.nav.about },
+    { href: "/contact", label: messages.nav.contact },
   ];
 
   return (
@@ -98,11 +97,8 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
 
         <div className="pt-6 border-t border-[var(--border)] flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-[var(--text-muted)] font-medium">Preferences</span>
-            <div className="flex items-center gap-2">
-              <LanguageSwitcher currentLocale={locale} />
-              <ThemeToggle />
-            </div>
+            <span className="text-xs text-[var(--text-muted)] font-medium">Theme Mode</span>
+            <ThemeToggle />
           </div>
 
           <a
@@ -115,7 +111,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
           </a>
 
           <Link
-            href={`/${locale}/contact?topic=freelance`}
+            href="/contact?topic=freelance"
             className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 min-h-[44px]"
           >
             {messages.nav.letsTalk}

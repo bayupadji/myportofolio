@@ -7,7 +7,7 @@ import { Messages } from "@/presentation/i18n";
 import { CardSpotlight } from "../ui/CardSpotlight";
 
 export interface ProcessSectionProps {
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 

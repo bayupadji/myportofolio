@@ -8,22 +8,21 @@ import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 import { useUiStore } from "@/presentation/stores/useUiStore";
 import { ThemeToggle } from "./ThemeToggle";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export interface HeaderProps {
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 
-export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
+export const Header: React.FC<HeaderProps> = ({ messages }) => {
   const pathname = usePathname();
   const { toggleMobileDrawer } = useUiStore();
 
   const navLinks = [
-    { href: `/${locale}/about`, label: messages.nav.about },
-    { href: `/${locale}/work`, label: messages.nav.work },
-    { href: `/${locale}/services`, label: messages.nav.services },
-    { href: `/${locale}/contact`, label: messages.nav.contact },
+    { href: "/about", label: messages.nav.about },
+    { href: "/work", label: messages.nav.work },
+    { href: "/services", label: messages.nav.services },
+    { href: "/contact", label: messages.nav.contact },
   ];
 
   return (
@@ -35,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand / Name */}
         <Link
-          href={`/${locale}`}
+          href="/"
           className="group flex items-center gap-2.5 text-base font-semibold tracking-tight text-[var(--text)] focus-visible:rounded-md"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
@@ -56,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href ||
-              (link.href !== `/${locale}` && pathname.startsWith(link.href));
+              (link.href !== "/" && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.href}
@@ -76,12 +75,11 @@ export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
         {/* Right Actions */}
         <div className="flex items-center gap-2.5">
           <div className="hidden sm:flex items-center gap-2">
-            <LanguageSwitcher currentLocale={locale} />
             <ThemeToggle />
           </div>
 
           <Link
-            href={`/${locale}/contact?topic=freelance`}
+            href="/contact?topic=freelance"
             className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-95 shadow-sm shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[40px]"
           >
             <Sparkles className="w-3.5 h-3.5" />

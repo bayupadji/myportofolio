@@ -1,33 +1,17 @@
 import React from "react";
-import { Locale } from "@/domain/value-objects/LocalizedText";
 import { getMessages } from "@/presentation/i18n";
 import { container } from "@/infrastructure/container";
 import { WorkGrid } from "@/presentation/components/sections/WorkGrid";
 import { CtaCardSection } from "@/presentation/components/sections/CtaCardSection";
 
-interface WorkPageProps {
-  params: Promise<{ locale: string }>;
-}
+export const metadata = {
+  title: "Selected Work & Case Studies · Bayu UI/UX Designer",
+  description:
+    "Selected product design case studies across Fintech, Admin Tools, Mobile Apps, and Design Systems.",
+};
 
-export async function generateMetadata({ params }: WorkPageProps) {
-  const { locale } = await params;
-  const isId = locale === "id";
-
-  return {
-    title: isId
-      ? "Karya & Studi Kasus · Bayu UI/UX Designer"
-      : "Selected Work & Case Studies · Bayu UI/UX Designer",
-    description: isId
-      ? "Koleksi studi kasus desain produk terpilih lintas Fintech, Admin Tools, Aplikasi Mobile, dan Sistem Desain."
-      : "Selected product design case studies across Fintech, Admin Tools, Mobile Apps, and Design Systems.",
-  };
-}
-
-export default async function WorkPage({ params }: WorkPageProps) {
-  const { locale } = await params;
-  const validLocale = (locale as Locale) || "en";
-  const messages = getMessages(validLocale);
-
+export default async function WorkPage() {
+  const messages = getMessages();
   const projects = await container.getPublishedProjects.execute();
 
   return (
@@ -48,12 +32,11 @@ export default async function WorkPage({ params }: WorkPageProps) {
 
           <WorkGrid
             projects={projects}
-            locale={validLocale}
             messages={messages}
           />
         </div>
       </div>
-      <CtaCardSection locale={validLocale} messages={messages} />
+      <CtaCardSection messages={messages} />
     </div>
   );
 }

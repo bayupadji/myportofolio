@@ -3,7 +3,7 @@ import { container } from "@/infrastructure/container";
 import { ProjectManager } from "@/presentation/components/admin/ProjectManager";
 
 export const metadata = {
-  title: "Manajemen Proyek · Bayu Portfolio CMS",
+  title: "Case Studies & Projects · Bayu Portfolio CMS",
 };
 
 export default async function AdminProjectsPage() {

@@ -13,7 +13,7 @@ import { CardSpotlight } from "@/presentation/components/ui/CardSpotlight";
 
 export interface ServicesSectionProps {
   services: Service[];
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 
@@ -100,7 +100,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     {messages.services.pricingNote}
                   </span>
                   <Link
-                    href={`/${locale}/contact?topic=freelance`}
+                    href="/contact?topic=freelance"
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent)] hover:underline min-h-[44px]"
                   >
                     <span>{messages.services.cta}</span>
@@ -187,7 +187,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
             <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
               <Link
-                href={`/${locale}/contact?topic=freelance`}
+                href="/contact?topic=freelance"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{messages.services.cta}</span>

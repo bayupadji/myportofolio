@@ -3,7 +3,7 @@ import { container } from "@/infrastructure/container";
 import { ProfileManager } from "@/presentation/components/admin/ProfileManager";
 
 export const metadata = {
-  title: "Profil & Ketersediaan · Bayu Portfolio CMS",
+  title: "Profile & Availability · Bayu Portfolio CMS",
 };
 
 export default async function AdminProfilePage() {

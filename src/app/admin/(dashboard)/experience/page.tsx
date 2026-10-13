@@ -3,7 +3,7 @@ import { container } from "@/infrastructure/container";
 import { ExperienceManager } from "@/presentation/components/admin/ExperienceManager";
 
 export const metadata = {
-  title: "Pengalaman & Layanan · Bayu Portfolio CMS",
+  title: "Experience & Services · Bayu Portfolio CMS",
 };
 
 export default async function AdminExperiencePage() {

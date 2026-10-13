@@ -20,7 +20,7 @@ import { useContactMutation } from "@/presentation/hooks/useContactMutation";
 
 export interface ContactFormProps {
   email: string;
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 

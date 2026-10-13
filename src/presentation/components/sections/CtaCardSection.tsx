@@ -6,7 +6,7 @@ import { Messages } from "@/presentation/i18n";
 import { CardSpotlight } from "@/presentation/components/ui/CardSpotlight";
 
 export interface CtaCardSectionProps {
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
   className?: string;
 }
@@ -59,7 +59,7 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
 
             <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
               <Link
-                href={`/${locale}/contact`}
+                href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{messages.hero.ctaContact}</span>
@@ -67,7 +67,7 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
               </Link>
 
               <Link
-                href={`/${locale}/services`}
+                href="/services"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[16px] border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{messages.nav.services}</span>

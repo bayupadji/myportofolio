@@ -117,7 +117,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       {/* Navigation List */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-          Manajemen Konten
+          Content Management
         </div>
 
         {navItems.map((item) => {
@@ -158,7 +158,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       <div className="p-3 border-t border-[var(--border)] space-y-2 bg-[var(--background)]/50">
         {/* Availability Badge */}
         <div className="px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] flex items-center justify-between text-xs">
-          <span className="text-[var(--text-muted)] text-[11px]">Ketersediaan:</span>
+          <span className="text-[var(--text-muted)] text-[11px]">Availability:</span>
           <span
             className={`font-semibold text-[11px] flex items-center gap-1.5 ${
               isAvailable ? "text-[var(--success)]" : "text-amber-500"
@@ -175,15 +175,15 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
         {/* Public Portfolio Link */}
         <Link
-          href="/en"
+          href="/"
           target="_blank"
           className="flex items-center justify-between w-full px-3 py-2 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors"
         >
           <span className="flex items-center gap-2">
             <ExternalLink className="w-3.5 h-3.5" />
-            <span>Lihat Web Publik</span>
+            <span>View Public Site</span>
           </span>
-          <span className="text-[10px] text-[var(--text-muted)] font-mono">/en</span>
+          <span className="text-[10px] text-[var(--text-muted)] font-mono">/</span>
         </Link>
 
         {/* Logout */}
@@ -193,7 +193,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           className="flex items-center gap-2 w-full px-3 py-2 text-xs font-medium text-[var(--error)] hover:bg-[var(--error)]/10 rounded-xl transition-colors text-left"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>{isLoggingOut ? "Keluar..." : "Keluar Dashboard"}</span>
+          <span>{isLoggingOut ? "Logging out..." : "Log Out"}</span>
         </button>
       </div>
     </div>

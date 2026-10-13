@@ -3,7 +3,7 @@ import { container } from "@/infrastructure/container";
 import { MessagesManager } from "@/presentation/components/admin/MessagesManager";
 
 export const metadata = {
-  title: "Pesan Masuk · Bayu Portfolio CMS",
+  title: "Inbound Messages · Bayu Portfolio CMS",
 };
 
 export default async function AdminMessagesPage() {

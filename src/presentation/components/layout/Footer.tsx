@@ -8,12 +8,12 @@ import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 
 export interface FooterProps {
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
   email: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ locale, messages, email }) => {
+export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
   const [copied, setCopied] = useState(false);
 
   const copyEmail = () => {
@@ -73,25 +73,25 @@ export const Footer: React.FC<FooterProps> = ({ locale, messages, email }) => {
               Navigation
             </span>
             <Link
-              href={`/${locale}/work`}
+              href="/work"
               className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1"
             >
               {messages.nav.work}
             </Link>
             <Link
-              href={`/${locale}/services`}
+              href="/services"
               className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1"
             >
               {messages.nav.services}
             </Link>
             <Link
-              href={`/${locale}/about`}
+              href="/about"
               className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1"
             >
               {messages.nav.about}
             </Link>
             <Link
-              href={`/${locale}/contact`}
+              href="/contact"
               className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1"
             >
               {messages.nav.contact}

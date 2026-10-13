@@ -21,7 +21,7 @@ export interface AboutSectionProps {
   profile: Profile;
   experiences: Experience[];
   skills: Skill[];
-  locale: Locale;
+  locale?: Locale;
   messages: Messages;
 }
 
@@ -206,7 +206,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                                 aria-hidden="true"
                                 className="absolute top-[9px] left-0 h-1.5 w-1.5 rounded-full bg-[var(--accent)]"
                               />
-                              <span>{resolveLocalized(b.fullText, locale).text}</span>
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: resolveLocalized(b.fullText, locale).text,
+                                }}
+                              />
                             </li>
                           ))}
                         </ul>
