@@ -1,12 +1,11 @@
 import React from "react";
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
 import { Locale, resolveLocalized } from "@/domain/value-objects/LocalizedText";
 import { getMessages } from "@/presentation/i18n";
 import { container } from "@/infrastructure/container";
 import { Hero } from "@/presentation/components/sections/Hero";
 import { SelectedWork } from "@/presentation/components/sections/SelectedWork";
 import { ProcessSection } from "@/presentation/components/sections/ProcessSection";
+import { CtaCardSection } from "@/presentation/components/sections/CtaCardSection";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -67,48 +66,8 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* 3. Evidence-Based 4-Step Process */}
       <ProcessSection locale={validLocale} messages={messages} />
 
-      {/* 4. Bottom High-Impact CTA Banner */}
-      <section className="w-full py-16 sm:py-20 bg-[var(--surface)] border-b border-[var(--border)]">
-        <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>
-              {validLocale === "id"
-                ? "Tersedia untuk Peluang Baru"
-                : "Open to New Opportunities"}
-            </span>
-          </div>
-
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text)] max-w-2xl mx-auto mb-4">
-            {validLocale === "id"
-              ? "Punya proyek produk atau peran yang ingin didiskusikan?"
-              : "Have a product challenge or an open role to discuss?"}
-          </h2>
-
-          <p className="text-base text-[var(--text-muted)] max-w-xl mx-auto mb-8">
-            {validLocale === "id"
-              ? "Saya siap membantu mentransformasi ide menjadi produk digital yang intuitif, cepat, dan berdampak."
-              : "I am ready to help turn your product ideas into intuitive, fast, and measurable digital experiences."}
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href={`/${validLocale}/contact`}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-90 shadow-md shadow-[var(--accent)]/20 transition-all min-h-[48px]"
-            >
-              <span>{messages.hero.ctaContact}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              href={`/${validLocale}/services`}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all min-h-[48px]"
-            >
-              <span>{messages.nav.services}</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 4. Bottom High-Impact CTA Banner Card */}
+      <CtaCardSection locale={validLocale} messages={messages} />
     </div>
   );
 }

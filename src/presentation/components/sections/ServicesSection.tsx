@@ -9,6 +9,7 @@ import {
 import { Service } from "@/domain/entities/Service";
 import { Locale, resolveLocalized } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
+import { CardSpotlight } from "@/presentation/components/ui/CardSpotlight";
 
 export interface ServicesSectionProps {
   services: Service[];
@@ -55,7 +56,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             return (
               <div
                 key={service.id}
-                className="flex flex-col p-6 sm:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs hover:border-[var(--accent)]/40 transition-all duration-200"
+                className="flex flex-col p-6 sm:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-2xl"
               >
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <h2 className="text-xl font-bold tracking-tight text-[var(--text)]">
@@ -111,63 +112,89 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           })}
         </div>
 
-        {/* 3-Step "How We Get Started" Process per PRD Section 10.12 */}
-        <div className="p-8 sm:p-12 rounded-2xl border border-[var(--border)] bg-[var(--surface-hover)]/60 text-center max-w-4xl mx-auto">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
-            Workflow
-          </span>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-[var(--text)] mb-3">
-            {messages.services.howWeStart}
-          </h2>
-          <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-xl mx-auto mb-10">
-            A frictionless, transparent engagement model focused on clarity and fast turnaround.
-          </p>
+        {/* 3-Step "How We Get Started" Workflow Card (Static without hover/spotlight) */}
+        <div className="relative rounded-[24px] sm:rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-8 sm:p-14 lg:p-16 text-center shadow-sm overflow-hidden">
+          {/* Ambient radial gradient glow */}
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[var(--accent)]/10 blur-[100px] pointer-events-none rounded-full"
+            aria-hidden="true"
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-10">
-            <div className="p-5 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xs">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] mb-3 font-bold">
-                1
-              </div>
-              <h3 className="font-bold text-base text-[var(--text)] mb-1.5">
-                {messages.services.step1}
-              </h3>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                {messages.services.step1Desc}
-              </p>
+          <div className="relative z-1 flex flex-col items-center">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold mb-5">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>
+                {locale === "id" ? "Alur Kerja & Kolaborasi" : "Frictionless Workflow"}
+              </span>
             </div>
 
-            <div className="p-5 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xs">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] mb-3 font-bold">
-                2
-              </div>
-              <h3 className="font-bold text-base text-[var(--text)] mb-1.5">
-                {messages.services.step2}
-              </h3>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                {messages.services.step2Desc}
-              </p>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-4 leading-[1.2]">
+              {messages.services.howWeStart}
+            </h2>
+
+            <p className="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-10 max-w-2xl mx-auto">
+              {locale === "id"
+                ? "Model kolaborasi transparan dan terstruktur yang berfokus pada kejelasan hasil, efisiensi waktu, dan dampak nyata."
+                : "A frictionless, transparent engagement model focused on clarity, fast turnaround, and measurable business impact."}
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-10 w-full">
+              <CardSpotlight
+                size={260}
+                className="p-6 rounded-2xl bg-[var(--surface-hover)]/70 border border-[var(--border)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-4 font-bold text-base">
+                  1
+                </div>
+                <h3 className="font-bold text-base sm:text-lg text-[var(--text)] mb-2">
+                  {messages.services.step1}
+                </h3>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                  {messages.services.step1Desc}
+                </p>
+              </CardSpotlight>
+
+              <CardSpotlight
+                size={260}
+                className="p-6 rounded-2xl bg-[var(--surface-hover)]/70 border border-[var(--border)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-4 font-bold text-base">
+                  2
+                </div>
+                <h3 className="font-bold text-base sm:text-lg text-[var(--text)] mb-2">
+                  {messages.services.step2}
+                </h3>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                  {messages.services.step2Desc}
+                </p>
+              </CardSpotlight>
+
+              <CardSpotlight
+                size={260}
+                className="p-6 rounded-2xl bg-[var(--surface-hover)]/70 border border-[var(--border)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-4 font-bold text-base">
+                  3
+                </div>
+                <h3 className="font-bold text-base sm:text-lg text-[var(--text)] mb-2">
+                  {messages.services.step3}
+                </h3>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                  {messages.services.step3Desc}
+                </p>
+              </CardSpotlight>
             </div>
 
-            <div className="p-5 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xs">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] mb-3 font-bold">
-                3
-              </div>
-              <h3 className="font-bold text-base text-[var(--text)] mb-1.5">
-                {messages.services.step3}
-              </h3>
-              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                {messages.services.step3Desc}
-              </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
+              <Link
+                href={`/${locale}/contact?topic=freelance`}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
+              >
+                <span>{messages.services.cta}</span>
+                <Send className="w-4 h-4" />
+              </Link>
             </div>
           </div>
-
-          <Link
-            href={`/${locale}/contact?topic=freelance`}
-            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-90 shadow-md shadow-[var(--accent)]/20 min-h-[48px]"
-          >
-            <span>{messages.services.cta}</span>
-            <Send className="w-4 h-4" />
-          </Link>
         </div>
       </div>
     </div>

@@ -49,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ locale, messages, email }) => {
             <div className="flex items-center gap-2 mt-2">
               <button
                 onClick={copyEmail}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors min-h-[44px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] border border-[var(--border)] text-xs font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors min-h-[44px]"
                 aria-label={messages.contact.copyEmail}
               >
                 {copied ? (

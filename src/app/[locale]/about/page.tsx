@@ -3,6 +3,7 @@ import { Locale } from "@/domain/value-objects/LocalizedText";
 import { getMessages } from "@/presentation/i18n";
 import { container } from "@/infrastructure/container";
 import { AboutSection } from "@/presentation/components/sections/AboutSection";
+import { CtaCardSection } from "@/presentation/components/sections/CtaCardSection";
 
 interface AboutPageProps {
   params: Promise<{ locale: string }>;
@@ -34,12 +35,15 @@ export default async function AboutPage({ params }: AboutPageProps) {
   ]);
 
   return (
-    <AboutSection
-      profile={profile}
-      experiences={experiences}
-      skills={skills}
-      locale={validLocale}
-      messages={messages}
-    />
+    <div className="flex flex-col w-full">
+      <AboutSection
+        profile={profile}
+        experiences={experiences}
+        skills={skills}
+        locale={validLocale}
+        messages={messages}
+      />
+      <CtaCardSection locale={validLocale} messages={messages} />
+    </div>
   );
 }

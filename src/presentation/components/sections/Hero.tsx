@@ -9,6 +9,7 @@ import { HeroMetric } from "@/domain/entities/Profile";
 import { LiveStatusPill } from "../ui/LiveStatusPill";
 import { CountUp } from "../motion/CountUp";
 import { HeroPhoto } from "../ui/HeroPhoto";
+import { CardSpotlight } from "../ui/CardSpotlight";
 
 export interface HeroProps {
   locale: Locale;
@@ -67,17 +68,25 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* Dual CTAs (1 Primary, 1 Secondary) */}
             <div className="flex flex-wrap items-center gap-3.5 w-full sm:w-auto">
-              <Link
-                href={`/${locale}/work`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-90 transition-all shadow-md shadow-[var(--accent)]/20 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
+              <a
+                href="#case-studies"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const target = document.getElementById("case-studies");
+                  if (target) {
+                    target.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", "#case-studies");
+                  }
+                }}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto cursor-pointer"
               >
                 <span>{messages.hero.ctaWork}</span>
                 <ArrowDown className="w-4 h-4" />
-              </Link>
+              </a>
 
               <Link
                 href={`/${locale}/contact`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[16px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{messages.hero.ctaContact}</span>
                 <ArrowUpRight className="w-4 h-4 text-[var(--text-muted)]" />
@@ -110,20 +119,23 @@ export const Hero: React.FC<HeroProps> = ({
               const labelText = resolveLocalized(metric.label, locale).text;
               const descText = resolveLocalized(metric.description, locale).text;
               return (
-                <div
+                <CardSpotlight
                   key={idx}
-                  className="flex flex-col p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xs transition-transform duration-200 hover:-translate-y-0.5"
+                  size={240}
+                  className="flex flex-col rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl cursor-default"
                 >
-                  <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--accent)] mb-1">
-                    <CountUp value={metric.value} />
-                  </span>
-                  <span className="text-sm font-semibold text-[var(--text)] mb-0.5">
-                    {labelText}
-                  </span>
-                  <span className="text-xs text-[var(--text-muted)] leading-relaxed">
-                    {descText}
-                  </span>
-                </div>
+                  <div className="flex flex-col p-4 h-full">
+                    <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--accent)] mb-1">
+                      <CountUp value={metric.value} />
+                    </span>
+                    <span className="text-sm font-semibold text-[var(--text)] mb-0.5">
+                      {labelText}
+                    </span>
+                    <span className="text-xs text-[var(--text-muted)] leading-relaxed">
+                      {descText}
+                    </span>
+                  </div>
+                </CardSpotlight>
               );
             })}
           </div>

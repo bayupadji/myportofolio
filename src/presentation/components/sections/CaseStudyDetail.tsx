@@ -115,7 +115,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
             {project.metrics.map((m, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] shadow-xs"
+                className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--background)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-lg"
               >
                 <div className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)]">
                   {m.value}
@@ -308,7 +308,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
                 {project.solutionStates.map((state, idx) => (
                   <div
                     key={idx}
-                    className="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] flex flex-col justify-between hover:border-[var(--accent)]/50 transition-colors"
+                    className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex flex-col justify-between shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
@@ -353,7 +353,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
                 {project.learnings.map((l, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] flex items-start gap-3"
+                    className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex items-start gap-3 shadow-xs transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-md"
                   >
                     <div className="flex h-6 w-6 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                       {idx + 1}
@@ -371,7 +371,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
               {prevProject ? (
                 <Link
                   href={`/${locale}/work/${prevProject.slug}`}
-                  className="flex flex-col items-start p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] transition-colors w-full sm:w-1/2"
+                  className="flex flex-col items-start p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl w-full sm:w-1/2"
                 >
                   <span className="text-xs text-[var(--text-muted)] flex items-center gap-1 mb-1">
                     <ArrowLeft className="w-3.5 h-3.5" />
@@ -388,7 +388,7 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
               {nextProject && (
                 <Link
                   href={`/${locale}/work/${nextProject.slug}`}
-                  className="flex flex-col items-end p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] transition-colors w-full sm:w-1/2 text-right"
+                  className="flex flex-col items-end p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-xl w-full sm:w-1/2 text-right"
                 >
                   <span className="text-xs text-[var(--text-muted)] flex items-center gap-1 mb-1">
                     {messages.caseStudy.nextProject}

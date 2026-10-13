@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
 
           <Link
             href={`/${locale}/contact?topic=freelance`}
-            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 transition-all shadow-sm shadow-[var(--accent)]/20 active:scale-[0.98] min-h-[40px]"
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-95 shadow-sm shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[40px]"
           >
             <Sparkles className="w-3.5 h-3.5" />
             {messages.nav.letsTalk}
@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ locale, messages }) => {
           {/* Mobile Menu Trigger */}
           <button
             onClick={toggleMobileDrawer}
-            className="p-2.5 md:hidden rounded-lg border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="p-2.5 md:hidden rounded-[16px] border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label={messages.nav.menu}
           >
             <Menu className="w-5 h-5" />

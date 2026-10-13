@@ -16,6 +16,7 @@ import {
   useAdminProjects,
   useUpdateProjectStatusMutation,
 } from "@/presentation/hooks/useAdminQueries";
+import { ImageUploadDropzone } from "./ImageUploadDropzone";
 
 export interface AdminDashboardProps {
   projects: Project[];
@@ -31,9 +32,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const { data: projects = initialProjects } = useAdminProjects(initialProjects);
   const updateStatusMutation = useUpdateProjectStatusMutation();
 
-  const [activeTab, setActiveTab] = useState<"projects" | "messages" | "checklist">(
-    "projects"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "projects" | "messages" | "checklist" | "media"
+  >("projects");
   const [isFreelanceAvailable, setIsFreelanceAvailable] = useState<boolean>(
     profile.isAvailableForFreelance
   );
@@ -54,7 +55,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="flex items-center gap-3">
             <Link
               href="/en"
-              className="p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--surface-hover)] text-[var(--text-muted)] min-h-[40px] flex items-center justify-center"
+              className="p-2 rounded-[16px] border border-[var(--border)] hover:bg-[var(--surface-hover)] text-[var(--text-muted)] min-h-[40px] flex items-center justify-center"
               title="Return to public portfolio"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -75,7 +76,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsFreelanceAvailable(!isFreelanceAvailable)}
-              className="px-3.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-hover)] text-xs font-semibold flex items-center gap-2 min-h-[36px]"
+              className="px-3.5 py-1.5 rounded-[16px] border border-[var(--border)] bg-[var(--surface-hover)] text-xs font-semibold flex items-center gap-2 min-h-[36px]"
             >
               <span>Availability:</span>
               {isFreelanceAvailable ? (
@@ -90,10 +91,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
       {/* Tabs */}
       <div className="border-b border-[var(--border)] bg-[var(--surface)]">
-        <div className="mx-auto max-w-[1200px] px-4 sm:px-8 flex items-center gap-4">
+        <div className="mx-auto max-w-[1200px] px-4 sm:px-8 flex items-center gap-4 overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveTab("projects")}
-            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] ${
+            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] whitespace-nowrap ${
               activeTab === "projects"
                 ? "border-[var(--accent)] text-[var(--accent)]"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text)]"
@@ -103,7 +104,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </button>
           <button
             onClick={() => setActiveTab("messages")}
-            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] ${
+            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] whitespace-nowrap ${
               activeTab === "messages"
                 ? "border-[var(--accent)] text-[var(--accent)]"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text)]"
@@ -113,13 +114,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </button>
           <button
             onClick={() => setActiveTab("checklist")}
-            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] ${
+            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] whitespace-nowrap ${
               activeTab === "checklist"
                 ? "border-[var(--accent)] text-[var(--accent)]"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text)]"
             }`}
           >
             Pre-Publish QA Checklist
+          </button>
+          <button
+            onClick={() => setActiveTab("media")}
+            className={`py-3.5 px-3 text-sm font-semibold border-b-2 transition-colors min-h-[44px] whitespace-nowrap ${
+              activeTab === "media"
+                ? "border-[var(--accent)] text-[var(--accent)]"
+                : "border-transparent text-[var(--text-muted)] hover:text-[var(--text)]"
+            }`}
+          >
+            Storage & Media (Compressor)
           </button>
         </div>
       </div>
@@ -171,14 +182,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         setChecklistProject(p);
                         setActiveTab("checklist");
                       }}
-                      className="px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs font-semibold hover:bg-[var(--surface-hover)] min-h-[36px]"
+                      className="px-3 py-1.5 rounded-[16px] border border-[var(--border)] text-xs font-semibold hover:bg-[var(--surface-hover)] min-h-[36px]"
                     >
                       QA Checklist
                     </button>
 
                     <button
                       onClick={() => toggleProjectStatus(p.id, p.status)}
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors min-h-[36px] ${
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[16px] text-xs font-bold transition-colors min-h-[36px] ${
                         p.status === "published"
                           ? "bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/25 hover:bg-[var(--success)]/20"
                           : "bg-zinc-500/10 text-zinc-500 border border-zinc-500/25 hover:bg-zinc-500/20"
@@ -197,7 +208,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <Link
                       href={`/en/work/${p.slug}`}
                       target="_blank"
-                      className="p-2 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] min-h-[36px] flex items-center justify-center"
+                      className="p-2 rounded-[16px] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] min-h-[36px] flex items-center justify-center"
                       title="Preview public page"
                     >
                       <ExternalLink className="w-4 h-4" />
@@ -308,6 +319,40 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     Detailed state specifications are documented in the case study gallery.
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Media & Image Compressor Tab */}
+        {activeTab === "media" && (
+          <div className="space-y-8 max-w-4xl">
+            <div>
+              <h2 className="text-xl font-bold">Supabase Storage & Mandatory Image Compressor</h2>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Semua gambar otomatis dikompresi di sisi client (WebP, kualitas 80%, dimensi presisi) sebelum diunggah ke Supabase Storage, menghemat kuota penyimpanan hingga 85-95%.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Cover / Project Image Dropzone */}
+              <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs">
+                <ImageUploadDropzone
+                  label="1. Project Cover / Case Study Asset"
+                  preset="cover"
+                  bucket="portfolio-assets"
+                  folder="projects"
+                />
+              </div>
+
+              {/* Profile Avatar Dropzone */}
+              <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs">
+                <ImageUploadDropzone
+                  label="2. Profile Avatar / Headshot"
+                  preset="avatar"
+                  bucket="portfolio-assets"
+                  folder="avatars"
+                />
               </div>
             </div>
           </div>

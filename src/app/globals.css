@@ -65,6 +65,11 @@ body {
   flex-direction: column;
 }
 
+/* Enforce 16px border-radius on buttons across the entire design system */
+button {
+  border-radius: 16px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -126,6 +131,76 @@ body {
   }
   78% {
     transform: translateY(-13px) rotate(-0.15deg);
+  }
+}
+
+/* Organic random-feel bobbing system (coprime Y bobbing + X sway/rotation) */
+@keyframes bob-y {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  18% {
+    transform: translateY(-5px);
+  }
+  38% {
+    transform: translateY(-15px);
+  }
+  62% {
+    transform: translateY(-3px);
+  }
+  82% {
+    transform: translateY(-11px);
+  }
+}
+
+@keyframes bob-drift {
+  0%, 100% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  24% {
+    transform: translateX(4px) rotate(0.6deg);
+  }
+  52% {
+    transform: translateX(-4px) rotate(-0.5deg);
+  }
+  76% {
+    transform: translateX(3px) rotate(0.35deg);
+  }
+  92% {
+    transform: translateX(-1px) rotate(-0.2deg);
+  }
+}
+
+@keyframes bob-y-alt {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  22% {
+    transform: translateY(-13px);
+  }
+  45% {
+    transform: translateY(-4px);
+  }
+  68% {
+    transform: translateY(-16px);
+  }
+  86% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes bob-drift-alt {
+  0%, 100% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  26% {
+    transform: translateX(-5px) rotate(-0.65deg);
+  }
+  54% {
+    transform: translateX(3px) rotate(0.55deg);
+  }
+  78% {
+    transform: translateX(-2px) rotate(-0.35deg);
   }
 }
 

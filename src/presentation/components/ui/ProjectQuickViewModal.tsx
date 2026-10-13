@@ -90,7 +90,7 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label={messages.work.closeQuickView}
-            className="absolute top-4 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md border border-white/20 hover:bg-black/80 transition-colors focus-visible:outline-2"
+            className="absolute top-4 right-4 flex h-11 w-11 items-center justify-center rounded-[16px] bg-black/60 text-white backdrop-blur-md border border-white/20 hover:bg-black/80 transition-colors focus-visible:outline-2"
           >
             <X className="w-5 h-5" />
           </button>
@@ -194,7 +194,7 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-lg border border-[var(--border)] text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors min-h-[44px]"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-[16px] border border-[var(--border)] text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors min-h-[44px]"
             >
               {messages.work.closeQuickView}
             </button>
@@ -202,7 +202,7 @@ export const ProjectQuickViewModal: React.FC<ProjectQuickViewModalProps> = ({
             <Link
               href={`/${locale}/work/${project.slug}`}
               onClick={onClose}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 shadow-md shadow-[var(--accent)]/20 transition-all min-h-[44px] active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 shadow-md shadow-[var(--accent)]/20 transition-all min-h-[44px] active:scale-[0.98]"
             >
               <span>{messages.work.viewFullStudy}</span>
               <ArrowUpRight className="w-4 h-4" />

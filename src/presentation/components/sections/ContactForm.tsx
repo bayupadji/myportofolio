@@ -137,7 +137,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   <button
                     type="button"
                     onClick={copyEmailToClipboard}
-                    className="p-2.5 rounded-lg border border-[var(--border)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    className="p-2.5 rounded-[16px] border border-[var(--border)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                     aria-label={messages.contact.copyEmail}
                     title={messages.contact.copyEmail}
                   >
@@ -217,7 +217,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   </p>
                   <button
                     onClick={() => setSuccess(false)}
-                    className="px-6 py-2.5 rounded-lg border border-[var(--border)] text-sm font-semibold hover:bg-[var(--surface-hover)] min-h-[44px]"
+                    className="px-6 py-2.5 rounded-[16px] border border-[var(--border)] text-sm font-semibold hover:bg-[var(--surface-hover)] min-h-[44px]"
                   >
                     {locale === "id" ? "Kirim Pesan Lain" : "Send Another Message"}
                   </button>
@@ -332,7 +332,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   <button
                     type="submit"
                     disabled={contactMutation.isPending}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-90 disabled:opacity-50 transition-all shadow-md shadow-[var(--accent)]/20 min-h-[48px]"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 disabled:opacity-50 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px]"
                   >
                     {contactMutation.isPending ? (
                       <span>{messages.contact.submitting}</span>

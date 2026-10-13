@@ -1,10 +1,13 @@
 import React from "react";
 import {
   FileText,
-  Briefcase,
   GraduationCap,
   Sparkles,
   MapPin,
+  CreditCard,
+  Truck,
+  Layers,
+  Star,
 } from "lucide-react";
 import { Profile } from "@/domain/entities/Profile";
 import { Experience } from "@/domain/entities/Experience";
@@ -61,7 +64,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <a
                 href={profile.cvUrl}
                 download
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-sm hover:opacity-90 shadow-md shadow-[var(--accent)]/20 transition-all min-h-[44px]"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-sm hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[44px]"
               >
                 <FileText className="w-4 h-4" />
                 <span>{messages.about.downloadCv}</span>
@@ -85,59 +88,143 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           </div>
         </div>
 
-        {/* Career Timeline with Impact Bullets */}
-        <section className="py-16 border-b border-[var(--border)]">
-          <div className="flex items-center gap-2 mb-10">
-            <Briefcase className="w-5 h-5 text-[var(--accent)]" />
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text)]">
-              {messages.about.experienceTitle}
-            </h2>
+        {/* Career Timeline with Impact Bullets (Faithfully crafted after indrakusuma.dev/#experience) */}
+        <section id="experience" className="py-16 sm:py-20 border-b border-[var(--border)] scroll-mt-20">
+          {/* Section Header with Numbered Kicker & Divider line */}
+          <div className="flex items-center gap-3.5 mb-3">
+            <span className="font-mono text-[var(--accent)] text-xs sm:text-sm font-semibold tracking-wider uppercase">
+              01 — {locale === "id" ? "Pengalaman & Dampak" : "Experience & Impact"}
+            </span>
+            <span className="h-px flex-1 max-w-[140px] bg-gradient-to-r from-[var(--accent)]/60 to-transparent" />
           </div>
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text)] mb-12">
+            {locale === "id" ? "Tempat saya menciptakan dampak nyata" : "Where I’ve made an impact"}
+          </h2>
 
-          <div className="space-y-12 max-w-4xl">
-            {experiences.map((exp) => (
-              <div
-                key={exp.id}
-                className="relative pl-8 sm:pl-10 border-l-2 border-[var(--border)] pb-8 last:pb-0"
-              >
-                {/* Timeline node */}
-                <div className="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full bg-[var(--accent)] ring-4 ring-[var(--surface)]" />
+          {/* Timeline Rail & Items Container */}
+          <div className="relative w-full">
+            {/* Vertical Spine Line (Perfect center aligned with badges) */}
+            <span
+              aria-hidden="true"
+              className="absolute top-4 bottom-4 left-7 sm:left-8 -translate-x-1/2 w-0.5 rounded-full bg-[var(--accent)]/30"
+            />
 
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-2">
-                  <h3 className="text-xl font-bold text-[var(--text)]">
-                    {resolveLocalized(exp.role, locale).text}{" "}
-                    <span className="text-[var(--accent)] font-semibold">
-                      @ {exp.company}
-                    </span>
-                  </h3>
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--text-muted)] w-fit">
-                    {resolveLocalized(exp.period, locale).text}
-                  </span>
-                </div>
+            <div className="space-y-8 sm:space-y-10 w-full">
+              {experiences.map((exp, expIdx) => {
+                const roleText = resolveLocalized(exp.role, locale).text;
+                const periodText = resolveLocalized(exp.period, locale).text;
+                const isCurrent =
+                  periodText.toLowerCase().includes("present") ||
+                  periodText.toLowerCase().includes("sekarang") ||
+                  periodText.toLowerCase().includes("now");
 
-                <p className="text-xs text-[var(--text-muted)] mb-4">{exp.location}</p>
+                return (
+                  <div
+                    key={exp.id}
+                    className="relative pl-16 sm:pl-20 w-full"
+                  >
+                    {/* Pulsing Radar Ping for Current Role (Shared center anchor) */}
+                    {isCurrent && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute top-1.5 left-7 sm:left-8 -translate-x-1/2 z-1 h-11 w-11 rounded-[14px] bg-[var(--accent)]/25 animate-ping pointer-events-none"
+                      />
+                    )}
 
-                {/* Impact bullets adhering to action + context + measurable result */}
-                <ul className="space-y-2.5 mb-5 text-sm sm:text-base text-[var(--text)] leading-relaxed">
-                  {exp.bullets.map((b, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <span className="text-[var(--accent)] font-bold mt-1 shrink-0">
-                        •
-                      </span>
-                      <span>{resolveLocalized(b.fullText, locale).text}</span>
-                    </li>
-                  ))}
-                </ul>
+                    {/* Company Logo / Monogram Badge (Shared center anchor) */}
+                    <div
+                      className="absolute top-1.5 left-7 sm:left-8 -translate-x-1/2 z-10 h-11 w-11 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] shadow-md flex items-center justify-center overflow-hidden"
+                      title={exp.company}
+                    >
+                      {exp.logoUrl ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={exp.logoUrl}
+                          alt={`${exp.company} logo`}
+                          className="h-full w-full object-contain p-1 rounded-[12px]"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full w-full font-bold text-sm text-[var(--accent)]">
+                          {expIdx === 0 ? (
+                            <CreditCard className="w-5 h-5 text-[var(--accent)]" />
+                          ) : expIdx === 1 ? (
+                            <Truck className="w-5 h-5 text-[var(--accent)]" />
+                          ) : (
+                            <Layers className="w-5 h-5 text-[var(--accent)]" />
+                          )}
+                        </div>
+                      )}
+                    </div>
 
-                <div className="flex flex-wrap gap-1.5">
-                  {exp.skillsUsed.map((skill) => (
-                    <Tag key={skill} size="sm">
-                      {skill}
-                    </Tag>
-                  ))}
-                </div>
-              </div>
-            ))}
+                    {/* Experience Card Container (with hover lift + accent outline, FULL WIDTH) */}
+                    <div className="w-full rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8 shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[var(--accent)] hover:shadow-2xl">
+                      {/* Top Row: Company Name & Highlight Pill */}
+                      <div className="mb-4 flex flex-wrap items-center justify-between gap-2.5">
+                        <h3 className="text-xl font-bold tracking-tight text-[var(--text)]">
+                          {exp.company}
+                        </h3>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border border-[var(--border)] bg-[var(--surface-hover)] text-[var(--accent)] whitespace-nowrap shadow-2xs">
+                          <Star className="w-3.5 h-3.5 fill-[var(--accent)] text-[var(--accent)]" />
+                          <span>
+                            {expIdx === 0
+                              ? "Core Scale-Up Impact"
+                              : expIdx === 1
+                              ? "Fleet OS Overhaul"
+                              : "14+ Products Shipped"}
+                          </span>
+                        </span>
+                      </div>
+
+                      {/* Role & Period Details Divider */}
+                      <div className="border-t border-[var(--border)] pt-4">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                          <span className="text-[16px] sm:text-[17px] font-bold text-[var(--text)]">
+                            {roleText}
+                          </span>
+                          {isCurrent && (
+                            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-[var(--success)] bg-[var(--success)]/10 border border-[var(--success)]/20">
+                              {locale === "id" ? "AKTIF" : "CURRENT"}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Period & Location Meta */}
+                        <div className="font-mono text-xs text-[var(--text-muted)] flex items-center gap-x-2.5 mb-4">
+                          <span>{periodText}</span>
+                          <span aria-hidden="true" className="text-[var(--border)]">•</span>
+                          <span>{exp.location}</span>
+                        </div>
+
+                        {/* Impact Bullets with custom accent dot */}
+                        <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
+                          {exp.bullets.map((b, bIdx) => (
+                            <li
+                              key={bIdx}
+                              className="relative pl-5 text-sm sm:text-[14.5px] text-[var(--text-muted)] leading-[1.6]"
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="absolute top-[9px] left-0 h-1.5 w-1.5 rounded-full bg-[var(--accent)]"
+                              />
+                              <span>{resolveLocalized(b.fullText, locale).text}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* Skills / Tools Used */}
+                        <div className="mt-5 pt-4 border-t border-[var(--border)]/60 flex flex-wrap gap-1.5">
+                          {exp.skillsUsed.map((skill) => (
+                            <Tag key={skill} size="sm">
+                              {skill}
+                            </Tag>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
@@ -156,7 +243,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               return (
                 <div
                   key={group}
-                  className="p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-xs"
+                  className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl"
                 >
                   <h3 className="text-base font-bold text-[var(--text)] pb-3 mb-4 border-b border-[var(--border)] flex items-center justify-between">
                     <span>{group}</span>
@@ -193,7 +280,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-            <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+            <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl">
               <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
                 2015 - 2019
               </span>
@@ -205,7 +292,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               </p>
             </div>
 
-            <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+            <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl">
               <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
                 2022
               </span>

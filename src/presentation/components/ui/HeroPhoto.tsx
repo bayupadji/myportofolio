@@ -34,31 +34,75 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
 
   const isAbout = variant === "about";
 
-  // Distinct organic idle float timings for hero vs about to feel alive and non-mechanical
-  const mainFloatStyle = {
-    animation: isAbout
-      ? "ik-float-alt 7.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite -2.4s"
-      : "ik-float-smooth 6.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 0s",
-  };
-
-  const badgeFloatStyle = {
-    animation: isAbout
-      ? "ik-float-smooth 7.4s ease-in-out infinite -5s"
-      : "ik-float-alt 6.5s ease-in-out infinite -3.2s",
-  };
-
-  const toolFloatStyle = {
-    animation: isAbout
-      ? "ik-float-alt 7s ease-in-out infinite -1.2s"
-      : "ik-float-smooth 6.2s ease-in-out infinite -0.8s",
-  };
-
   return (
     <div
       className={`relative aspect-square w-[clamp(260px,70vw,420px)] justify-self-center select-none ${className}`}
       aria-label={`${name} - ${role}`}
     >
-      {/* 1. Orbiting / marching dashed ellipse SVG (Identical to indrakusuma.dev) */}
+      {/* Embedded CSS keyframes: Guarantees animation works without depending on external CSS compilation or cache */}
+      <style>{`
+        @keyframes ik-orbit-spin {
+          to {
+            stroke-dashoffset: -22px;
+          }
+        }
+
+        /* Hero coprime bobbing (X drift + Y vertical bobbing) */
+        @keyframes hero-bob-y {
+          0%, 100% { transform: translateY(0px); }
+          22% { transform: translateY(-7px); }
+          46% { transform: translateY(-20px); }
+          72% { transform: translateY(-5px); }
+          88% { transform: translateY(-14px); }
+        }
+
+        @keyframes hero-bob-x {
+          0%, 100% { transform: translateX(0px) rotate(0deg); }
+          25% { transform: translateX(6px) rotate(0.8deg); }
+          52% { transform: translateX(-5px) rotate(-0.7deg); }
+          75% { transform: translateX(4px) rotate(0.5deg); }
+          90% { transform: translateX(-2px) rotate(-0.3deg); }
+        }
+
+        /* About coprime bobbing (distinct timing & phase) */
+        @keyframes about-bob-y {
+          0%, 100% { transform: translateY(0px); }
+          20% { transform: translateY(-16px); }
+          48% { transform: translateY(-6px); }
+          70% { transform: translateY(-22px); }
+          86% { transform: translateY(-10px); }
+        }
+
+        @keyframes about-bob-x {
+          0%, 100% { transform: translateX(0px) rotate(0deg); }
+          28% { transform: translateX(-6px) rotate(-0.85deg); }
+          55% { transform: translateX(5px) rotate(0.7deg); }
+          80% { transform: translateX(-3px) rotate(-0.4deg); }
+        }
+
+        /* Badge floating animations */
+        @keyframes badge-float-1 {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-9px); }
+        }
+
+        @keyframes badge-float-2 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-11px) rotate(2deg); }
+        }
+
+        /* Pure CSS hover-pause: When hovered, bobbing pauses and lifts; resumes when unhovered */
+        .ik-bob-container:hover .ik-bob-animated,
+        .ik-bob-container:hover .ik-drift-animated {
+          animation-play-state: paused !important;
+        }
+
+        .ik-badge-hover:hover {
+          animation-play-state: paused !important;
+        }
+      `}</style>
+
+      {/* 1. Orbiting / marching dashed ellipse SVG */}
       <svg
         aria-hidden="true"
         viewBox="0 0 400 400"
@@ -71,10 +115,13 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
           rx="215"
           ry="92"
           transform="rotate(-14 200 200)"
-          strokeWidth="1.3"
+          strokeWidth="1.4"
           strokeDasharray="3 8"
-          className="ik-orbit-march"
-          style={{ stroke: "var(--accent)", opacity: 0.45 }}
+          style={{
+            stroke: "var(--accent)",
+            opacity: 0.45,
+            animation: "ik-orbit-spin 1.4s linear infinite",
+          }}
         />
       </svg>
 
@@ -87,51 +134,75 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
         }}
       />
 
-      {/* 3. Main photo card with idle organic float + interactive hover lift */}
+      {/* 3. Main photo card with multi-axis organic random bobbing (PAUSED WHEN HOVERED) */}
       <div
-        className="absolute top-[4%] left-[8%] w-[84%] pointer-events-auto"
-        style={mainFloatStyle}
+        className="ik-bob-container absolute top-[4%] left-[8%] w-[84%] pointer-events-auto"
       >
+        {/* Layer 1: X drift & tilt */}
         <div
-          className="group cursor-pointer rounded-[clamp(16px,5.5%,24px)] border border-[var(--border)] bg-[var(--surface)] p-[2.5%] shadow-xl transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.025] hover:border-[var(--accent)]/60 hover:shadow-2xl active:scale-[0.99]"
-          title={`${name} — ${role}`}
+          className="ik-drift-animated"
+          style={{
+            animation: isAbout
+              ? "about-bob-x 7.8s ease-in-out infinite -2.4s"
+              : "hero-bob-x 6.8s ease-in-out infinite 0s",
+          }}
         >
-          {/* Terminal Header dots & title */}
+          {/* Layer 2: Y vertical bobbing */}
           <div
-            aria-hidden="true"
-            className="flex items-center gap-1.5 px-[3%] pt-[1%] pb-[3%]"
+            className="ik-bob-animated"
+            style={{
+              animation: isAbout
+                ? "about-bob-y 5.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite -1.8s"
+                : "hero-bob-y 4.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 0s",
+            }}
           >
-            <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F56] transition-opacity group-hover:opacity-90" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E] transition-opacity group-hover:opacity-90" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#27C93F] transition-opacity group-hover:opacity-90" />
-            <span className="text-[var(--text-muted)] ml-3 font-mono text-[11px] group-hover:text-[var(--text)] transition-colors">
-              {isAbout ? "about-bayu.md" : "bayu.design"}
-            </span>
-          </div>
+            {/* Layer 3: Interactive Card with prominent Hover Lift */}
+            <div
+              className="group cursor-pointer rounded-[clamp(16px,5.5%,24px)] border border-[var(--border)] bg-[var(--surface)] p-[2.5%] shadow-xl transition-all duration-300 ease-out hover:-translate-y-3 hover:scale-[1.03] hover:border-[var(--accent)] hover:shadow-2xl active:scale-[0.99]"
+              title={`${name} — ${role}`}
+            >
+              {/* Terminal Header dots & title */}
+              <div
+                aria-hidden="true"
+                className="flex items-center gap-1.5 px-[3%] pt-[1%] pb-[3%]"
+              >
+                <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F56] transition-opacity group-hover:opacity-90" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E] transition-opacity group-hover:opacity-90" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#27C93F] transition-opacity group-hover:opacity-90" />
+                <span className="text-[var(--text-muted)] ml-3 font-mono text-[11px] group-hover:text-[var(--text)] transition-colors">
+                  {isAbout ? "about-bayu.md" : "bayu.design"}
+                </span>
+              </div>
 
-          {/* Photo Container */}
-          <div className="bg-[var(--surface-hover)] aspect-[1/0.92] overflow-hidden rounded-[clamp(11px,4%,16px)] relative">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imgSrc}
-              alt={name}
-              onError={handleImageError}
-              fetchPriority="high"
-              loading="eager"
-              width={800}
-              height={800}
-              className="h-full w-full object-cover object-[50%_20%] transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-            />
+              {/* Photo Container */}
+              <div className="bg-[var(--surface-hover)] aspect-[1/0.92] overflow-hidden rounded-[clamp(11px,4%,16px)] relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imgSrc}
+                  alt={name}
+                  onError={handleImageError}
+                  fetchPriority="high"
+                  loading="eager"
+                  width={800}
+                  height={800}
+                  className="h-full w-full object-cover object-[50%_20%] transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 4. Bottom-Left Floating Code/Spec Badge (with counter-phase float + hover lift) */}
+      {/* 4. Bottom-Left Floating Code/Spec Badge (PAUSED WHEN HOVERED) */}
       <div
-        className="absolute bottom-[3%] left-[-4%] sm:bottom-[2%] sm:left-[-6%] z-10 pointer-events-auto"
-        style={badgeFloatStyle}
+        className="ik-badge-hover absolute bottom-[3%] left-[-4%] sm:bottom-[2%] sm:left-[-6%] z-10 pointer-events-auto"
+        style={{
+          animation: isAbout
+            ? "badge-float-1 5.9s ease-in-out infinite -2.8s"
+            : "badge-float-1 5.2s ease-in-out infinite -1.5s",
+        }}
       >
-        <div className="group cursor-pointer rounded-[14px] sm:rounded-[16px] border border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-105 hover:border-[var(--accent)]/60 hover:shadow-2xl font-mono text-[10px] leading-[1.65] sm:text-[12px] sm:leading-[1.7]">
+        <div className="group cursor-pointer rounded-[14px] sm:rounded-[16px] border border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-xl transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-105 hover:border-[var(--accent)] hover:shadow-2xl font-mono text-[10px] leading-[1.65] sm:text-[12px] sm:leading-[1.7]">
           <p className="sr-only">
             {role} focusing on {tagline}
           </p>
@@ -154,13 +225,17 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
         </div>
       </div>
 
-      {/* 5. Top-Right Floating Tool Badge (Figma icon with float + hover lift/spin) */}
+      {/* 5. Top-Right Floating Tool Badge (Figma icon, PAUSED WHEN HOVERED) */}
       <div
         aria-hidden="true"
-        className="absolute top-[calc(4%-18px)] right-[calc(8%-18px)] sm:top-[calc(4%-22px)] sm:right-[calc(8%-22px)] z-10 pointer-events-auto"
-        style={toolFloatStyle}
+        className="ik-badge-hover absolute top-[calc(4%-18px)] right-[calc(8%-18px)] sm:top-[calc(4%-22px)] sm:right-[calc(8%-22px)] z-10 pointer-events-auto"
+        style={{
+          animation: isAbout
+            ? "badge-float-2 6.3s ease-in-out infinite -1.2s"
+            : "badge-float-2 5.5s ease-in-out infinite -0.8s",
+        }}
       >
-        <div className="group cursor-pointer h-11 w-11 sm:h-13 sm:w-13 rounded-[14px] sm:rounded-[16px] border border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md shadow-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-110 hover:rotate-6 hover:border-[var(--accent)]/60 hover:shadow-2xl flex items-center justify-center p-2.5">
+        <div className="group cursor-pointer h-11 w-11 sm:h-13 sm:w-13 rounded-[14px] sm:rounded-[16px] border border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md shadow-xl transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-110 hover:rotate-6 hover:border-[var(--accent)] hover:shadow-2xl flex items-center justify-center p-2.5">
           {/* Figma Logo SVG */}
           <svg
             className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:scale-110"

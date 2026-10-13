@@ -40,14 +40,14 @@ export const ThemeToggle: React.FC = () => {
 
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-lg bg-[var(--surface)] border border-[var(--border)] animate-pulse" />
+      <div className="w-10 h-10 rounded-[16px] bg-[var(--surface)] border border-[var(--border)] animate-pulse" />
     );
   }
 
   return (
     <button
       onClick={cycleTheme}
-      className="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
+      className="p-2.5 rounded-[16px] border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
       aria-label={`Current theme: ${theme}. Click to change theme.`}
       title={`Theme: ${theme.toUpperCase()} (Click to toggle)`}
     >

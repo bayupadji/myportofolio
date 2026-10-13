@@ -68,7 +68,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
             </span>
             <button
               onClick={() => setMobileDrawerOpen(false)}
-              className="p-2.5 rounded-lg border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] min-w-[44px] min-h-[44px] flex items-center justify-center"
+              className="p-2.5 rounded-[16px] border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label={messages.nav.close}
             >
               <X className="w-5 h-5" />
@@ -82,7 +82,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center justify-between px-4 py-3.5 rounded-lg text-lg font-medium transition-colors min-h-[48px] ${
+                  className={`flex items-center justify-between px-4 py-3.5 rounded-[16px] text-lg font-medium transition-colors min-h-[48px] ${
                     isActive
                       ? "bg-[var(--accent)]/10 text-[var(--accent)] font-semibold"
                       : "text-[var(--text)] hover:bg-[var(--surface-hover)]"
@@ -108,7 +108,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
           <a
             href="/cv/Bayu-Product-Designer-Resume.pdf"
             download
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg border border-[var(--border)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] min-h-[44px]"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-[16px] border border-[var(--border)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] min-h-[44px]"
           >
             <FileText className="w-4 h-4 text-[var(--accent)]" />
             {messages.nav.resume}
@@ -116,7 +116,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ locale, messages }) 
 
           <Link
             href={`/${locale}/contact?topic=freelance`}
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 min-h-[44px]"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-semibold hover:opacity-90 min-h-[44px]"
           >
             {messages.nav.letsTalk}
           </Link>

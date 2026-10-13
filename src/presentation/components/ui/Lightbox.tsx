@@ -43,7 +43,7 @@ export const Lightbox: React.FC = () => {
         <button
           ref={closeBtnRef}
           onClick={closeLightbox}
-          className="absolute -top-12 right-0 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus-visible:outline-white"
+          className="absolute -top-12 right-0 p-2.5 rounded-[16px] bg-white/10 hover:bg-white/20 text-white transition-colors focus-visible:outline-white"
           aria-label="Close enlarged view"
         >
           <X className="w-6 h-6" />

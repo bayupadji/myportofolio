@@ -4,6 +4,7 @@ import { Locale, resolveLocalized } from "@/domain/value-objects/LocalizedText";
 import { getMessages } from "@/presentation/i18n";
 import { container } from "@/infrastructure/container";
 import { CaseStudyDetail } from "@/presentation/components/sections/CaseStudyDetail";
+import { CtaCardSection } from "@/presentation/components/sections/CtaCardSection";
 
 interface CaseStudyPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -63,12 +64,15 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
     currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;
 
   return (
-    <CaseStudyDetail
-      project={project}
-      prevProject={prevProject}
-      nextProject={nextProject}
-      locale={validLocale}
-      messages={messages}
-    />
+    <div className="flex flex-col w-full">
+      <CaseStudyDetail
+        project={project}
+        prevProject={prevProject}
+        nextProject={nextProject}
+        locale={validLocale}
+        messages={messages}
+      />
+      <CtaCardSection locale={validLocale} messages={messages} />
+    </div>
   );
 }

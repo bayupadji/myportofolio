@@ -64,7 +64,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
               role="tab"
               aria-selected={isSelected}
               onClick={() => setActiveCategory(cat.id)}
-              className={`group flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-150 min-h-[40px] cursor-pointer ${
+              className={`group flex items-center gap-2 px-4 py-2 rounded-[16px] text-sm font-medium whitespace-nowrap transition-all duration-150 min-h-[40px] cursor-pointer ${
                 isSelected
                   ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm font-semibold"
                   : "bg-[var(--surface)] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)]"
@@ -95,7 +95,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
           return (
             <CardSpotlight
               key={project.id}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs hover:border-[var(--accent)]/50 transition-all duration-200 flex flex-col group"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-2xl flex flex-col group"
             >
               {/* Thumbnail Container */}
               <div className="relative aspect-16/10 w-full overflow-hidden bg-[var(--surface-hover)]">
@@ -122,7 +122,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
                 <button
                   type="button"
                   onClick={() => setQuickViewProject(project)}
-                  className="absolute top-3 right-3 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/75 backdrop-blur-md text-white text-xs font-medium hover:bg-black/90 active:scale-95 shadow-lg border border-white/10 cursor-pointer"
+                  className="absolute top-3 right-3 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] bg-black/75 backdrop-blur-md text-white text-xs font-medium hover:bg-black/90 active:scale-95 shadow-lg border border-white/10 cursor-pointer"
                   aria-label={`${messages.work.quickView} ${title}`}
                 >
                   <Eye className="w-3.5 h-3.5" />
@@ -130,7 +130,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
                 </button>
 
                 {primaryMetric && (
-                  <div className="absolute bottom-3 right-3 bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] rounded-lg px-3 py-1.5 shadow-md flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]">
+                  <div className="absolute bottom-3 right-3 bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] rounded-[16px] px-3 py-1.5 shadow-md flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]">
                     <CountUp value={primaryMetric.value} />
                     <span className="text-[var(--text-muted)] font-normal text-[11px]">
                       {resolveLocalized(primaryMetric.label, locale).text}

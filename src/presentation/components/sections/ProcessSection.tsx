@@ -4,6 +4,7 @@ import React from "react";
 import { Search, Compass, LayoutGrid, CheckCircle } from "lucide-react";
 import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
+import { CardSpotlight } from "../ui/CardSpotlight";
 
 export interface ProcessSectionProps {
   locale: Locale;
@@ -51,20 +52,22 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ messages }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, idx) => (
-            <div
+            <CardSpotlight
               key={idx}
-              className="flex flex-col p-6 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xs hover:border-[var(--accent)]/40 transition-colors"
+              className="flex flex-col rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl cursor-default"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 mb-4">
-                {step.icon}
+              <div className="flex flex-col p-6 h-full">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 mb-4">
+                  {step.icon}
+                </div>
+                <h3 className="text-base font-bold text-[var(--text)] mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
-              <h3 className="text-base font-bold text-[var(--text)] mb-2">
-                {step.title}
-              </h3>
-              <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-                {step.desc}
-              </p>
-            </div>
+            </CardSpotlight>
           ))}
         </div>
       </div>
