@@ -29,6 +29,10 @@ import { SkillRepository } from "@/domain/repositories/SkillRepository";
 import { ServiceRepository } from "@/domain/repositories/ServiceRepository";
 import { MessageRepository } from "@/domain/repositories/MessageRepository";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
+import { Project } from "@/domain/entities/Project";
+import { Profile } from "@/domain/entities/Profile";
+import { Experience } from "@/domain/entities/Experience";
+import { Service } from "@/domain/entities/Service";
 
 // Composition Root (Container)
 class Container {
@@ -82,6 +86,38 @@ class Container {
 
   async updateProjectStatus(id: string, status: PublishStatus): Promise<void> {
     return this.projectRepo.updateStatus(id, status);
+  }
+
+  async saveProject(project: Project): Promise<void> {
+    return this.projectRepo.save(project);
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    return this.projectRepo.delete(id);
+  }
+
+  async updateProfile(profile: Profile): Promise<void> {
+    return this.profileRepo.updateProfile(profile);
+  }
+
+  async saveExperience(experience: Experience): Promise<void> {
+    return this.expRepo.save(experience);
+  }
+
+  async deleteExperience(id: string): Promise<void> {
+    return this.expRepo.delete(id);
+  }
+
+  async saveService(service: Service): Promise<void> {
+    return this.serviceRepo.save(service);
+  }
+
+  async deleteService(id: string): Promise<void> {
+    return this.serviceRepo.delete(id);
+  }
+
+  async deleteMessage(id: string): Promise<void> {
+    return this.messageRepo.delete(id);
   }
 }
 

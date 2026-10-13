@@ -6,4 +6,6 @@ export interface ProjectRepository {
   getBySlug(slug: string): Promise<Project | null>;
   getAll(): Promise<Project[]>;
   updateStatus(id: string, status: PublishStatus): Promise<void>;
+  save(project: Project): Promise<void>;
+  delete(id: string): Promise<void>;
 }

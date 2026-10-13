@@ -44,6 +44,19 @@ export class InMemoryProjectRepository implements ProjectRepository {
       };
     }
   }
+
+  async save(project: Project): Promise<void> {
+    const idx = this.projects.findIndex((p) => p.id === project.id);
+    if (idx !== -1) {
+      this.projects[idx] = project;
+    } else {
+      this.projects.push(project);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    this.projects = this.projects.filter((p) => p.id !== id);
+  }
 }
 
 export class InMemoryProfileRepository implements ProfileRepository {
@@ -64,6 +77,10 @@ export class InMemoryProfileRepository implements ProfileRepository {
       isAvailableForFreelance: isFreelance,
     };
   }
+
+  async updateProfile(profile: Profile): Promise<void> {
+    this.profile = { ...profile };
+  }
 }
 
 export class InMemoryExperienceRepository implements ExperienceRepository {
@@ -71,6 +88,19 @@ export class InMemoryExperienceRepository implements ExperienceRepository {
 
   async getAll(): Promise<Experience[]> {
     return [...this.list];
+  }
+
+  async save(experience: Experience): Promise<void> {
+    const idx = this.list.findIndex((e) => e.id === experience.id);
+    if (idx !== -1) {
+      this.list[idx] = experience;
+    } else {
+      this.list.unshift(experience);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    this.list = this.list.filter((e) => e.id !== id);
   }
 }
 
@@ -87,6 +117,19 @@ export class InMemoryServiceRepository implements ServiceRepository {
 
   async getAll(): Promise<Service[]> {
     return [...this.list];
+  }
+
+  async save(service: Service): Promise<void> {
+    const idx = this.list.findIndex((s) => s.id === service.id);
+    if (idx !== -1) {
+      this.list[idx] = service;
+    } else {
+      this.list.push(service);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    this.list = this.list.filter((s) => s.id !== id);
   }
 }
 
@@ -118,5 +161,9 @@ export class InMemoryMessageRepository implements MessageRepository {
 
   async getAll(): Promise<Message[]> {
     return [...this.messages];
+  }
+
+  async delete(id: string): Promise<void> {
+    this.messages = this.messages.filter((m) => m.id !== id);
   }
 }

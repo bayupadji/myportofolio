@@ -25,3 +25,19 @@ export class GetAllProjects {
     return this.projectRepository.getAll();
   }
 }
+
+export class SaveProject {
+  constructor(private readonly projectRepository: ProjectRepository) {}
+
+  async execute(project: Project): Promise<void> {
+    return this.projectRepository.save(project);
+  }
+}
+
+export class DeleteProject {
+  constructor(private readonly projectRepository: ProjectRepository) {}
+
+  async execute(id: string): Promise<void> {
+    return this.projectRepository.delete(id);
+  }
+}
