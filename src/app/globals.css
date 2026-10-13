@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface-hover: #F1F5F9;
+  --surface-elevated: #FFFFFF;
+  --border: #E5E7EB;
+  --border-subtle: #F1F5F9;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-contrast: #FFFFFF;
+  --success: #15803D;
+  --error: #DC2626;
+  --ring-focus: rgba(79, 70, 229, 0.45);
+}
+
+html.dark {
+  --background: #0B0D12;
+  --surface: #12151C;
+  --surface-hover: #1B202B;
+  --surface-elevated: #161A23;
+  --border: #232733;
+  --border-subtle: #1C202C;
+  --text: #F1F5F9;
+  --text-muted: #94A3B8;
+  --accent: #818CF8;
+  --accent-hover: #A5B4FC;
+  --accent-contrast: #0B0D12;
+  --success: #4ADE80;
+  --error: #F87171;
+  --ring-focus: rgba(129, 140, 248, 0.45);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-main: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-success: var(--success);
+  --color-error: var(--error);
+}
+
+/* Base resets & typography */
+html {
+  scroll-behavior: smooth;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles meeting WCAG 2.2 AA */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Skip link */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: top 150ms ease-in-out;
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
