@@ -18,6 +18,7 @@ import {
 import { Profile, HeroMetric, ProcessStepItem, CtaBannerContent } from "@/domain/entities/Profile";
 import { Project } from "@/domain/entities/Project";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
+import { useUpdateProfileMutation } from "@/presentation/hooks/useAdminQueries";
 
 interface LandingPageManagerProps {
   initialProfile: Profile;
@@ -29,8 +30,9 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
   allProjects,
 }) => {
   const [profile, setProfile] = useState<Profile>(initialProfile);
-  const [isSaving, setIsSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const updateProfileMutation = useUpdateProfileMutation();
+  const isSaving = updateProfileMutation.isPending;
 
   // Accordion open/close states
   const [openSections, setOpenSections] = useState({
@@ -108,24 +110,14 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
     setSavedSuccess(false);
 
     try {
-      const res = await fetch("/api/admin/landing", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-
-      if (res.ok) {
-        setSavedSuccess(true);
-        setTimeout(() => setSavedSuccess(false), 3000);
-      }
+      await updateProfileMutation.mutateAsync(profile);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to save landing page settings", err);
-    } finally {
-      setIsSaving(false);
     }
   };
 

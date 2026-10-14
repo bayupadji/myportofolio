@@ -20,6 +20,11 @@ import { Experience, ExperienceBullet } from "@/domain/entities/Experience";
 import { Skill } from "@/domain/entities/Skill";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
 import { WysiwygEditor } from "@/presentation/components/ui/WysiwygEditor";
+import {
+  useUpdateProfileMutation,
+  useSaveExperienceMutation,
+  useDeleteExperienceMutation,
+} from "@/presentation/hooks/useAdminQueries";
 
 function bulletsToHtml(bullets: ExperienceBullet[]): string {
   if (!bullets || bullets.length === 0) return "";
@@ -106,35 +111,29 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
   const [skills] = useState<Skill[]>(initialSkills);
 
-  // Profile save state
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const updateProfileMutation = useUpdateProfileMutation();
+  const saveExpMutation = useSaveExperienceMutation();
+  const deleteExpMutation = useDeleteExperienceMutation();
+
+  const isSavingProfile = updateProfileMutation.isPending;
+  const isSavingExp = saveExpMutation.isPending;
   const [profileSaved, setProfileSaved] = useState(false);
 
   // Experience modal state
   const [editingExp, setEditingExp] = useState<Experience | null>(null);
   const [editorHtml, setEditorHtml] = useState<string>("");
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
-  const [isSavingExp, setIsSavingExp] = useState(false);
 
   // Handlers for Profile
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSavingProfile(true);
     setProfileSaved(false);
     try {
-      const res = await fetch("/api/admin/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-      if (res.ok) {
-        setProfileSaved(true);
-        setTimeout(() => setProfileSaved(false), 3000);
-      }
+      await updateProfileMutation.mutateAsync(profile);
+      setProfileSaved(true);
+      setTimeout(() => setProfileSaved(false), 3000);
     } catch (err) {
       console.error(err);
-    } finally {
-      setIsSavingProfile(false);
     }
   };
 
@@ -175,10 +174,8 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
   const handleDeleteExp = async (id: string, company: string) => {
     if (!window.confirm(`Delete work experience at "${company}"?`)) return;
     try {
-      const res = await fetch(`/api/admin/experience?id=${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setExperiences((prev) => prev.filter((e) => e.id !== id));
-      }
+      await deleteExpMutation.mutateAsync(id);
+      setExperiences((prev) => prev.filter((e) => e.id !== id));
     } catch (err) {
       console.error(err);
     }
@@ -186,27 +183,18 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
 
   const handleSaveExp = async () => {
     if (!editingExp || !editingExp.company.trim()) return;
-    setIsSavingExp(true);
     try {
-      const res = await fetch("/api/admin/experience", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingExp),
+      await saveExpMutation.mutateAsync(editingExp);
+      setExperiences((prev) => {
+        const exists = prev.some((e) => e.id === editingExp.id);
+        if (exists) {
+          return prev.map((e) => (e.id === editingExp.id ? editingExp : e));
+        }
+        return [editingExp, ...prev];
       });
-      if (res.ok) {
-        setExperiences((prev) => {
-          const exists = prev.some((e) => e.id === editingExp.id);
-          if (exists) {
-            return prev.map((e) => (e.id === editingExp.id ? editingExp : e));
-          }
-          return [editingExp, ...prev];
-        });
-        setIsExpModalOpen(false);
-      }
+      setIsExpModalOpen(false);
     } catch (err) {
       console.error(err);
-    } finally {
-      setIsSavingExp(false);
     }
   };
 

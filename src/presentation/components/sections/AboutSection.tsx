@@ -93,9 +93,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           {/* Section Header with Numbered Kicker & Divider line */}
           <div className="flex items-center gap-3.5 mb-3">
             <span className="font-mono text-[var(--accent)] text-xs sm:text-sm font-semibold tracking-wider uppercase">
-              01 — {locale === "id" ? "Pengalaman & Dampak" : "Experience & Impact"}
+              {locale === "id" ? "Pengalaman & Dampak" : "Experience & Impact"}
             </span>
-            <span className="h-px flex-1 max-w-[140px] bg-gradient-to-r from-[var(--accent)]/60 to-transparent" />
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text)] mb-12">
             {locale === "id" ? "Tempat saya menciptakan dampak nyata" : "Where I’ve made an impact"}

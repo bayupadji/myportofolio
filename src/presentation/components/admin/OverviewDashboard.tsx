@@ -20,6 +20,7 @@ import {
 import { Project } from "@/domain/entities/Project";
 import { Message } from "@/domain/entities/Message";
 import { Profile } from "@/domain/entities/Profile";
+import { useUpdateAvailabilityMutation } from "@/presentation/hooks/useAdminQueries";
 
 interface OverviewDashboardProps {
   projects: Project[];
@@ -35,28 +36,24 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   const [isFreelance, setIsFreelance] = useState<boolean>(
     profile.isAvailableForFreelance
   );
-  const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
+  const updateAvailabilityMutation = useUpdateAvailabilityMutation();
+  const isUpdatingStatus = updateAvailabilityMutation.isPending;
 
   const publishedCount = projects.filter((p) => p.status === "published").length;
   const draftCount = projects.filter((p) => p.status === "draft").length;
   const sampleCount = projects.filter((p) => p.isSampleProject).length;
 
   const toggleAvailability = async () => {
-    setIsUpdatingStatus(true);
     const newStatus = !isFreelance;
     try {
-      const res = await fetch("/api/admin/profile", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isFreelance: newStatus }),
+      await updateAvailabilityMutation.mutateAsync({
+        statusEn: profile.availabilityStatus?.en || "Available",
+        statusId: profile.availabilityStatus?.id || "Tersedia",
+        isFreelance: newStatus,
       });
-      if (res.ok) {
-        setIsFreelance(newStatus);
-      }
+      setIsFreelance(newStatus);
     } catch (err) {
       console.error("Failed to update status", err);
-    } finally {
-      setIsUpdatingStatus(false);
     }
   };
 
