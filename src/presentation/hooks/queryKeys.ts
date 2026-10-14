@@ -4,4 +4,6 @@ export const queryKeys = {
   messages: ["messages"] as const,
   profile: ["profile"] as const,
   services: ["services"] as const,
+  experiences: ["experiences"] as const,
+  skills: ["skills"] as const,
 };

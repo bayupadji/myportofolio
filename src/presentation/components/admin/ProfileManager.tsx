@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Profile } from "@/domain/entities/Profile";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
+import { useUpdateProfileMutation } from "@/presentation/hooks/useAdminQueries";
 
 interface ProfileManagerProps {
   initialProfile: Profile;
@@ -23,29 +24,21 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
   initialProfile,
 }) => {
   const [profile, setProfile] = useState<Profile>(initialProfile);
-  const [isSaving, setIsSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const updateProfileMutation = useUpdateProfileMutation();
+
+  const isSaving = updateProfileMutation.isPending;
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
     setSavedSuccess(false);
 
     try {
-      const res = await fetch("/api/admin/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-
-      if (res.ok) {
-        setSavedSuccess(true);
-        setTimeout(() => setSavedSuccess(false), 3000);
-      }
+      await updateProfileMutation.mutateAsync(profile);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to save profile", err);
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -249,10 +242,8 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
                 Profile Headshot / Avatar (1:1 Ratio)
               </label>
               <ImageUploadDropzone
-                label="Upload & Compress Profile Avatar to Supabase"
-                preset="avatar"
-                bucket="portfolio-assets"
-                folder="avatars"
+                label="Upload & Compress Profile Photo (WebP)"
+                folder="profile"
                 onUploadComplete={(publicUrl) => {
                   setProfile((prev) => ({ ...prev, avatarUrl: publicUrl }));
                 }}
@@ -277,21 +268,29 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
                     value={profile.avatarUrl}
                     onChange={(e) => setProfile({ ...profile, avatarUrl: e.target.value })}
                     className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
-                    placeholder="https://..."
+                    placeholder="/uploads/profile/..."
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block font-semibold mb-1 text-[var(--text)]">
-                  Resume / CV File URL (PDF)
+                  Upload Resume / CV File (PDF)
                 </label>
+                <ImageUploadDropzone
+                  label="Upload CV (PDF)"
+                  mode="document"
+                  folder="cv"
+                  onUploadComplete={(publicUrl) => {
+                    setProfile((prev) => ({ ...prev, cvUrl: publicUrl }));
+                  }}
+                />
                 <input
                   type="text"
                   value={profile.cvUrl}
                   onChange={(e) => setProfile({ ...profile, cvUrl: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
-                  placeholder="/cv.pdf or Supabase Storage URL..."
+                  className="w-full mt-2 px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+                  placeholder="/uploads/cv/..."
                 />
               </div>
             </div>

@@ -16,13 +16,14 @@
   --error: #DC2626;
   --ring-focus: rgba(79, 70, 229, 0.45);
 
-  /* Liquid Glass Island Header Tokens - Light */
-  --header-glass-bg: rgba(255, 255, 255, 0.74);
-  --header-glass-border: rgba(229, 231, 235, 0.85);
-  --header-glass-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08), 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
-  --header-glass-shadow-scrolled: 0 20px 42px -10px rgba(15, 23, 42, 0.12), 0 6px 20px -2px rgba(15, 23, 42, 0.06), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
-  --header-nav-track-bg: rgba(241, 245, 249, 0.65);
-  --header-nav-track-border: rgba(229, 231, 235, 0.6);
+  /* Liquid Glass Island Header Tokens - Light (Clean translucent glass) */
+  --header-glass-bg: rgba(255, 255, 255, 0.32);
+  --header-glass-bg-scrolled: rgba(255, 255, 255, 0.52);
+  --header-glass-border: rgba(255, 255, 255, 0.65);
+  --header-glass-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08), 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.85);
+  --header-glass-shadow-scrolled: 0 20px 42px -10px rgba(15, 23, 42, 0.12), 0 6px 20px -2px rgba(15, 23, 42, 0.06), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.9);
+  --header-nav-track-bg: rgba(241, 245, 249, 0.28);
+  --header-nav-track-border: rgba(229, 231, 235, 0.45);
 }
 
 html.dark {
@@ -41,13 +42,14 @@ html.dark {
   --error: #F87171;
   --ring-focus: rgba(129, 140, 248, 0.45);
 
-  /* Liquid Glass Island Header Tokens - Dark */
-  --header-glass-bg: rgba(18, 21, 28, 0.74);
-  --header-glass-border: rgba(255, 255, 255, 0.09);
-  --header-glass-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.14);
+  /* Liquid Glass Island Header Tokens - Dark (Deep crystalline glass) */
+  --header-glass-bg: rgba(18, 21, 28, 0.36);
+  --header-glass-bg-scrolled: rgba(18, 21, 28, 0.56);
+  --header-glass-border: rgba(255, 255, 255, 0.12);
+  --header-glass-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.14);
   --header-glass-shadow-scrolled: 0 24px 54px -10px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.18);
-  --header-nav-track-bg: rgba(24, 29, 39, 0.6);
-  --header-nav-track-border: rgba(255, 255, 255, 0.06);
+  --header-nav-track-bg: rgba(255, 255, 255, 0.04);
+  --header-nav-track-border: rgba(255, 255, 255, 0.08);
 }
 
 @theme {
@@ -290,8 +292,8 @@ button {
   background-color: var(--header-glass-bg);
   border: 1px solid var(--header-glass-border);
   box-shadow: var(--header-glass-shadow);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   transition: box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
               border-color 300ms ease,
@@ -299,6 +301,7 @@ button {
 }
 
 .liquid-glass-island.scrolled {
+  background-color: var(--header-glass-bg-scrolled);
   box-shadow: var(--header-glass-shadow-scrolled);
   transform: translateY(-1px) scale(0.995);
 }
@@ -309,18 +312,18 @@ button {
   inset: 0;
   border-radius: 9999px;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.04) 40%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 100%);
 }
 
 html.dark .liquid-glass-sheen {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 100%);
 }
 
 /* Nav Links pill track */
 .liquid-nav-track {
   background-color: var(--header-nav-track-bg);
   border: 1px solid var(--header-nav-track-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 

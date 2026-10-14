@@ -37,15 +37,14 @@ export const Header: React.FC<HeaderProps> = ({ messages }) => {
 
   return (
     <header className="sticky top-2.5 sm:top-4 z-40 w-full px-3 sm:px-4 flex justify-center pointer-events-none transition-all duration-300">
-      <a href="#main-content" className="skip-to-content pointer-events-auto">
+      {/* <a href="#main-content" className="skip-to-content pointer-events-auto">
         Skip to content
-      </a>
+      </a> */}
 
       {/* Floating Island Capsule with Liquid Glass */}
       <div
-        className={`pointer-events-auto relative flex items-center justify-between gap-2 sm:gap-3 lg:gap-4 rounded-full py-1.5 px-2 sm:py-2 sm:px-3 liquid-glass-island transition-all duration-300 max-w-[calc(100vw-1.5rem)] ${
-          isScrolled ? "scrolled" : ""
-        }`}
+        className={`pointer-events-auto relative flex items-center justify-between gap-2 sm:gap-3 lg:gap-4 rounded-full py-1.5 px-2 sm:py-2 sm:px-3 liquid-glass-island transition-all duration-300 max-w-[calc(100vw-1.5rem)] ${isScrolled ? "scrolled" : ""
+          }`}
       >
         {/* Specular Liquid Refraction Sheen */}
         <div className="liquid-glass-sheen" aria-hidden="true" />
@@ -82,11 +81,10 @@ export const Header: React.FC<HeaderProps> = ({ messages }) => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-3 sm:px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? "text-[var(--accent-contrast)] bg-[var(--accent)] shadow-sm shadow-[var(--accent)]/30 font-semibold"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)]/70"
-                }`}
+                className={`relative px-3 sm:px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${isActive
+                  ? "text-[var(--accent-contrast)] bg-[var(--accent)] shadow-sm shadow-[var(--accent)]/30 font-semibold"
+                  : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)]/70"
+                  }`}
               >
                 {link.label}
               </Link>
@@ -111,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({ messages }) => {
           {/* Mobile Menu Trigger */}
           <button
             onClick={toggleMobileDrawer}
-            className="md:hidden flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)]/90 text-[var(--text)] hover:bg-[var(--surface-hover)] hover:border-[var(--accent)] transition-all cursor-pointer shrink-0 shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="md:hidden flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)]/70 bg-[var(--surface)]/40 text-[var(--text)] hover:bg-[var(--surface)]/70 hover:border-[var(--accent)] transition-all cursor-pointer shrink-0 shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 backdrop-blur-sm"
             aria-label={messages.nav.menu}
           >
             <Menu className="w-4 h-4" />

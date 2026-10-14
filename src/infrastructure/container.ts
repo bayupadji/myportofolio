@@ -1,26 +1,24 @@
-import {
-  InMemoryProjectRepository,
-  InMemoryProfileRepository,
-  InMemoryExperienceRepository,
-  InMemorySkillRepository,
-  InMemoryServiceRepository,
-  InMemoryMessageRepository
-} from "./mock/InMemoryRepositories";
+import { DrizzleProjectRepository } from "./drizzle/repositories/DrizzleProjectRepository";
+import { DrizzleProfileRepository } from "./drizzle/repositories/DrizzleProfileRepository";
+import { DrizzleExperienceRepository } from "./drizzle/repositories/DrizzleExperienceRepository";
+import { DrizzleSkillRepository } from "./drizzle/repositories/DrizzleSkillRepository";
+import { DrizzleServiceRepository } from "./drizzle/repositories/DrizzleServiceRepository";
+import { DrizzleMessageRepository } from "./drizzle/repositories/DrizzleMessageRepository";
 import {
   GetPublishedProjects,
   GetProjectBySlug,
-  GetAllProjects
+  GetAllProjects,
 } from "@/application/use-cases/ProjectUseCases";
 import {
   GetProfile,
-  UpdateAvailability
+  UpdateAvailability,
 } from "@/application/use-cases/ProfileUseCases";
 import {
   GetExperiences,
   GetSkills,
   GetServices,
   SubmitContactMessage,
-  GetAdminMessages
+  GetAdminMessages,
 } from "@/application/use-cases/OtherUseCases";
 import { ProjectRepository } from "@/domain/repositories/ProjectRepository";
 import { ProfileRepository } from "@/domain/repositories/ProfileRepository";
@@ -32,6 +30,7 @@ import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { Project } from "@/domain/entities/Project";
 import { Profile } from "@/domain/entities/Profile";
 import { Experience } from "@/domain/entities/Experience";
+import { Skill } from "@/domain/entities/Skill";
 import { Service } from "@/domain/entities/Service";
 
 // Composition Root (Container)
@@ -56,20 +55,13 @@ class Container {
   public readonly getAdminMessages: GetAdminMessages;
 
   constructor() {
-    // Default to in-memory repositories (or Supabase if credentials present)
-    const inMemProj = new InMemoryProjectRepository();
-    const inMemProfile = new InMemoryProfileRepository();
-    const inMemExp = new InMemoryExperienceRepository();
-    const inMemSkill = new InMemorySkillRepository();
-    const inMemService = new InMemoryServiceRepository();
-    const inMemMsg = new InMemoryMessageRepository();
-
-    this.projectRepo = inMemProj;
-    this.profileRepo = inMemProfile;
-    this.expRepo = inMemExp;
-    this.skillRepo = inMemSkill;
-    this.serviceRepo = inMemService;
-    this.messageRepo = inMemMsg;
+    // Instantiate local SQLite Drizzle repositories
+    this.projectRepo = new DrizzleProjectRepository();
+    this.profileRepo = new DrizzleProfileRepository();
+    this.expRepo = new DrizzleExperienceRepository();
+    this.skillRepo = new DrizzleSkillRepository();
+    this.serviceRepo = new DrizzleServiceRepository();
+    this.messageRepo = new DrizzleMessageRepository();
 
     // Instantiate use cases
     this.getPublishedProjects = new GetPublishedProjects(this.projectRepo);
@@ -108,12 +100,24 @@ class Container {
     return this.expRepo.delete(id);
   }
 
+  async saveSkill(skill: Skill): Promise<void> {
+    return this.skillRepo.save(skill);
+  }
+
+  async deleteSkill(id: string): Promise<void> {
+    return this.skillRepo.delete(id);
+  }
+
   async saveService(service: Service): Promise<void> {
     return this.serviceRepo.save(service);
   }
 
   async deleteService(id: string): Promise<void> {
     return this.serviceRepo.delete(id);
+  }
+
+  async updateMessageStatus(id: string, status: "unread" | "read" | "replied"): Promise<void> {
+    return this.messageRepo.updateStatus(id, status);
   }
 
   async deleteMessage(id: string): Promise<void> {

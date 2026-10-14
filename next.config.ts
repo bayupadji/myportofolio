@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["better-sqlite3", "sharp"],
   /* config options here */
   experimental: {
     agentFeedback: true,

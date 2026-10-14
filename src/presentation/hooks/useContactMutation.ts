@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "./queryKeys";
 import { MessageTopic } from "@/domain/entities/Message";
+import { submitContactMessageAction } from "../actions/messageActions";
 
 export interface ContactSubmissionPayload {
   name: string;
@@ -22,18 +23,23 @@ export function useContactMutation() {
 
   return useMutation<ContactSubmissionResponse, Error, ContactSubmissionPayload>({
     mutationFn: async (payload) => {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to submit message.");
+      // Honeypot anti-spam check
+      if (payload.honeypot && payload.honeypot.trim().length > 0) {
+        return { success: true, message: "Thank you for your message." };
       }
 
-      return data;
+      const res = await submitContactMessageAction({
+        name: payload.name,
+        email: payload.email,
+        topic: payload.topic,
+        body: payload.body,
+      });
+
+      if (!res.success) {
+        throw new Error(res.error || "Failed to submit message.");
+      }
+
+      return { success: true, message: "Your message has been sent successfully." };
     },
     onSuccess: () => {
       // Invalidate admin messages cache so any open admin view updates

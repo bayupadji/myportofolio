@@ -15,6 +15,12 @@ import { Experience, ExperienceBullet } from "@/domain/entities/Experience";
 import { Service } from "@/domain/entities/Service";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
 import { WysiwygEditor } from "@/presentation/components/ui/WysiwygEditor";
+import {
+  useSaveExperienceMutation,
+  useDeleteExperienceMutation,
+  useSaveServiceMutation,
+  useDeleteServiceMutation,
+} from "@/presentation/hooks/useAdminQueries";
 
 function bulletsToHtml(bullets: ExperienceBullet[]): string {
   if (!bullets || bullets.length === 0) return "";
@@ -146,13 +152,16 @@ export const ExperienceManager: React.FC<ExperienceManagerProps> = ({
     setIsExpModalOpen(true);
   };
 
+  const saveExpMutation = useSaveExperienceMutation();
+  const deleteExpMutation = useDeleteExperienceMutation();
+  const saveServiceMutation = useSaveServiceMutation();
+  const deleteServiceMutation = useDeleteServiceMutation();
+
   const handleDeleteExp = async (id: string, company: string) => {
     if (!window.confirm(`Delete work experience at "${company}"?`)) return;
     try {
-      const res = await fetch(`/api/admin/experience?id=${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setExperiences((prev) => prev.filter((e) => e.id !== id));
-      }
+      await deleteExpMutation.mutateAsync(id);
+      setExperiences((prev) => prev.filter((e) => e.id !== id));
     } catch (err) {
       console.error(err);
     }
@@ -162,21 +171,15 @@ export const ExperienceManager: React.FC<ExperienceManagerProps> = ({
     if (!editingExp || !editingExp.company.trim()) return;
     setIsSavingExp(true);
     try {
-      const res = await fetch("/api/admin/experience", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingExp),
+      await saveExpMutation.mutateAsync(editingExp);
+      setExperiences((prev) => {
+        const exists = prev.some((e) => e.id === editingExp.id);
+        if (exists) {
+          return prev.map((e) => (e.id === editingExp.id ? editingExp : e));
+        }
+        return [editingExp, ...prev];
       });
-      if (res.ok) {
-        setExperiences((prev) => {
-          const exists = prev.some((e) => e.id === editingExp.id);
-          if (exists) {
-            return prev.map((e) => (e.id === editingExp.id ? editingExp : e));
-          }
-          return [editingExp, ...prev];
-        });
-        setIsExpModalOpen(false);
-      }
+      setIsExpModalOpen(false);
     } catch (err) {
       console.error(err);
     } finally {
@@ -209,10 +212,8 @@ export const ExperienceManager: React.FC<ExperienceManagerProps> = ({
   const handleDeleteService = async (id: string, title: string) => {
     if (!window.confirm(`Delete service "${title}"?`)) return;
     try {
-      const res = await fetch(`/api/admin/services?id=${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setServices((prev) => prev.filter((s) => s.id !== id));
-      }
+      await deleteServiceMutation.mutateAsync(id);
+      setServices((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       console.error(err);
     }
@@ -222,25 +223,19 @@ export const ExperienceManager: React.FC<ExperienceManagerProps> = ({
     if (!editingService || !editingService.title.en.trim()) return;
     setIsSavingService(true);
     try {
-      const res = await fetch("/api/admin/services", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingService),
+      await saveServiceMutation.mutateAsync(editingService);
+      setServices((prev) => {
+        const exists = prev.some((e) => e.id === editingService.id);
+        if (exists) {
+          return prev.map((e) => (e.id === editingService.id ? editingService : e));
+        }
+        return [...prev, editingService];
       });
-      if (res.ok) {
-        setServices((prev) => {
-          const exists = prev.some((e) => e.id === editingService.id);
-          if (exists) {
-            return prev.map((e) => (e.id === editingService.id ? editingService : e));
-          }
-          return [...prev, editingService];
-        });
-        setIsServiceModalOpen(false);
-      }
+      setIsServiceModalOpen(false);
     } catch (err) {
       console.error(err);
     } finally {
-      setIsSavingExp(false);
+      setIsSavingService(false);
     }
   };
 
@@ -469,10 +464,8 @@ export const ExperienceManager: React.FC<ExperienceManagerProps> = ({
                   Company Logo (1:1 Ratio)
                 </label>
                 <ImageUploadDropzone
-                  label="Upload & Compress Company Logo to Supabase"
-                  preset="avatar"
-                  bucket="portfolio-assets"
-                  folder="companies"
+                  label="Upload & Compress Company Logo (WebP)"
+                  folder="general"
                   onUploadComplete={(publicUrl) => {
                     setEditingExp((prev) => (prev ? { ...prev, logoUrl: publicUrl } : null));
                   }}

@@ -110,6 +110,19 @@ export class InMemorySkillRepository implements SkillRepository {
   async getAll(): Promise<Skill[]> {
     return [...this.list];
   }
+
+  async save(skill: Skill): Promise<void> {
+    const idx = this.list.findIndex((s) => s.id === skill.id);
+    if (idx !== -1) {
+      this.list[idx] = skill;
+    } else {
+      this.list.push(skill);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    this.list = this.list.filter((s) => s.id !== id);
+  }
 }
 
 export class InMemoryServiceRepository implements ServiceRepository {
@@ -161,6 +174,13 @@ export class InMemoryMessageRepository implements MessageRepository {
 
   async getAll(): Promise<Message[]> {
     return [...this.messages];
+  }
+
+  async updateStatus(id: string, status: "unread" | "read" | "replied"): Promise<void> {
+    const idx = this.messages.findIndex((m) => m.id === id);
+    if (idx !== -1) {
+      this.messages[idx].status = status;
+    }
   }
 
   async delete(id: string): Promise<void> {

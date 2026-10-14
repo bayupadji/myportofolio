@@ -43,7 +43,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
   };
 
   const defaultClasses =
-    "h-9 w-9 flex-none rounded-full border border-[var(--border)] bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--accent)] text-[var(--text)] transition-all duration-300 hover:rotate-[20deg] flex items-center justify-center cursor-pointer shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 shrink-0";
+    "h-9 w-9 flex-none rounded-full border border-[var(--border)]/70 bg-[var(--surface)]/40 hover:bg-[var(--surface)]/70 hover:border-[var(--accent)] text-[var(--text)] transition-all duration-300 hover:rotate-[20deg] flex items-center justify-center cursor-pointer shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 shrink-0 backdrop-blur-sm";
 
   if (!mounted) {
     return (

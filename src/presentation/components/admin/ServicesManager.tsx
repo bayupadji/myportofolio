@@ -10,6 +10,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { Service } from "@/domain/entities/Service";
+import {
+  useSaveServiceMutation,
+  useDeleteServiceMutation,
+} from "@/presentation/hooks/useAdminQueries";
 
 interface ServicesManagerProps {
   initialServices: Service[];
@@ -21,7 +25,10 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
   const [services, setServices] = useState<Service[]>(initialServices);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+
+  const saveServiceMutation = useSaveServiceMutation();
+  const deleteServiceMutation = useDeleteServiceMutation();
+  const isSaving = saveServiceMutation.isPending;
 
   const handleOpenNew = () => {
     const emptyService: Service = {
@@ -50,10 +57,8 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
   const handleDelete = async (id: string, title: string) => {
     if (!window.confirm(`Permanently delete service "${title}"?`)) return;
     try {
-      const res = await fetch(`/api/admin/services?id=${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setServices((prev) => prev.filter((s) => s.id !== id));
-      }
+      await deleteServiceMutation.mutateAsync(id);
+      setServices((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       console.error(err);
     }
@@ -61,7 +66,6 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
 
   const handleSave = async () => {
     if (!editingService || !editingService.title.en.trim()) return;
-    setIsSaving(true);
     try {
       const slug =
         editingService.slug ||
@@ -75,26 +79,17 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
         slug,
       };
 
-      const res = await fetch("/api/admin/services", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      await saveServiceMutation.mutateAsync(payload);
+      setServices((prev) => {
+        const exists = prev.some((s) => s.id === payload.id);
+        if (exists) {
+          return prev.map((s) => (s.id === payload.id ? payload : s));
+        }
+        return [...prev, payload];
       });
-
-      if (res.ok) {
-        setServices((prev) => {
-          const exists = prev.some((s) => s.id === payload.id);
-          if (exists) {
-            return prev.map((s) => (s.id === payload.id ? payload : s));
-          }
-          return [...prev, payload];
-        });
-        setIsModalOpen(false);
-      }
+      setIsModalOpen(false);
     } catch (err) {
       console.error(err);
-    } finally {
-      setIsSaving(false);
     }
   };
 

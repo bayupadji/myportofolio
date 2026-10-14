@@ -244,10 +244,8 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
                   Hero Avatar Photo (1:1 Ratio)
                 </label>
                 <ImageUploadDropzone
-                  label="Upload & Compress Profile Avatar"
-                  preset="avatar"
-                  bucket="portfolio-assets"
-                  folder="avatar"
+                  label="Upload & Compress Profile Photo (WebP)"
+                  folder="profile"
                   onUploadComplete={(publicUrl) => {
                     setProfile((prev) => ({ ...prev, avatarUrl: publicUrl }));
                   }}

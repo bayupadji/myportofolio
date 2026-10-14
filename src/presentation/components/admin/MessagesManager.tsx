@@ -11,6 +11,7 @@ import {
   User,
 } from "lucide-react";
 import { Message } from "@/domain/entities/Message";
+import { useDeleteMessageMutation } from "@/presentation/hooks/useAdminQueries";
 
 interface MessagesManagerProps {
   initialMessages: Message[];
@@ -22,6 +23,7 @@ export const MessagesManager: React.FC<MessagesManagerProps> = ({
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [search, setSearch] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
+  const deleteMessageMutation = useDeleteMessageMutation();
 
   const filteredMessages = messages.filter((m) => {
     const matchesSearch =
@@ -37,12 +39,8 @@ export const MessagesManager: React.FC<MessagesManagerProps> = ({
   const handleDelete = async (id: string, senderName: string) => {
     if (!window.confirm(`Delete message from "${senderName}"?`)) return;
     try {
-      const res = await fetch(`/api/admin/messages?id=${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        setMessages((prev) => prev.filter((m) => m.id !== id));
-      }
+      await deleteMessageMutation.mutateAsync(id);
+      setMessages((prev) => prev.filter((m) => m.id !== id));
     } catch (err) {
       console.error(err);
     }

@@ -526,10 +526,8 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
                   Company Logo (1:1 Ratio)
                 </label>
                 <ImageUploadDropzone
-                  label="Upload & Compress Company Logo to Supabase"
-                  preset="avatar"
-                  bucket="portfolio-assets"
-                  folder="companies"
+                  label="Upload & Compress Company Logo (WebP)"
+                  folder="general"
                   onUploadComplete={(publicUrl) => {
                     setEditingExp((prev) => (prev ? { ...prev, logoUrl: publicUrl } : null));
                   }}

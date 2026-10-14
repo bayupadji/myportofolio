@@ -22,6 +22,12 @@ import { Project, ProjectSection } from "@/domain/entities/Project";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
 import { WysiwygEditor } from "@/presentation/components/ui/WysiwygEditor";
+import {
+  useAdminProjects,
+  useUpdateProjectStatusMutation,
+  useSaveProjectMutation,
+  useDeleteProjectMutation,
+} from "@/presentation/hooks/useAdminQueries";
 
 interface ProjectManagerProps {
   initialProjects: Project[];
@@ -30,7 +36,11 @@ interface ProjectManagerProps {
 export const ProjectManager: React.FC<ProjectManagerProps> = ({
   initialProjects,
 }) => {
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const { data: projects = initialProjects } = useAdminProjects(initialProjects);
+  const updateStatusMutation = useUpdateProjectStatusMutation();
+  const saveProjectMutation = useSaveProjectMutation();
+  const deleteProjectMutation = useDeleteProjectMutation();
+
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "published" | "draft" | "sample">("all");
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -57,16 +67,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
   const handleToggleStatus = async (id: string, currentStatus: PublishStatus) => {
     const newStatus: PublishStatus = currentStatus === "published" ? "draft" : "published";
     try {
-      const res = await fetch("/api/admin/projects", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status: newStatus }),
-      });
-      if (res.ok) {
-        setProjects((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
-        );
-      }
+      await updateStatusMutation.mutateAsync({ id, status: newStatus });
     } catch (err) {
       console.error("Failed to toggle status", err);
     }
@@ -76,12 +77,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
     if (!window.confirm(`Permanently delete project "${title}"?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/projects?id=${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        setProjects((prev) => prev.filter((p) => p.id !== id));
-      }
+      await deleteProjectMutation.mutateAsync(id);
     } catch (err) {
       console.error("Failed to delete project", err);
     }
@@ -185,25 +181,7 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
     setEditorError(null);
 
     try {
-      const res = await fetch("/api/admin/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingProject),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to save project");
-      }
-
-      setProjects((prev) => {
-        const exists = prev.some((p) => p.id === editingProject.id);
-        if (exists) {
-          return prev.map((p) => (p.id === editingProject.id ? editingProject : p));
-        }
-        return [editingProject, ...prev];
-      });
-
+      await saveProjectMutation.mutateAsync(editingProject);
       setIsEditorOpen(false);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "An error occurred";
@@ -574,8 +552,6 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
                     {/* Integrated Dropzone */}
                     <ImageUploadDropzone
                       label="Upload & Compress Project Cover Image"
-                      preset="cover"
-                      bucket="portfolio-assets"
                       folder="projects"
                       onUploadComplete={(publicUrl) => {
                         setEditingProject((prev) =>
