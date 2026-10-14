@@ -13,6 +13,9 @@ import {
   MessageSquare,
   Sparkles,
   ShieldCheck,
+  Home,
+  Layers,
+  UserCheck,
 } from "lucide-react";
 import { Project } from "@/domain/entities/Project";
 import { Message } from "@/domain/entities/Message";
@@ -205,31 +208,119 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         </div>
       </div>
 
-      {/* Quick Action Bar */}
-      <div className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex flex-wrap items-center gap-3">
-        <span className="text-xs font-bold text-[var(--text)] uppercase tracking-wider mr-2 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
-          Quick Actions:
-        </span>
-        <Link
-          href="/admin/projects"
-          className="px-3 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-medium text-[var(--text)] flex items-center gap-1.5 transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span>Add New Project</span>
-        </Link>
-        <Link
-          href="/admin/profile"
-          className="px-3 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-medium text-[var(--text)] flex items-center gap-1.5 transition-colors"
-        >
-          <span>Edit Bio & Availability</span>
-        </Link>
-        <Link
-          href="/admin/experience"
-          className="px-3 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-xs font-medium text-[var(--text)] flex items-center gap-1.5 transition-colors"
-        >
-          <span>Manage Experience & Services</span>
-        </Link>
+      {/* Portfolio Pages Hub */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-bold text-[var(--text)] uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
+            Portfolio Sections Hub:
+          </span>
+          <span className="text-[11px] text-[var(--text-muted)]">
+            Quick jump to customize any public page
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {/* Hub 1: Landing Page */}
+          <Link
+            href="/admin/landing"
+            className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)]/50 hover:bg-[var(--surface-hover)]/30 transition-all group flex flex-col justify-between shadow-xs"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-7 h-7 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
+                  <Home className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">/</span>
+              </div>
+              <h3 className="font-bold text-xs text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                Landing Page
+              </h3>
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5 line-clamp-2">
+                Hero headline, key impact metrics, 4-step process, & CTA banner.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-[var(--border)]/60 text-[11px] font-semibold text-[var(--accent)] flex items-center justify-between">
+              <span>Edit Landing</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Hub 2: Case Studies */}
+          <Link
+            href="/admin/projects"
+            className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)]/50 hover:bg-[var(--surface-hover)]/30 transition-all group flex flex-col justify-between shadow-xs"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-7 h-7 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
+                  <FolderGit2 className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">/work</span>
+              </div>
+              <h3 className="font-bold text-xs text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                Case Studies
+              </h3>
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5 line-clamp-2">
+                {projects.length} studies ({publishedCount} published), WYSIWYG editor.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-[var(--border)]/60 text-[11px] font-semibold text-[var(--accent)] flex items-center justify-between">
+              <span>Manage Projects</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Hub 3: Freelance Services */}
+          <Link
+            href="/admin/services"
+            className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)]/50 hover:bg-[var(--surface-hover)]/30 transition-all group flex flex-col justify-between shadow-xs"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-7 h-7 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
+                  <Layers className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">/services</span>
+              </div>
+              <h3 className="font-bold text-xs text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                Freelance Services
+              </h3>
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5 line-clamp-2">
+                Design packages, target audiences, and deliverables.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-[var(--border)]/60 text-[11px] font-semibold text-[var(--accent)] flex items-center justify-between">
+              <span>Edit Services</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Hub 4: About Me */}
+          <Link
+            href="/admin/about"
+            className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)]/50 hover:bg-[var(--surface-hover)]/30 transition-all group flex flex-col justify-between shadow-xs"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-7 h-7 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
+                  <UserCheck className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">/about</span>
+              </div>
+              <h3 className="font-bold text-xs text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                About & Career
+              </h3>
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5 line-clamp-2">
+                Bio story, work experience timeline with logo, and CV link.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-[var(--border)]/60 text-[11px] font-semibold text-[var(--accent)] flex items-center justify-between">
+              <span>Edit About</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Two Column Grid: Recent Inbounds & QA Gates */}

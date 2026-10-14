@@ -13,6 +13,19 @@ export interface HeroMetric {
   description: LocalizedText;
 }
 
+export interface ProcessStepItem {
+  stepNumber: number;
+  title: LocalizedText;
+  description: LocalizedText;
+}
+
+export interface CtaBannerContent {
+  badge?: LocalizedText;
+  headline: LocalizedText;
+  description: LocalizedText;
+  primaryButtonText: LocalizedText;
+}
+
 export interface Profile {
   id: string;
   name: string;
@@ -27,4 +40,10 @@ export interface Profile {
   isAvailableForFreelance: boolean;
   socialLinks: SocialLink[];
   keyMetrics: HeroMetric[];
+  heroRole?: LocalizedText;
+  heroHeadline?: LocalizedText;
+  heroValueStatement?: LocalizedText;
+  featuredProjectIds?: string[];
+  processSteps?: ProcessStepItem[];
+  ctaBanner?: CtaBannerContent;
 }

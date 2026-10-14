@@ -57,6 +57,71 @@ export const seedProfile: Profile = {
       description: { en: "With unified token design system", id: "Melalui implementasi token design system" },
     },
   ],
+  heroRole: {
+    en: "Generalist Product Designer (UI/UX)",
+    id: "Product Designer Generalis (UI/UX)",
+  },
+  heroHeadline: {
+    en: "Hi, I’m Bayu.",
+    id: "Halo, saya Bayu.",
+  },
+  heroValueStatement: {
+    en: "Crafting intuitive, high-impact digital experiences across web, mobile, and complex systems.",
+    id: "Merancang pengalaman digital yang jelas dan berdampak tinggi lintas web, mobile, dan sistem kompleks.",
+  },
+  featuredProjectIds: ["proj-1", "proj-2", "proj-3", "proj-4"],
+  processSteps: [
+    {
+      stepNumber: 1,
+      title: { en: "Discover & Understand", id: "Riset & Pahami Masalah" },
+      description: {
+        en: "Deep-dive into business telemetry, user friction points, and stakeholder interviews to uncover the root problem.",
+        id: "Menganalisis telemetri bisnis, friksi pengguna, dan wawancara stakeholder untuk menemukan akar masalah.",
+      },
+    },
+    {
+      stepNumber: 2,
+      title: { en: "Architecture & Wireframes", id: "Arsitektur & Wireframe" },
+      description: {
+        en: "Draft progressive user journeys, edge cases, and rapid low-fidelity layouts before touching high-fidelity visuals.",
+        id: "Merancang alur pengguna bertahap, skenario kegagalan/edge case, dan wireframe cepat sebelum visual detail.",
+      },
+    },
+    {
+      stepNumber: 3,
+      title: { en: "Interactive UI & Testing", id: "UI Interaktif & Pengujian" },
+      description: {
+        en: "Build production-ready components, design tokens, and conduct moderated usability sessions with realistic prototypes.",
+        id: "Membangun komponen siap produksi, token desain, dan validasi melalui sesi uji usabilitas pengguna nyata.",
+      },
+    },
+    {
+      stepNumber: 4,
+      title: { en: "Handoff, Scale & Impact", id: "Handoff, Skala & Pengukuran" },
+      description: {
+        en: "Pair closely with engineering teams, define QA edge states, and measure post-launch analytics against target KPIs.",
+        id: "Kolaborasi intensif dengan tim pengembang, dokumentasi edge states, dan mengukur metrik pasca-peluncuran.",
+      },
+    },
+  ],
+  ctaBanner: {
+    badge: {
+      en: "Open to New Opportunities",
+      id: "Tersedia untuk Peluang Baru",
+    },
+    headline: {
+      en: "Have a product challenge or an open role to discuss?",
+      id: "Punya proyek produk atau peran yang ingin didiskusikan?",
+    },
+    description: {
+      en: "I am ready to help turn your product ideas into intuitive, fast, and measurable digital experiences.",
+      id: "Saya siap membantu mentransformasi ide menjadi produk digital yang intuitif, cepat, dan berdampak.",
+    },
+    primaryButtonText: {
+      en: "Discuss a project",
+      id: "Diskusikan Proyek",
+    },
+  },
 };
 
 export const seedProjects: Project[] = [

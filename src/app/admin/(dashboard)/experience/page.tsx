@@ -1,21 +1,5 @@
-import React from "react";
-import { container } from "@/infrastructure/container";
-import { ExperienceManager } from "@/presentation/components/admin/ExperienceManager";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Experience & Services · Bayu Portfolio CMS",
-};
-
-export default async function AdminExperiencePage() {
-  const [experiences, services] = await Promise.all([
-    container.getExperiences.execute(),
-    container.getServices.execute(),
-  ]);
-
-  return (
-    <ExperienceManager
-      initialExperiences={experiences}
-      initialServices={services}
-    />
-  );
+export default function AdminExperiencePage() {
+  redirect("/admin/about");
 }

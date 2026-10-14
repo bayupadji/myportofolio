@@ -5,10 +5,13 @@ import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 import { CardSpotlight } from "@/presentation/components/ui/CardSpotlight";
 
+import { CtaBannerContent } from "@/domain/entities/Profile";
+
 export interface CtaCardSectionProps {
   locale?: Locale;
   messages: Messages;
   className?: string;
+  customContent?: CtaBannerContent;
 }
 
 /**
@@ -19,8 +22,14 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
   locale,
   messages,
   className = "",
+  customContent,
 }) => {
   const isId = locale === "id";
+
+  const badgeText = customContent?.badge?.en || (isId ? "Tersedia untuk Peluang Baru" : "Open to New Opportunities");
+  const headlineText = customContent?.headline?.en || (isId ? "Punya proyek produk atau peran yang ingin didiskusikan?" : "Have a product challenge or an open role to discuss?");
+  const descriptionText = customContent?.description?.en || (isId ? "Saya siap membantu mentransformasi ide menjadi produk digital yang intuitif, cepat, dan berdampak." : "I am ready to help turn your product ideas into intuitive, fast, and measurable digital experiences.");
+  const primaryBtnText = customContent?.primaryButtonText?.en || messages.hero.ctaContact;
 
   return (
     <section className={`w-full py-16 sm:py-24 border-b border-[var(--border)] ${className}`}>
@@ -38,23 +47,15 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
           <div className="relative z-1 max-w-2xl mx-auto flex flex-col items-center">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold mb-5">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>
-                {isId
-                  ? "Tersedia untuk Peluang Baru"
-                  : "Open to New Opportunities"}
-              </span>
+              <span>{badgeText}</span>
             </div>
 
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-4 leading-[1.2]">
-              {isId
-                ? "Punya proyek produk atau peran yang ingin didiskusikan?"
-                : "Have a product challenge or an open role to discuss?"}
+              {headlineText}
             </h2>
 
             <p className="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-8 max-w-xl">
-              {isId
-                ? "Saya siap membantu mentransformasi ide menjadi produk digital yang intuitif, cepat, dan berdampak."
-                : "I am ready to help turn your product ideas into intuitive, fast, and measurable digital experiences."}
+              {descriptionText}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
@@ -62,7 +63,7 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
-                <span>{messages.hero.ctaContact}</span>
+                <span>{primaryBtnText}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 

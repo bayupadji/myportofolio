@@ -1,13 +1,5 @@
-import React from "react";
-import { container } from "@/infrastructure/container";
-import { ProfileManager } from "@/presentation/components/admin/ProfileManager";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Profile & Availability · Bayu Portfolio CMS",
-};
-
-export default async function AdminProfilePage() {
-  const profile = await container.getProfile.execute();
-
-  return <ProfileManager initialProfile={profile} />;
+export default function AdminProfilePage() {
+  redirect("/admin/about");
 }

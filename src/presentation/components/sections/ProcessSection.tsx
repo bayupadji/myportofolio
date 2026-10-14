@@ -6,34 +6,50 @@ import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 import { CardSpotlight } from "../ui/CardSpotlight";
 
+import { ProcessStepItem } from "@/domain/entities/Profile";
+
 export interface ProcessSectionProps {
   locale?: Locale;
   messages: Messages;
+  customSteps?: ProcessStepItem[];
 }
 
-export const ProcessSection: React.FC<ProcessSectionProps> = ({ messages }) => {
-  const steps = [
-    {
-      icon: <Search className="w-5 h-5 text-[var(--accent)]" />,
-      title: messages.process.step1Title,
-      desc: messages.process.step1Desc,
-    },
-    {
-      icon: <Compass className="w-5 h-5 text-[var(--accent)]" />,
-      title: messages.process.step2Title,
-      desc: messages.process.step2Desc,
-    },
-    {
-      icon: <LayoutGrid className="w-5 h-5 text-[var(--accent)]" />,
-      title: messages.process.step3Title,
-      desc: messages.process.step3Desc,
-    },
-    {
-      icon: <CheckCircle className="w-5 h-5 text-[var(--accent)]" />,
-      title: messages.process.step4Title,
-      desc: messages.process.step4Desc,
-    },
+export const ProcessSection: React.FC<ProcessSectionProps> = ({ messages, customSteps }) => {
+  const defaultIcons = [
+    <Search key="1" className="w-5 h-5 text-[var(--accent)]" />,
+    <Compass key="2" className="w-5 h-5 text-[var(--accent)]" />,
+    <LayoutGrid key="3" className="w-5 h-5 text-[var(--accent)]" />,
+    <CheckCircle key="4" className="w-5 h-5 text-[var(--accent)]" />,
   ];
+
+  const steps = customSteps && customSteps.length > 0
+    ? customSteps.map((cs, idx) => ({
+        icon: defaultIcons[idx % defaultIcons.length],
+        title: cs.title.en,
+        desc: cs.description.en,
+      }))
+    : [
+        {
+          icon: defaultIcons[0],
+          title: messages.process.step1Title,
+          desc: messages.process.step1Desc,
+        },
+        {
+          icon: defaultIcons[1],
+          title: messages.process.step2Title,
+          desc: messages.process.step2Desc,
+        },
+        {
+          icon: defaultIcons[2],
+          title: messages.process.step3Title,
+          desc: messages.process.step3Desc,
+        },
+        {
+          icon: defaultIcons[3],
+          title: messages.process.step4Title,
+          desc: messages.process.step4Desc,
+        },
+      ];
 
   return (
     <section className="w-full py-16 sm:py-24 border-b border-[var(--border)] bg-[var(--surface-hover)]/40">

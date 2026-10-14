@@ -17,6 +17,9 @@ export interface HeroProps {
   metrics: HeroMetric[];
   availability: string;
   avatarUrl?: string;
+  roleText?: string;
+  headlineText?: string;
+  valueStatementText?: string;
 }
 
 export const Hero: React.FC<HeroProps> = ({
@@ -25,6 +28,9 @@ export const Hero: React.FC<HeroProps> = ({
   metrics,
   availability,
   avatarUrl,
+  roleText,
+  headlineText,
+  valueStatementText,
 }) => {
   return (
     <section className="relative w-full pt-10 pb-16 sm:pt-16 sm:pb-24 border-b border-[var(--border)] overflow-hidden">
@@ -50,13 +56,24 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* Role badge */}
             <p className="text-sm font-semibold tracking-wider uppercase text-[var(--accent)] mb-3">
-              {messages.hero.role}
+              {roleText || messages.hero.role}
             </p>
 
             {/* Heading with 1 H1 per page */}
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--text)] leading-[1.15] mb-6">
-              Hi, I’m <span className="text-[var(--accent)]">Bayu</span>. <br />
-              {messages.hero.valueStatement}
+              {headlineText ? (
+                <>
+                  {headlineText} <br />
+                  <span className="text-[var(--text-muted)] font-bold text-2xl sm:text-4xl block mt-2">
+                    {valueStatementText || messages.hero.valueStatement}
+                  </span>
+                </>
+              ) : (
+                <>
+                  Hi, I’m <span className="text-[var(--accent)]">Bayu</span>. <br />
+                  {valueStatementText || messages.hero.valueStatement}
+                </>
+              )}
             </h1>
 
             {/* Bio statement */}
