@@ -1,7 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Lightbox } from "@/presentation/components/ui/Lightbox";
 import { QueryProvider } from "@/presentation/providers/QueryProvider";
+
+const fontSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans-loaded",
+  display: "swap",
+});
+
+const fontMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono-loaded",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Bayu · Generalist Product Designer (UI/UX)",
@@ -69,7 +82,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="antialiased selection:bg-[var(--accent)] selection:text-[var(--accent-contrast)]">
+      <body className={`${fontSans.variable} ${fontMono.variable} antialiased selection:bg-[var(--accent)] selection:text-[var(--accent-contrast)]`}>
         <QueryProvider>
           {children}
           <Lightbox />
