@@ -23,7 +23,11 @@ function applyTheme(pref: ThemePreference) {
 
 const emptySubscribe = () => () => {};
 
-export const ThemeToggle: React.FC = () => {
+export interface ThemeToggleProps {
+  className?: string;
+}
+
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
   const { theme, setTheme } = useUiStore();
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
@@ -38,16 +42,23 @@ export const ThemeToggle: React.FC = () => {
     applyTheme(next);
   };
 
+  const defaultClasses =
+    "h-9 w-9 flex-none rounded-full border border-[var(--border)] bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--accent)] text-[var(--text)] transition-all duration-300 hover:rotate-[20deg] flex items-center justify-center cursor-pointer shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 shrink-0";
+
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-[16px] bg-[var(--surface)] border border-[var(--border)] animate-pulse" />
+      <div
+        className={
+          className || "w-9 h-9 rounded-full bg-[var(--surface)] border border-[var(--border)] animate-pulse shrink-0"
+        }
+      />
     );
   }
 
   return (
     <button
       onClick={cycleTheme}
-      className="p-2.5 rounded-[16px] border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
+      className={className || defaultClasses}
       aria-label={`Current theme: ${theme}. Click to change theme.`}
       title={`Theme: ${theme.toUpperCase()} (Click to toggle)`}
     >
@@ -57,3 +68,4 @@ export const ThemeToggle: React.FC = () => {
     </button>
   );
 };
+
