@@ -102,11 +102,11 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
             )}
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] leading-tight max-w-4xl mb-4">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] leading-tight max-w-4xl mb-4 text-balance">
             {title}
           </h1>
 
-          <p className="text-lg sm:text-xl text-[var(--text-muted)] max-w-3xl leading-relaxed mb-8">
+          <p className="text-lg sm:text-xl text-[var(--text-muted)] max-w-3xl leading-relaxed mb-8 text-pretty">
             {summary}
           </p>
 
@@ -115,12 +115,12 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
             {project.metrics.map((m, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--background)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-lg"
+                className="p-4 sm:p-5 rounded-xl border border-[var(--border)] bg-[var(--background)] shadow-2xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md"
               >
-                <div className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)]">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)] font-mono tabular-nums">
                   {m.value}
                 </div>
-                <div className="text-xs sm:text-sm text-[var(--text-muted)] font-medium mt-0.5">
+                <div className="text-xs sm:text-sm text-[var(--text-muted)] font-medium mt-0.5 text-balance">
                   {resolveLocalized(m.label, locale).text}
                 </div>
               </div>

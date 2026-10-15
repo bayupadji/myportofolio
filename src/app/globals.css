@@ -106,9 +106,22 @@ code, kbd, samp, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Enforce 16px border-radius on buttons across the entire design system */
+/* Designer canvas subtle grid & dot matrix patterns */
+.bg-designer-grid {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-designer-subtle {
+  background-image: 
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Base button defaults */
 button {
-  border-radius: 16px;
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

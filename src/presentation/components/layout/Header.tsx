@@ -37,9 +37,9 @@ export const Header: React.FC<HeaderProps> = ({ messages }) => {
 
   return (
     <header className="sticky top-2.5 sm:top-4 z-40 w-full px-3 sm:px-4 flex justify-center pointer-events-none transition-all duration-300">
-      {/* <a href="#main-content" className="skip-to-content pointer-events-auto">
+      <a href="#main-content" className="skip-to-content pointer-events-auto">
         Skip to content
-      </a> */}
+      </a>
 
       {/* Floating Island Capsule with Liquid Glass */}
       <div

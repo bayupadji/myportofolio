@@ -36,7 +36,7 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <CardSpotlight
           size={380}
-          className="relative rounded-[24px] sm:rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-8 sm:p-14 lg:p-16 text-center shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[var(--accent)] hover:shadow-2xl overflow-hidden"
+          className="relative rounded-2xl sm:rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-8 sm:p-12 lg:p-14 text-center shadow-2xs transition-all duration-200 ease-out hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-xl overflow-hidden"
         >
           {/* Ambient radial gradient glow */}
           <div
@@ -45,23 +45,23 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
           />
 
           <div className="relative z-1 max-w-2xl mx-auto flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold mb-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-mono font-semibold uppercase tracking-wider mb-4 border border-[var(--accent)]/20">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{badgeText}</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-4 leading-[1.2]">
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text)] mb-4 leading-tight text-balance">
               {headlineText}
             </h2>
 
-            <p className="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-8 max-w-xl">
+            <p className="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-8 max-w-xl text-pretty">
               {descriptionText}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{primaryBtnText}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -69,7 +69,7 @@ export const CtaCardSection: React.FC<CtaCardSectionProps> = ({
 
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[16px] border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-semibold text-base hover:bg-[var(--surface-hover)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] min-h-[48px] w-full sm:w-auto"
               >
                 <span>{messages.nav.services}</span>
               </Link>

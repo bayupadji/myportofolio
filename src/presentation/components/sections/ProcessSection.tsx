@@ -62,22 +62,22 @@ const StepCard: React.FC<{
   >
     {/* Top Row: Step Badge & Prominent Accent Icon Box */}
     <div className="flex items-center justify-between gap-4">
-      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-hover)] text-xs font-mono font-semibold tracking-wider text-[var(--text)] shadow-2xs">
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-[var(--border)] bg-[var(--surface-hover)] text-xs font-mono font-semibold tracking-wider text-[var(--text)] shadow-2xs tabular-nums">
         <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
-        <span>STEP : 0{step.stepNumber}</span>
+        <span>PHASE : 0{step.stepNumber}</span>
       </div>
 
-      <div className="w-13 h-13 sm:w-15 sm:h-15 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] text-[var(--accent-contrast)] flex items-center justify-center shadow-md shadow-[var(--accent)]/20 shrink-0">
+      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] text-[var(--accent-contrast)] flex items-center justify-center shadow-md shadow-[var(--accent)]/20 shrink-0">
         {step.icon}
       </div>
     </div>
 
     {/* Middle: Title & Description */}
     <div className="my-auto py-3">
-      <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)] mb-2.5">
+      <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)] mb-2.5 text-balance">
         {step.title}
       </h3>
-      <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+      <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed text-pretty">
         {step.desc}
       </p>
     </div>
@@ -363,14 +363,15 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
             <div className="flex items-end justify-between gap-4 pb-4 border-b border-[var(--border)]/60">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
-                    {messages.process.badge}
+                  <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[var(--accent)] flex items-center gap-1.5">
+                    <span>❖</span>
+                    <span>{messages.process.badge}</span>
                   </span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl xl:text-4xl font-extrabold tracking-tight text-[var(--text)]">
+                <h2 className="text-2xl sm:text-3xl xl:text-4xl font-extrabold tracking-tight text-[var(--text)] text-balance">
                   {messages.process.title}
                 </h2>
-                <p className="mt-1.5 text-sm sm:text-base text-[var(--text-muted)] max-w-xl">
+                <p className="mt-1.5 text-sm sm:text-base text-[var(--text-muted)] max-w-xl text-pretty">
                   {messages.process.subtitle}
                 </p>
               </div>
@@ -382,15 +383,15 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
                     key={i}
                     type="button"
                     onClick={() => jumpTo(i)}
-                    className={`h-9 px-3.5 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
+                    className={`h-9 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer tabular-nums font-mono ${
                       activeStep === i
-                        ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm shadow-[var(--accent)]/30 scale-105"
+                        ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs scale-105"
                         : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--text)]"
                     }`}
                     aria-label={`Jump to Step ${s.stepNumber}: ${s.title}`}
                   >
-                    <span className="font-mono">0{s.stepNumber}</span>
-                    <span className="hidden xl:inline ml-1.5">{s.title.split(" ")[0]}</span>
+                    <span>0{s.stepNumber}</span>
+                    <span className="hidden xl:inline ml-1.5 font-sans font-medium">{s.title.split(" ")[0]}</span>
                   </button>
                 ))}
               </div>

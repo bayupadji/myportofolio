@@ -108,28 +108,29 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
           {/* Left Info Column */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] block mb-3">
-                {messages.contact.badge}
-              </span>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-mono font-semibold uppercase tracking-wider mb-4 border border-[var(--accent)]/20">
+                <span>❖</span>
+                <span>{messages.contact.badge}</span>
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-4 text-balance leading-tight">
                 {messages.contact.title}
               </h1>
-              <p className="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-8">
+              <p className="text-base sm:text-lg text-[var(--text-muted)] leading-relaxed mb-8 text-pretty">
                 {messages.contact.subtitle}
               </p>
 
               <div className="space-y-4">
                 {/* One-click email copy */}
-                <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] flex items-center justify-between">
+                <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] flex items-center justify-between shadow-2xs">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)]">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-xs text-[var(--text-muted)] block">
+                      <span className="text-xs text-[var(--text-muted)] block font-mono">
                         {messages.contact.directEmail}
                       </span>
-                      <span className="text-sm font-semibold text-[var(--text)]">
+                      <span className="text-sm font-semibold text-[var(--text)] font-mono">
                         {email}
                       </span>
                     </div>
@@ -137,7 +138,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   <button
                     type="button"
                     onClick={copyEmailToClipboard}
-                    className="p-2.5 rounded-[16px] border border-[var(--border)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    className="p-2.5 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] text-[var(--text)] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                     aria-label={messages.contact.copyEmail}
                     title={messages.contact.copyEmail}
                   >
@@ -332,7 +333,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   <button
                     type="submit"
                     disabled={contactMutation.isPending}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 disabled:opacity-50 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px]"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 disabled:opacity-50 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] cursor-pointer"
                   >
                     {contactMutation.isPending ? (
                       <span>{messages.contact.submitting}</span>

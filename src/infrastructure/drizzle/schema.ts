@@ -110,3 +110,13 @@ export const messagesTable = sqliteTable("messages", {
   status: text("status").$type<"unread" | "read" | "replied">().notNull().default("unread"),
   createdAt: text("created_at").notNull(),
 });
+
+// 7. Admin Users Table
+export const adminUsersTable = sqliteTable("admin_users", {
+  id: text("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").notNull().default("admin"),
+  createdAt: text("created_at").notNull(),
+});
+

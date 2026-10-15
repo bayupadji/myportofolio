@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { container } from "@/infrastructure/container";
 import { AdminSidebar } from "@/presentation/components/admin/AdminSidebar";
+import { AdminTopBar } from "@/presentation/components/admin/AdminTopBar";
 
 export const metadata = {
   title: "Admin Dashboard · Bayu Portfolio CMS",
@@ -20,9 +21,9 @@ export default async function AdminDashboardLayout({
   const cookieStore = await cookies();
   const authCookie = cookieStore.get("portfolio_admin_auth");
 
-  // Protect all dashboard routes
-  if (authCookie?.value !== "authenticated") {
-    redirect("/admin/login");
+  // Protect all dashboard routes (session expires automatically after 5 minutes)
+  if (!authCookie || !authCookie.value) {
+    redirect("/admin/login?expired=1");
   }
 
   // Fetch count & availability for sidebar
@@ -40,6 +41,7 @@ export default async function AdminDashboardLayout({
         isAvailable={profile.isAvailableForFreelance}
       />
       <div className="lg:pl-64 flex flex-col min-h-screen">
+        <AdminTopBar />
         <main className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full">
           {children}
         </main>

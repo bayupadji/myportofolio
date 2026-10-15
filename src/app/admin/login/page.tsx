@@ -3,18 +3,30 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Shield, KeyRound, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import {
+  Shield,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [pin, setPin] = useState("");
+  const [username, setUsername] = useState("skyviadmin");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pin.trim()) {
-      setError("Please enter your admin PIN");
+    if (!username.trim() || !password) {
+      setError("Masukkan username dan password admin.");
       return;
     }
 
@@ -25,103 +37,182 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pin }),
+        body: JSON.stringify({
+          username: username.trim(),
+          password,
+        }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Invalid PIN entered");
+        throw new Error(data.error || "Autentikasi gagal. Periksa kredensial Anda.");
       }
 
       router.push("/admin");
       router.refresh();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Authentication failed";
+      const msg = err instanceof Error ? err.message : "Autentikasi gagal";
       setError(msg);
-      setPin("");
+      setPassword("");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex flex-col justify-center items-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[var(--background)] bg-designer-grid flex flex-col justify-center items-center p-4 relative overflow-hidden">
+      {/* Ambient Lighting */}
+      <div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[300px] bg-[var(--accent)]/10 blur-[120px] pointer-events-none rounded-full"
+        aria-hidden="true"
+      />
+
+      <div className="w-full max-w-md relative z-10">
         {/* Back Link */}
         <div className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Public Portfolio</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Kembali ke Web Portofolio</span>
           </Link>
         </div>
 
         {/* Card */}
-        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 shadow-lg">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 shadow-xl">
+          {/* Header */}
+          <div className="flex items-center gap-3.5 mb-6 pb-5 border-b border-[var(--border)]">
+            <div className="w-11 h-11 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center font-bold shadow-2xs">
+              <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-[var(--text)]">Admin Portal</h1>
-              <p className="text-xs text-[var(--text-muted)]">
-                Bayu Portfolio CMS &bull; Owner Access
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-bold text-[var(--text)] leading-tight text-balance">
+                  Admin Control Center
+                </h1>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  SQLite DB
+                </span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                Bayu Portfolio CMS &bull; Drizzle ORM
               </p>
             </div>
           </div>
 
           {error && (
-            <div className="mb-6 p-3.5 rounded-xl bg-[var(--error)]/10 border border-[var(--error)]/25 text-[var(--error)] text-xs flex items-center gap-2.5">
+            <div
+              role="alert"
+              className="mb-5 p-3 rounded-xl bg-[var(--error)]/10 border border-[var(--error)]/25 text-[var(--error)] text-xs flex items-center gap-2.5 animate-in fade-in"
+            >
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Username Input */}
             <div>
               <label
-                htmlFor="pin-input"
-                className="block text-xs font-semibold text-[var(--text)] uppercase tracking-wider mb-2"
+                htmlFor="username-input"
+                className="block text-xs font-mono font-semibold text-[var(--text)] uppercase tracking-wider mb-1.5"
               >
-                Enter Secret PIN
+                Username
               </label>
               <div className="relative">
                 <input
-                  id="pin-input"
-                  type="password"
-                  maxLength={6}
-                  value={pin}
+                  id="username-input"
+                  type="text"
+                  value={username}
                   onChange={(e) => {
                     setError(null);
-                    setPin(e.target.value);
+                    setUsername(e.target.value);
                   }}
-                  placeholder="&bull; &bull; &bull; &bull;"
-                  className="w-full text-center tracking-[0.5em] text-2xl font-mono px-4 py-3 bg-[var(--background)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
-                  autoFocus
+                  placeholder="skyviadmin"
+                  required
+                  autoComplete="username"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[var(--background)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all font-mono"
                   disabled={isLoading}
                 />
-                <KeyRound className="w-4 h-4 text-[var(--text-muted)] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <User className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
-              <p className="mt-2 text-[11px] text-[var(--text-muted)] text-center">
-                Development default PIN: <code className="font-mono font-bold text-[var(--accent)]">1234</code>
-              </p>
             </div>
 
+            {/* Password Input */}
+            <div>
+              <label
+                htmlFor="password-input"
+                className="block text-xs font-mono font-semibold text-[var(--text)] uppercase tracking-wider mb-1.5"
+              >
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password-input"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => {
+                    setError(null);
+                    setPassword(e.target.value);
+                  }}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="w-full pl-10 pr-11 py-2.5 bg-[var(--background)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all font-mono"
+                  disabled={isLoading}
+                  autoFocus
+                />
+                <Lock className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
+                  aria-label={showPassword ? "Sembunyikan password" : "Lihat password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Credential Helper Spec Chip */}
+            <div className="p-3 rounded-xl bg-[var(--surface-hover)] border border-[var(--border)] text-[11px] text-[var(--text-muted)] font-mono space-y-1">
+              <div className="flex items-center gap-1.5 text-[var(--text)] font-semibold">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Kredensial Default Terkonfigurasi:</span>
+              </div>
+              <div className="pl-5 space-y-0.5">
+                <div>
+                  User: <code className="text-[var(--accent)] font-bold">skyviadmin</code>
+                </div>
+                <div>
+                  Pass: <code className="text-[var(--accent)] font-bold">skyvi1234</code>
+                </div>
+                <div className="pt-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                  <span>&bull;</span>
+                  <span>Sesi login aman: Otomatis kedaluwarsa per 5 menit</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading || pin.length === 0}
-              className="w-full py-3 px-4 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 disabled:opacity-50 font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-xs"
+              disabled={isLoading || !username.trim() || !password}
+              className="w-full py-3 px-4 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-95 disabled:opacity-50 font-semibold rounded-xl text-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[var(--accent)]/20"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Verifying...</span>
+                  <span>Memverifikasi akun...</span>
                 </>
               ) : (
-                <span>Open Dashboard</span>
+                <span>Masuk ke Dashboard</span>
               )}
             </button>
           </form>
@@ -130,3 +221,4 @@ export default function AdminLoginPage() {
     </div>
   );
 }
+

@@ -95,24 +95,42 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
           return (
             <CardSpotlight
               key={project.id}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-[var(--accent)] hover:shadow-2xl flex flex-col group"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-2xs transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[var(--accent)] hover:shadow-xl flex flex-col group overflow-hidden"
             >
+              {/* Prototype / Application Window Header Bar */}
+              <div
+                aria-hidden="true"
+                className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--border)] bg-[var(--surface-hover)]/70 text-[10px] font-mono text-[var(--text-muted)] select-none"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-[var(--border)] group-hover:bg-[#FF5F56] transition-colors" />
+                  <span className="h-2 w-2 rounded-full bg-[var(--border)] group-hover:bg-[#FFBD2E] transition-colors" />
+                  <span className="h-2 w-2 rounded-full bg-[var(--border)] group-hover:bg-[#27C93F] transition-colors" />
+                </div>
+                <div className="px-2 py-0.5 rounded bg-[var(--surface)] border border-[var(--border)]/60 text-[10px] tracking-tight">
+                  <span>{project.slug}.design // {project.category.toLowerCase()}</span>
+                </div>
+                <div className="text-[9px] uppercase tracking-wider text-[var(--accent)] font-semibold">
+                  Case Study
+                </div>
+              </div>
+
               {/* Thumbnail Container */}
               <div className="relative aspect-16/10 w-full overflow-hidden bg-[var(--surface-hover)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={project.coverUrl}
                   alt={title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   loading="lazy"
                 />
 
                 <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-                  <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-black/60 backdrop-blur-md text-white border border-white/10">
+                  <span className="px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-black/70 backdrop-blur-md text-white border border-white/10 shadow-xs">
                     {project.category}
                   </span>
                   {project.isSampleProject && (
-                    <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-500/90 text-white shadow-xs">
+                    <span className="px-2 py-1 rounded-md text-[10px] font-mono font-bold bg-amber-500/90 text-white shadow-xs">
                       {messages.work.sampleProjectBadge}
                     </span>
                   )}
@@ -122,7 +140,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
                 <button
                   type="button"
                   onClick={() => setQuickViewProject(project)}
-                  className="absolute top-3 right-3 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] bg-black/75 backdrop-blur-md text-white text-xs font-medium hover:bg-black/90 active:scale-95 shadow-lg border border-white/10 cursor-pointer"
+                  className="absolute top-3 right-3 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/80 backdrop-blur-md text-white text-xs font-medium hover:bg-black active:scale-95 shadow-lg border border-white/15 cursor-pointer"
                   aria-label={`${messages.work.quickView} ${title}`}
                 >
                   <Eye className="w-3.5 h-3.5" />
@@ -130,9 +148,9 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
                 </button>
 
                 {primaryMetric && (
-                  <div className="absolute bottom-3 right-3 bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] rounded-[16px] px-3 py-1.5 shadow-md flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]">
+                  <div className="absolute bottom-3 right-3 bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] rounded-lg px-3 py-1.5 shadow-md flex items-center gap-1.5 text-xs font-bold text-[var(--accent)] tabular-nums font-mono">
                     <CountUp value={primaryMetric.value} />
-                    <span className="text-[var(--text-muted)] font-normal text-[11px]">
+                    <span className="text-[var(--text-muted)] font-normal text-[11px] font-sans">
                       {resolveLocalized(primaryMetric.label, locale).text}
                     </span>
                   </div>
@@ -140,16 +158,20 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
               </div>
 
               {/* Content */}
-              <div className="flex flex-col flex-1 p-6">
-                <div className="flex items-center gap-2 mb-2.5 flex-wrap">
+              <div className="flex flex-col flex-1 p-5 sm:p-6">
+                {/* Platform & Role tags */}
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
                   {project.platforms.map((p) => (
                     <Tag key={p} size="sm">
                       {p}
                     </Tag>
                   ))}
+                  <span className="text-xs text-[var(--text-muted)] font-mono">
+                    · {project.role}
+                  </span>
                 </div>
 
-                <h3 className="text-xl font-bold tracking-tight text-[var(--text)] group-hover:text-[var(--accent)] transition-colors mb-2">
+                <h3 className="text-xl font-bold tracking-tight text-[var(--text)] group-hover:text-[var(--accent)] transition-colors mb-2 text-balance leading-snug">
                   <Link
                     href={`/work/${project.slug}`}
                     className="focus-visible:outline-2 focus-visible:rounded"
@@ -158,7 +180,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
                   </Link>
                 </h3>
 
-                <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-6 line-clamp-2">
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-6 line-clamp-2 text-pretty">
                   {summary}
                 </p>
 
@@ -175,7 +197,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
 
                   <Link
                     href={`/work/${project.slug}`}
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] group-hover:translate-x-0.5 transition-transform min-h-[44px]"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--accent)] group-hover:translate-x-0.5 transition-transform min-h-[44px]"
                   >
                     <span>{messages.work.viewProject}</span>
                     <ArrowUpRight className="w-4 h-4" />

@@ -49,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
             <div className="flex items-center gap-2 mt-2">
               <button
                 onClick={copyEmail}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[16px] border border-[var(--border)] text-xs font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors min-h-[44px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs font-mono font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors min-h-[44px] cursor-pointer"
                 aria-label={messages.contact.copyEmail}
               >
                 {copied ? (
@@ -148,11 +148,15 @@ export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)]">
-          <p>© 2026 Bayu. {messages.footer.rights}</p>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)] font-mono">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-center sm:text-left">
+            <p>© 2026 Bayu · Generalist Product Designer</p>
+            <span className="hidden sm:inline text-[var(--border)]">|</span>
+            <p className="text-[11px] text-[var(--text-muted)]">Built to WCAG 2.2 AA · 8px Grid System</p>
+          </div>
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1.5 hover:text-[var(--text)] transition-colors min-h-[44px] px-2 py-1"
+            className="flex items-center gap-1.5 hover:text-[var(--text)] transition-colors min-h-[44px] px-2 py-1 cursor-pointer font-sans"
             aria-label={messages.footer.backToTop}
           >
             <span>{messages.footer.backToTop}</span>

@@ -125,7 +125,35 @@ function initializeDatabase(): {
       status TEXT NOT NULL DEFAULT 'unread',
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS admin_users (
+      id TEXT PRIMARY KEY,
+      username TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'admin',
+      created_at TEXT NOT NULL
+    );
   `);
+
+  // Ensure default admin user 'skyviadmin' exists with password 'skyvi1234' (atomic for multi-worker builds)
+  try {
+    sqlite
+      .prepare(`
+        INSERT INTO admin_users (id, username, password_hash, role, created_at)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(username) DO UPDATE SET
+          password_hash = excluded.password_hash
+      `)
+      .run(
+        "admin-skyviadmin",
+        "skyviadmin",
+        hashPassword("skyvi1234"),
+        "admin",
+        new Date().toISOString()
+      );
+  } catch (err) {
+    console.error("Error ensuring skyviadmin user:", err);
+  }
 
   const db = drizzle(sqlite, { schema });
 
@@ -137,6 +165,31 @@ function initializeDatabase(): {
   return { db, sqlite };
 }
 
+import crypto from "crypto";
+
+export function hashPassword(
+  password: string,
+  salt = crypto.randomBytes(16).toString("hex")
+): string {
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
+
+export function verifyPassword(password: string, combinedHash: string): boolean {
+  try {
+    const [salt, originalHash] = combinedHash.split(":");
+    if (!salt || !originalHash) return false;
+    const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+    return crypto.timingSafeEqual(
+      Buffer.from(hash, "hex"),
+      Buffer.from(originalHash, "hex")
+    );
+  } catch {
+    return false;
+  }
+}
+
 const { db, sqlite } = initializeDatabase();
 
 export { db, sqlite };
+

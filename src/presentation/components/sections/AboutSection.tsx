@@ -47,30 +47,31 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         {/* Story / Intro */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-[var(--border)] items-center">
           <div className="lg:col-span-7">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] block mb-3">
-              {messages.about.badge}
-            </span>
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-mono font-semibold uppercase tracking-wider mb-4 border border-[var(--accent)]/20">
+              <span>❖</span>
+              <span>{messages.about.badge}</span>
+            </div>
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-6 text-balance leading-tight">
               {messages.about.title}
             </h1>
 
             <div className="space-y-4 text-base sm:text-lg text-[var(--text)] leading-relaxed">
-              <p>{messages.about.bio1}</p>
-              <p>{messages.about.bio2}</p>
-              <p className="text-[var(--text-muted)]">{messages.about.bio3}</p>
+              <p className="text-pretty">{messages.about.bio1}</p>
+              <p className="text-pretty">{messages.about.bio2}</p>
+              <p className="text-[var(--text-muted)] text-pretty">{messages.about.bio3}</p>
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href={profile.cvUrl}
                 download
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-[16px] bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-sm hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[44px]"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-sm hover:opacity-95 shadow-md shadow-[var(--accent)]/20 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[44px]"
               >
                 <FileText className="w-4 h-4" />
                 <span>{messages.about.downloadCv}</span>
               </a>
 
-              <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] font-medium">
+              <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] font-mono">
                 <MapPin className="w-4 h-4 text-[var(--accent)]" />
                 <span>{profile.location}</span>
               </div>
@@ -283,26 +284,26 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-            <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl">
-              <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
+            <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-2xs transition-all duration-200 ease-out hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-lg">
+              <span className="text-xs font-mono font-bold text-[var(--accent)] uppercase tracking-wider block mb-1 tabular-nums">
                 2015 - 2019
               </span>
-              <h3 className="font-bold text-lg text-[var(--text)]">
+              <h3 className="font-bold text-lg text-[var(--text)] text-balance">
                 Bachelor of Computer Science (Informatics)
               </h3>
-              <p className="text-sm text-[var(--text-muted)] mt-1">
+              <p className="text-sm text-[var(--text-muted)] mt-1 text-pretty">
                 Bandung Institute of Technology (ITB) · Focus in HCI & Software Ergonomics
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[var(--accent)] hover:shadow-xl">
-              <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
+            <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-2xs transition-all duration-200 ease-out hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-lg">
+              <span className="text-xs font-mono font-bold text-[var(--accent)] uppercase tracking-wider block mb-1 tabular-nums">
                 2022
               </span>
-              <h3 className="font-bold text-lg text-[var(--text)]">
+              <h3 className="font-bold text-lg text-[var(--text)] text-balance">
                 Nielsen Norman Group (NN/g) UX Master Certified
               </h3>
-              <p className="text-sm text-[var(--text-muted)] mt-1">
+              <p className="text-sm text-[var(--text-muted)] mt-1 text-pretty">
                 Specialization in Interaction Design & Design Systems Governance
               </p>
             </div>
