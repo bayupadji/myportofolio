@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Eye, Info } from "lucide-react";
 import { Project } from "@/domain/entities/Project";
 import { Locale, resolveLocalized } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
+import { useUiStore } from "@/presentation/stores/useUiStore";
 import { Tag } from "../ui/Tag";
 import { CardSpotlight } from "../ui/CardSpotlight";
 import { ProjectQuickViewModal } from "../ui/ProjectQuickViewModal";
@@ -18,8 +19,12 @@ export interface WorkGridProps {
 }
 
 export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }) => {
-  const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [quickViewProject, setQuickViewProject] = useState<Project | null>(null);
+  const {
+    selectedCategory: activeCategory,
+    setSelectedCategory: setActiveCategory,
+    quickViewProject,
+    setQuickViewProject,
+  } = useUiStore();
 
   const categories = [
     { id: "All", label: messages.work.filterAll },

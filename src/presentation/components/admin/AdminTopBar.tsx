@@ -10,8 +10,10 @@ import {
   Sparkles,
   ChevronRight,
   ShieldCheck,
+  Menu,
 } from "lucide-react";
 import { ThemeToggle } from "@/presentation/components/layout/ThemeToggle";
+import { useUiStore } from "@/presentation/stores/useUiStore";
 
 const routeTitles: Record<string, { title: string; category: string }> = {
   "/admin": { title: "Overview", category: "Studio" },
@@ -24,6 +26,7 @@ const routeTitles: Record<string, { title: string; category: string }> = {
 
 export const AdminTopBar: React.FC = () => {
   const pathname = usePathname();
+  const { toggleAdminDrawer } = useUiStore();
   const currentRoute = routeTitles[pathname] || {
     title: pathname.replace("/admin/", "").replace(/^\w/, (c) => c.toUpperCase()),
     category: "Studio",
@@ -33,7 +36,15 @@ export const AdminTopBar: React.FC = () => {
     <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--surface)]/80 backdrop-blur-md px-4 sm:px-8 py-3 transition-colors">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Breadcrumb Path */}
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-2.5 text-xs">
+          <button
+            type="button"
+            onClick={toggleAdminDrawer}
+            className="lg:hidden p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] cursor-pointer"
+            aria-label="Toggle navigation drawer"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
           <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
             <span className="font-semibold">Studio</span>
             <ChevronRight className="w-3.5 h-3.5 opacity-40" />

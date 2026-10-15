@@ -15,9 +15,10 @@ import {
   CheckCircle2,
   Palette,
   Lock,
-  Menu,
   X,
 } from "lucide-react";
+
+import { useUiStore } from "@/presentation/stores/useUiStore";
 
 interface AdminSidebarProps {
   projectCount?: number;
@@ -32,7 +33,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { isAdminDrawerOpen: mobileOpen, setAdminDrawerOpen: setMobileOpen } = useUiStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const navGroups = [
@@ -121,26 +122,35 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     <div className="flex flex-col h-full bg-[var(--surface)] border-r border-[var(--border)] w-64 select-none">
       {/* Brand & Studio Header */}
       <div className="p-4 border-b border-[var(--border)]">
-        <Link href="/admin" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)] flex items-center justify-center font-bold shadow-xs transition-transform group-hover:scale-105">
-            <Palette className="w-4 h-4" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-xs text-[var(--text)] tracking-tight truncate">
-                Bayu · Studio CMS
-              </span>
-              <span className="text-[9px] font-mono font-semibold px-1 py-0.2 rounded bg-[var(--accent)]/10 text-[var(--accent)]">
-                Pro
-              </span>
+        <div className="flex items-center justify-between">
+          <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5 group min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)] flex items-center justify-center font-bold shadow-xs transition-transform group-hover:scale-105 shrink-0">
+              <Palette className="w-4 h-4" />
             </div>
-            <div className="text-[10px] text-[var(--text-muted)] truncate flex items-center gap-1">
-              <span>UI/UX Portfolio</span>
-              <span>&bull;</span>
-              <span className="text-[var(--success)] font-medium">SQLite DB</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[var(--text)] tracking-tight truncate">
+                  Bayu · Studio CMS
+                </span>
+                <span className="text-[9px] font-mono font-semibold px-1 py-0.2 rounded bg-[var(--accent)]/10 text-[var(--accent)]">
+                  Pro
+                </span>
+              </div>
+              <div className="text-[10px] text-[var(--text-muted)] truncate flex items-center gap-1">
+                <span>UI/UX Portfolio</span>
+                <span>&bull;</span>
+                <span className="text-[var(--success)] font-medium">SQLite DB</span>
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="lg:hidden p-1.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] cursor-pointer shrink-0 ml-2"
+            aria-label="Close navigation"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
         {/* User Card */}
         <div className="mt-3 p-2 rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-center gap-2.5">
@@ -273,31 +283,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         {navContent}
       </aside>
 
-      {/* Mobile Top Header */}
-      <header className="lg:hidden sticky top-0 z-40 bg-[var(--surface)] border-b border-[var(--border)] px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] flex items-center justify-center font-bold shadow-xs">
-            <Palette className="w-3.5 h-3.5" />
-          </div>
-          <span className="font-bold text-xs text-[var(--text)]">Bayu · Studio CMS</span>
-        </div>
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-lg border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface-hover)] cursor-pointer"
-          aria-label="Toggle Navigation"
-        >
-          {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-        </button>
-      </header>
-
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Drawer Overlay (Triggered via Zustand from AdminTopBar) */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex"
+          className="lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex animate-in fade-in duration-200"
           onClick={() => setMobileOpen(false)}
         >
           <div
-            className="h-full"
+            className="h-full shadow-2xl animate-in slide-in-from-left duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {navContent}

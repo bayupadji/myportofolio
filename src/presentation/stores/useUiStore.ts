@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { Project } from "@/domain/entities/Project";
 
 export interface LightboxData {
   url: string;
@@ -8,30 +9,54 @@ export interface LightboxData {
 
 export type ThemePreference = "light" | "dark" | "system";
 
-interface UiState {
+export interface UiState {
+  // Mobile Navigation Drawer (Public)
   isMobileDrawerOpen: boolean;
-  activeLightbox: LightboxData | null;
-  theme: ThemePreference;
-  selectedCategory: string;
-
   setMobileDrawerOpen: (open: boolean) => void;
   toggleMobileDrawer: () => void;
+
+  // Mobile Admin Sidebar Drawer
+  isAdminDrawerOpen: boolean;
+  setAdminDrawerOpen: (open: boolean) => void;
+  toggleAdminDrawer: () => void;
+
+  // Image Lightbox
+  activeLightbox: LightboxData | null;
   openLightbox: (data: LightboxData) => void;
   closeLightbox: () => void;
-  setTheme: (theme: ThemePreference) => void;
+
+  // Project Quick View Modal
+  quickViewProject: Project | null;
+  setQuickViewProject: (project: Project | null) => void;
+
+  // Case Studies Category Filter
+  selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+
+  // Theme Preference
+  theme: ThemePreference;
+  setTheme: (theme: ThemePreference) => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
   isMobileDrawerOpen: false,
-  activeLightbox: null,
-  theme: "system",
-  selectedCategory: "All",
-
   setMobileDrawerOpen: (open) => set({ isMobileDrawerOpen: open }),
   toggleMobileDrawer: () => set((state) => ({ isMobileDrawerOpen: !state.isMobileDrawerOpen })),
+
+  isAdminDrawerOpen: false,
+  setAdminDrawerOpen: (open) => set({ isAdminDrawerOpen: open }),
+  toggleAdminDrawer: () => set((state) => ({ isAdminDrawerOpen: !state.isAdminDrawerOpen })),
+
+  activeLightbox: null,
   openLightbox: (data) => set({ activeLightbox: data }),
   closeLightbox: () => set({ activeLightbox: null }),
-  setTheme: (theme) => set({ theme }),
+
+  quickViewProject: null,
+  setQuickViewProject: (project) => set({ quickViewProject: project }),
+
+  selectedCategory: "All",
   setSelectedCategory: (category) => set({ selectedCategory: category }),
+
+  theme: "system",
+  setTheme: (theme) => set({ theme }),
 }));
