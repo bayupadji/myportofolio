@@ -120,3 +120,12 @@ export const adminUsersTable = sqliteTable("admin_users", {
   createdAt: text("created_at").notNull(),
 });
 
+// 8. Page Views (Analytics) Table
+export const pageViewsTable = sqliteTable("page_views", {
+  id: text("id").primaryKey(),
+  path: text("path").notNull(),
+  referrer: text("referrer"),
+  visitorHash: text("visitor_hash").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+

@@ -16,10 +16,13 @@ export async function saveProjectAction(project: Project) {
 
     await container.saveProject(project);
 
-    // Revalidate public routes
+    // Revalidate public & admin routes
     revalidatePath("/");
     revalidatePath("/work");
     revalidatePath(`/work/${project.slug}`);
+    revalidatePath("/admin/projects");
+    revalidatePath("/admin");
+    revalidatePath("/admin/landing");
 
     return { success: true, project };
   } catch (err: unknown) {
@@ -38,9 +41,11 @@ export async function updateProjectStatusAction(id: string, status: PublishStatu
 
     await container.updateProjectStatus(id, status);
 
-    // Revalidate public routes
+    // Revalidate public & admin routes
     revalidatePath("/");
     revalidatePath("/work");
+    revalidatePath("/admin/projects");
+    revalidatePath("/admin");
 
     return { success: true, id, status };
   } catch (err: unknown) {
@@ -59,9 +64,11 @@ export async function deleteProjectAction(id: string) {
 
     await container.deleteProject(id);
 
-    // Revalidate public routes
+    // Revalidate public & admin routes
     revalidatePath("/");
     revalidatePath("/work");
+    revalidatePath("/admin/projects");
+    revalidatePath("/admin");
 
     return { success: true, id };
   } catch (err: unknown) {

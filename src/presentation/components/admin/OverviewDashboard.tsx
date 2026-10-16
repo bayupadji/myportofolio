@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   FolderGit2,
   Mail,
@@ -22,19 +23,25 @@ import {
 import { Project } from "@/domain/entities/Project";
 import { Message } from "@/domain/entities/Message";
 import { Profile } from "@/domain/entities/Profile";
+import { TrafficSummary } from "@/domain/entities/Analytics";
+import { toast } from "@/presentation/components/ui/Toast";
 import { useUpdateAvailabilityMutation } from "@/presentation/hooks/useAdminQueries";
+import { StudioTrafficChart } from "./StudioTrafficChart";
 
 interface OverviewDashboardProps {
   projects: Project[];
   messages: Message[];
   profile: Profile;
+  trafficSummary: TrafficSummary;
 }
 
 export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   projects,
   messages,
   profile,
+  trafficSummary,
 }) => {
+  const router = useRouter();
   const [isFreelance, setIsFreelance] = useState<boolean>(
     profile.isAvailableForFreelance
   );
@@ -47,15 +54,28 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
 
   const toggleAvailability = async () => {
     const newStatus = !isFreelance;
+    const statusEn = newStatus
+      ? "Available for Full-time & Selected Freelance"
+      : "Limited Availability / Waitlist";
+    const statusId = newStatus
+      ? "Tersedia untuk Full-time & Proyek Freelance Terpilih"
+      : "Ketersediaan Terbatas / Antrean";
+
     try {
       await updateAvailabilityMutation.mutateAsync({
-        statusEn: profile.availabilityStatus?.en || "Available",
-        statusId: profile.availabilityStatus?.id || "Tersedia",
+        statusEn,
+        statusId,
         isFreelance: newStatus,
       });
       setIsFreelance(newStatus);
+      toast.success(
+        `Availability status updated: ${newStatus ? "Open for Work" : "Limited Availability"}.`,
+        "Freelance Status Updated"
+      );
+      router.refresh();
     } catch (err) {
       console.error("Failed to update status", err);
+      toast.error("Failed to update availability status. Please try again.");
     }
   };
 
@@ -192,6 +212,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           <div className="pt-3 border-t border-[var(--border)]/50 flex items-center justify-between">
             <button
               onClick={toggleAvailability}
+              data-testid="toggle-availability-btn"
               disabled={isUpdatingStatus}
               className="text-[11px] font-semibold text-[var(--accent)] hover:underline disabled:opacity-50 cursor-pointer"
             >
@@ -222,6 +243,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Traffic & Audience Analytics Chart */}
+      <StudioTrafficChart initialSummary={trafficSummary} />
 
       {/* Portfolio Hub Section */}
       <div className="space-y-4">

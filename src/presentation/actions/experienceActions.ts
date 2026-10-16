@@ -17,6 +17,8 @@ export async function saveExperienceAction(experience: Experience) {
 
     revalidatePath("/about");
     revalidatePath("/");
+    revalidatePath("/admin/about");
+    revalidatePath("/admin");
 
     return { success: true, experience };
   } catch (err: unknown) {
@@ -37,6 +39,8 @@ export async function deleteExperienceAction(id: string) {
 
     revalidatePath("/about");
     revalidatePath("/");
+    revalidatePath("/admin/about");
+    revalidatePath("/admin");
 
     return { success: true, id };
   } catch (err: unknown) {

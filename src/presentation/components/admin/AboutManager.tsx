@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   UserCheck,
   Briefcase,
@@ -17,13 +18,16 @@ import {
 } from "lucide-react";
 import { Profile } from "@/domain/entities/Profile";
 import { Experience, ExperienceBullet } from "@/domain/entities/Experience";
-import { Skill } from "@/domain/entities/Skill";
+import { Skill, SkillGroup } from "@/domain/entities/Skill";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
 import { WysiwygEditor } from "@/presentation/components/ui/WysiwygEditor";
+import { toast } from "@/presentation/components/ui/Toast";
 import {
   useUpdateProfileMutation,
   useSaveExperienceMutation,
   useDeleteExperienceMutation,
+  useSaveSkillMutation,
+  useDeleteSkillMutation,
 } from "@/presentation/hooks/useAdminQueries";
 
 function bulletsToHtml(bullets: ExperienceBullet[]): string {
@@ -106,23 +110,69 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
   initialExperiences,
   initialSkills,
 }) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"bio" | "experience">("bio");
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
-  const [skills] = useState<Skill[]>(initialSkills);
+  const [skills, setSkills] = useState<Skill[]>(initialSkills);
 
   const updateProfileMutation = useUpdateProfileMutation();
   const saveExpMutation = useSaveExperienceMutation();
   const deleteExpMutation = useDeleteExperienceMutation();
+  const saveSkillMutation = useSaveSkillMutation();
+  const deleteSkillMutation = useDeleteSkillMutation();
 
   const isSavingProfile = updateProfileMutation.isPending;
   const isSavingExp = saveExpMutation.isPending;
+  const isSavingSkill = saveSkillMutation.isPending;
   const [profileSaved, setProfileSaved] = useState(false);
+
+  // Skill form state
+  const [newSkillName, setNewSkillName] = useState("");
+  const [newSkillGroup, setNewSkillGroup] = useState<SkillGroup>("UI/Visual");
+  const [newSkillLevel, setNewSkillLevel] = useState<"Expert" | "Proficient" | "Familiar">("Proficient");
 
   // Experience modal state
   const [editingExp, setEditingExp] = useState<Experience | null>(null);
   const [editorHtml, setEditorHtml] = useState<string>("");
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
+
+  const handleAddSkill = async () => {
+    const trimmed = newSkillName.trim();
+    if (!trimmed) return;
+
+    const newSkill: Skill = {
+      id: `skill-${Date.now()}`,
+      name: trimmed,
+      group: newSkillGroup,
+      level: newSkillLevel,
+      order: skills.length + 1,
+    };
+
+    try {
+      await saveSkillMutation.mutateAsync(newSkill);
+      setSkills((prev) => [...prev, newSkill]);
+      setNewSkillName("");
+      toast.success(`Skill "${newSkill.name}" added successfully.`, "Skill Added");
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add skill. Please try again.");
+    }
+  };
+
+  const handleDeleteSkill = async (id: string, name: string) => {
+    if (!window.confirm(`Delete skill "${name}"?`)) return;
+    try {
+      await deleteSkillMutation.mutateAsync(id);
+      setSkills((prev) => prev.filter((s) => s.id !== id));
+      toast.success(`Skill "${name}" was removed.`, "Skill Removed");
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete skill. Please try again.");
+    }
+  };
 
   // Handlers for Profile
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -131,9 +181,12 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
     try {
       await updateProfileMutation.mutateAsync(profile);
       setProfileSaved(true);
+      toast.success("Profile bio and story details saved successfully.", "Profile Updated");
+      router.refresh();
       setTimeout(() => setProfileSaved(false), 3000);
     } catch (err) {
       console.error(err);
+      toast.error("Failed to update profile. Please try again.");
     }
   };
 
@@ -176,13 +229,17 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
     try {
       await deleteExpMutation.mutateAsync(id);
       setExperiences((prev) => prev.filter((e) => e.id !== id));
+      toast.success(`Experience at "${company}" deleted.`, "Experience Deleted");
+      router.refresh();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to delete experience. Please try again.");
     }
   };
 
   const handleSaveExp = async () => {
     if (!editingExp || !editingExp.company.trim()) return;
+    const isNew = !experiences.some((e) => e.id === editingExp.id);
     try {
       await saveExpMutation.mutateAsync(editingExp);
       setExperiences((prev) => {
@@ -193,13 +250,21 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
         return [editingExp, ...prev];
       });
       setIsExpModalOpen(false);
+      toast.success(
+        isNew
+          ? `Experience at "${editingExp.company}" created successfully.`
+          : `Experience at "${editingExp.company}" updated successfully.`,
+        isNew ? "Experience Added" : "Experience Updated"
+      );
+      router.refresh();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to save experience. Please try again.");
     }
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl">
+    <div className="space-y-6 w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[var(--border)]">
         <div>
@@ -366,8 +431,8 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
             </div>
           </div>
 
-          {/* Skills Matrix Overview */}
-          <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs space-y-3">
+          {/* Skills Matrix */}
+          <div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="font-bold text-sm text-[var(--text)]">Design Skills Matrix</h2>
@@ -377,16 +442,70 @@ export const AboutManager: React.FC<AboutManagerProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-2">
+            {/* Inline add skill form */}
+            <div className="p-3.5 rounded-xl border border-[var(--border)] bg-[var(--background)] flex flex-wrap items-center gap-2">
+              <input
+                type="text"
+                value={newSkillName}
+                onChange={(e) => setNewSkillName(e.target.value)}
+                placeholder="Skill name (e.g. Design Systems, Prototyping)"
+                className="flex-1 min-w-[180px] px-3 py-1.5 text-xs rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)]"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddSkill();
+                  }
+                }}
+              />
+              <select
+                value={newSkillGroup}
+                onChange={(e) => setNewSkillGroup(e.target.value as SkillGroup)}
+                className="px-2.5 py-1.5 text-xs rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)]"
+              >
+                <option value="Research">Research</option>
+                <option value="UX/Product">UX/Product</option>
+                <option value="UI/Visual">UI/Visual</option>
+                <option value="Tools">Tools</option>
+                <option value="Light-dev">Light-dev</option>
+              </select>
+              <select
+                value={newSkillLevel}
+                onChange={(e) => setNewSkillLevel(e.target.value as "Expert" | "Proficient" | "Familiar")}
+                className="px-2.5 py-1.5 text-xs rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)]"
+              >
+                <option value="Expert">Expert</option>
+                <option value="Proficient">Proficient</option>
+                <option value="Familiar">Familiar</option>
+              </select>
+              <button
+                type="button"
+                onClick={handleAddSkill}
+                disabled={isSavingSkill || !newSkillName.trim()}
+                className="px-3.5 py-1.5 bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 font-semibold rounded-lg text-xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              >
+                {isSavingSkill ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                <span>Add Skill</span>
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2 pt-1">
               {skills.map((s) => (
                 <span
                   key={s.id}
-                  className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--background)] text-xs text-[var(--text)]"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--background)] text-xs text-[var(--text)] group hover:border-[var(--accent)]/40 transition-colors"
                 >
                   <span className="font-semibold">{s.name}</span>
-                  <span className="text-[10px] text-[var(--text-muted)] ml-1.5 opacity-70">
+                  <span className="text-[10px] text-[var(--text-muted)] opacity-70">
                     ({s.group})
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteSkill(s.id, s.name)}
+                    className="text-[var(--text-muted)] hover:text-red-500 ml-0.5 p-0.5 rounded cursor-pointer transition-colors"
+                    title={`Delete ${s.name}`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
                 </span>
               ))}
             </div>

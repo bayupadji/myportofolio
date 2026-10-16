@@ -15,12 +15,14 @@ export interface ServicesSectionProps {
   services: Service[];
   locale?: Locale;
   messages: Messages;
+  isAvailableForFreelance?: boolean;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
   services,
   locale,
   messages,
+  isAvailableForFreelance = true,
 }) => {
   return (
     <div className="w-full py-12 sm:py-20">
@@ -38,11 +40,26 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             {messages.services.subtitle}
           </p>
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/20 text-xs font-semibold">
+          <div
+            data-testid="services-availability-badge"
+            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-xs font-semibold ${
+              isAvailableForFreelance
+                ? "bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/20"
+                : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+            }`}
+          >
             <span className="relative flex h-2 w-2">
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--success)]"></span>
+              <span
+                className={`relative inline-flex rounded-full h-2 w-2 ${
+                  isAvailableForFreelance ? "bg-[var(--success)]" : "bg-amber-500"
+                }`}
+              />
             </span>
-            <span>{messages.services.available}</span>
+            <span>
+              {isAvailableForFreelance
+                ? messages.services.available
+                : (locale === "id" ? "Ketersediaan Terbatas / Antrean" : "Limited Availability / Waitlist")}
+            </span>
           </div>
         </div>
 

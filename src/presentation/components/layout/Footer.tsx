@@ -7,13 +7,25 @@ import { LinkedinIcon, GithubIcon, FigmaIcon } from "@/presentation/components/u
 import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 
+import { SocialLink } from "@/domain/entities/Profile";
+import { Globe } from "lucide-react";
+
 export interface FooterProps {
   locale?: Locale;
   messages: Messages;
   email: string;
+  socialLinks?: SocialLink[];
+  cvUrl?: string;
+  isAvailableForFreelance?: boolean;
 }
 
-export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
+export const Footer: React.FC<FooterProps> = ({
+  messages,
+  email,
+  socialLinks = [],
+  cvUrl = "/cv/Bayu-Product-Designer-Resume.pdf",
+  isAvailableForFreelance = true,
+}) => {
   const [copied, setCopied] = useState(false);
 
   const copyEmail = () => {
@@ -24,6 +36,22 @@ export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const activeLinks = socialLinks.length > 0
+    ? socialLinks
+    : [
+        { platform: "LinkedIn", url: "https://linkedin.com/in/bayu-designer" },
+        { platform: "GitHub", url: "https://github.com/bayu-design" },
+        { platform: "Figma", url: "https://figma.com/@bayu" },
+      ];
+
+  const renderSocialIcon = (platform: string) => {
+    const p = platform.toLowerCase();
+    if (p.includes("linkedin")) return <LinkedinIcon className="w-4 h-4 text-[var(--accent)]" />;
+    if (p.includes("github")) return <GithubIcon className="w-4 h-4" />;
+    if (p.includes("figma")) return <FigmaIcon className="w-4 h-4 text-purple-400" />;
+    return <Globe className="w-4 h-4 text-[var(--text-muted)]" />;
   };
 
   return (
@@ -39,8 +67,16 @@ export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
               <span className="font-bold text-base tracking-tight text-[var(--text)]">
                 Bayu
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/20 font-medium">
-                {messages.footer.availability}
+              <span
+                className={`text-xs px-2.5 py-0.5 rounded-full font-medium border ${
+                  isAvailableForFreelance
+                    ? "bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/20"
+                    : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                }`}
+              >
+                {isAvailableForFreelance
+                  ? messages.footer.availability
+                  : "Limited Availability"}
               </span>
             </div>
             <p className="text-sm text-[var(--text-muted)] max-w-md leading-relaxed">
@@ -109,35 +145,20 @@ export const Footer: React.FC<FooterProps> = ({ messages, email }) => {
             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               Connect
             </span>
+            {activeLinks.map((link, idx) => (
+              <a
+                key={idx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1 min-h-[36px]"
+              >
+                {renderSocialIcon(link.platform)}
+                <span>{link.platform}</span>
+              </a>
+            ))}
             <a
-              href="https://linkedin.com/in/bayu-designer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1 min-h-[36px]"
-            >
-              <LinkedinIcon className="w-4 h-4 text-[var(--accent)]" />
-              LinkedIn
-            </a>
-            <a
-              href="https://github.com/bayu-design"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1 min-h-[36px]"
-            >
-              <GithubIcon className="w-4 h-4" />
-              GitHub
-            </a>
-            <a
-              href="https://figma.com/@bayu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors py-1 min-h-[36px]"
-            >
-              <FigmaIcon className="w-4 h-4 text-purple-400" />
-              Figma Community
-            </a>
-            <a
-              href="/cv/Bayu-Product-Designer-Resume.pdf"
+              href={cvUrl}
               download
               className="flex items-center gap-2 text-sm font-medium text-[var(--accent)] hover:underline py-1 min-h-[36px]"
             >

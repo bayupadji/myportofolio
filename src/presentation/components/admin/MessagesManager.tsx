@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Mail,
   Trash2,
@@ -11,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import { Message } from "@/domain/entities/Message";
+import { toast } from "@/presentation/components/ui/Toast";
 import { useDeleteMessageMutation } from "@/presentation/hooks/useAdminQueries";
 
 interface MessagesManagerProps {
@@ -20,6 +22,7 @@ interface MessagesManagerProps {
 export const MessagesManager: React.FC<MessagesManagerProps> = ({
   initialMessages,
 }) => {
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [search, setSearch] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
@@ -41,8 +44,11 @@ export const MessagesManager: React.FC<MessagesManagerProps> = ({
     try {
       await deleteMessageMutation.mutateAsync(id);
       setMessages((prev) => prev.filter((m) => m.id !== id));
+      toast.success(`Message from "${senderName}" was deleted.`, "Message Deleted");
+      router.refresh();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to delete message. Please try again.");
     }
   };
 

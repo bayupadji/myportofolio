@@ -15,6 +15,7 @@ import { LinkedinIcon } from "@/presentation/components/ui/Icons";
 import { Locale } from "@/domain/value-objects/LocalizedText";
 import { Messages } from "@/presentation/i18n";
 import { MessageTopic } from "@/domain/entities/Message";
+import { toast } from "@/presentation/components/ui/Toast";
 
 import { useContactMutation } from "@/presentation/hooks/useContactMutation";
 
@@ -47,6 +48,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
   const copyEmailToClipboard = () => {
     navigator.clipboard.writeText(email);
     setCopied(true);
+    toast.info(
+      locale === "id"
+        ? "Alamat email disalin ke clipboard."
+        : "Email address copied to clipboard.",
+      locale === "id" ? "Disalin" : "Copied"
+    );
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -56,20 +63,25 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
 
     // Basic inline validation
     if (!name.trim()) {
-      setError(locale === "id" ? "Nama wajib diisi." : "Name is required.");
+      const msg = locale === "id" ? "Nama wajib diisi." : "Name is required.";
+      setError(msg);
+      toast.error(msg);
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(senderEmail.trim())) {
-      setError(locale === "id" ? "Alamat email tidak valid." : "A valid email is required.");
+      const msg = locale === "id" ? "Alamat email tidak valid." : "A valid email is required.";
+      setError(msg);
+      toast.error(msg);
       return;
     }
     if (body.trim().length < 10) {
-      setError(
+      const msg =
         locale === "id"
           ? "Pesan minimal 10 karakter."
-          : "Message must be at least 10 characters."
-      );
+          : "Message must be at least 10 characters.";
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -87,15 +99,22 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
           setName("");
           setSenderEmail("");
           setBody("");
+          toast.success(
+            locale === "id"
+              ? "Pesan Anda berhasil dikirim! Kami akan segera merespons."
+              : "Message sent successfully! We will get back to you soon.",
+            locale === "id" ? "Pesan Terkirim" : "Message Sent"
+          );
         },
         onError: (err) => {
-          setError(
+          const msg =
             err instanceof Error
               ? err.message
               : locale === "id"
               ? "Gagal mengirim pesan. Silakan coba lagi."
-              : "Failed to send message. Please try again."
-          );
+              : "Failed to send message. Please try again.";
+          setError(msg);
+          toast.error(msg, locale === "id" ? "Gagal Mengirim" : "Failed to Send");
         },
       }
     );
@@ -224,7 +243,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                <form onSubmit={handleSubmit} noValidate data-testid="contact-form" className="space-y-6">
                   {/* Honeypot field (hidden from real users to catch spambots) */}
                   <div className="hidden" aria-hidden="true">
                     <label htmlFor="website-trap">Leave this blank</label>
@@ -299,6 +318,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                     </label>
                     <select
                       id="contact-topic"
+                      name="topic"
+                      data-testid="contact-topic-select"
                       value={topic}
                       onChange={(e) => setTopic(e.target.value as MessageTopic)}
                       className="w-full px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text)] text-sm focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] outline-none transition-colors min-h-[44px]"
@@ -332,6 +353,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ email, locale, message
                   {/* Submit Button */}
                   <button
                     type="submit"
+                    data-testid="contact-submit-btn"
                     disabled={contactMutation.isPending}
                     className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold text-base hover:opacity-95 disabled:opacity-50 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98] min-h-[48px] cursor-pointer"
                   >

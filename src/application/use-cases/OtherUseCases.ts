@@ -35,6 +35,10 @@ export class GetServices {
   }
 }
 
+const messageRateLimits = new Map<string, { count: number; resetAt: number }>();
+const MAX_MESSAGES_PER_WINDOW = 3;
+const MESSAGE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
 export class SubmitContactMessage {
   constructor(private readonly repo: MessageRepository) {}
 
@@ -45,9 +49,8 @@ export class SubmitContactMessage {
     body: string;
     honeypot?: string;
   }): Promise<{ success: boolean; message: string }> {
-    // Spam bot check
+    // Spam bot honeypot check
     if (input.honeypot && input.honeypot.trim().length > 0) {
-      // Silently accept without recording spam
       return { success: true, message: "Message received" };
     }
 
@@ -56,7 +59,8 @@ export class SubmitContactMessage {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!input.email || !emailRegex.test(input.email.trim())) {
+    const cleanEmail = input.email ? input.email.trim().toLowerCase() : "";
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
       throw new ValidationError("A valid email address is required.");
     }
 
@@ -64,10 +68,27 @@ export class SubmitContactMessage {
       throw new ValidationError("Message must be at least 10 characters long.");
     }
 
+    const now = Date.now();
+    if (messageRateLimits.size > 100) {
+      for (const [key, val] of messageRateLimits.entries()) {
+        if (val.resetAt <= now) messageRateLimits.delete(key);
+      }
+    }
+
+    const rate = messageRateLimits.get(cleanEmail);
+    if (rate && rate.resetAt > now) {
+      if (rate.count >= MAX_MESSAGES_PER_WINDOW) {
+        throw new ValidationError("Too many messages sent. Please wait before submitting another message.");
+      }
+      rate.count += 1;
+    } else {
+      messageRateLimits.set(cleanEmail, { count: 1, resetAt: now + MESSAGE_WINDOW_MS });
+    }
+
     const newMessage: Message = {
       id: `msg-${crypto.randomUUID()}`,
       name: input.name.trim(),
-      email: input.email.trim(),
+      email: cleanEmail,
       topic: input.topic || "other",
       body: input.body.trim(),
       createdAt: new Date().toISOString(),

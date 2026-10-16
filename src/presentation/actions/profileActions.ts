@@ -15,10 +15,13 @@ export async function updateProfileAction(profile: Profile) {
 
     await container.updateProfile(profile);
 
-    // Revalidate public landing and about pages
+    // Revalidate public & admin pages
     revalidatePath("/");
     revalidatePath("/about");
     revalidatePath("/services");
+    revalidatePath("/admin/landing");
+    revalidatePath("/admin/about");
+    revalidatePath("/admin");
 
     return { success: true, profile };
   } catch (err: unknown) {
@@ -36,8 +39,12 @@ export async function updateAvailabilityAction(
     await assertAdminSession();
     await container.updateAvailability.execute(statusEn, statusId, isFreelance);
 
+    revalidatePath("/", "layout");
     revalidatePath("/");
     revalidatePath("/services");
+    revalidatePath("/about");
+    revalidatePath("/admin/landing");
+    revalidatePath("/admin");
 
     return { success: true, statusEn, statusId, isFreelance };
   } catch (err: unknown) {

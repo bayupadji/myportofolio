@@ -129,6 +129,19 @@ export class LocalFileStorageService {
       throw new Error("Only PDF documents are allowed for CV uploads.");
     }
 
+    // Verify PDF magic header '%PDF-' (0x25, 0x50, 0x44, 0x46, 0x2D)
+    const isPdfHeader =
+      fileBuffer.length >= 5 &&
+      fileBuffer[0] === 0x25 &&
+      fileBuffer[1] === 0x50 &&
+      fileBuffer[2] === 0x44 &&
+      fileBuffer[3] === 0x46 &&
+      fileBuffer[4] === 0x2d;
+
+    if (!isPdfHeader) {
+      throw new Error("Invalid file content: The uploaded file is not a valid PDF document.");
+    }
+
     const targetDir = path.join(UPLOADS_BASE_DIR, subfolder);
     await ensureDir(targetDir);
 

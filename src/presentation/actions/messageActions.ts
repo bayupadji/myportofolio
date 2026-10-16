@@ -3,6 +3,7 @@
 import { container } from "@/infrastructure/container";
 import { MessageTopic } from "@/domain/entities/Message";
 import { assertAdminSession } from "@/infrastructure/auth/session";
+import { revalidatePath } from "next/cache";
 
 export async function submitContactMessageAction(input: {
   name: string;
@@ -36,6 +37,10 @@ export async function updateMessageStatusAction(
   try {
     await assertAdminSession();
     await container.updateMessageStatus(id, status);
+
+    revalidatePath("/admin/messages");
+    revalidatePath("/admin");
+
     return { success: true, id, status };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to update message status";
@@ -47,6 +52,10 @@ export async function deleteMessageAction(id: string) {
   try {
     await assertAdminSession();
     await container.deleteMessage(id);
+
+    revalidatePath("/admin/messages");
+    revalidatePath("/admin");
+
     return { success: true, id };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to delete message";

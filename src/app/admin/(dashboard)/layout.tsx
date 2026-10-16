@@ -4,7 +4,13 @@ import { container } from "@/infrastructure/container";
 import { AdminSidebar } from "@/presentation/components/admin/AdminSidebar";
 import { AdminTopBar } from "@/presentation/components/admin/AdminTopBar";
 
-import { isAdminAuthenticated } from "@/infrastructure/auth/session";
+import {
+  AUTH_COOKIE_NAME,
+  verifySessionToken,
+} from "@/infrastructure/auth/session";
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Admin Dashboard · Bayu Portfolio CMS",
@@ -19,10 +25,16 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const isAuthenticated = await isAdminAuthenticated();
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get(AUTH_COOKIE_NAME);
+  const session = verifySessionToken(authCookie?.value);
 
-  if (!isAuthenticated) {
-    redirect("/admin/login?expired=1");
+  if (!session.valid) {
+    const query =
+      session.reason === "idle" || session.reason === "absolute"
+        ? `?reason=${session.reason}`
+        : "?expired=1";
+    redirect(`/admin/login${query}`);
   }
 
   // Fetch count & availability for sidebar

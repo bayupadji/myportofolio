@@ -14,6 +14,7 @@ import {
   uploadDocumentAction,
 } from "@/presentation/actions/uploadActions";
 import { UploadSubfolder } from "@/infrastructure/storage/localFileStorage";
+import { toast } from "@/presentation/components/ui/Toast";
 
 export interface CompressionResult {
   url: string;
@@ -122,6 +123,10 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
 
         setCompressionResult(compResult);
         setUploadedUrl(res.data.url);
+        toast.success(
+          `Image compressed & uploaded (-${compResult.savedPercentage}% saved).`,
+          "Upload Complete"
+        );
 
         if (onUploadComplete) {
           onUploadComplete(res.data.url, compResult);
@@ -133,14 +138,16 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
         }
 
         setUploadedUrl(res.data.url);
+        toast.success("Document uploaded successfully.", "Upload Complete");
         if (onUploadComplete) {
           onUploadComplete(res.data.url);
         }
       }
     } catch (err) {
-      setErrorMessage(
-        err instanceof Error ? err.message : "Upload to local storage failed."
-      );
+      const msg =
+        err instanceof Error ? err.message : "Upload to local storage failed.";
+      setErrorMessage(msg);
+      toast.error(msg, "Upload Failed");
     } finally {
       setIsUploading(false);
     }

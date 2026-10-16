@@ -39,9 +39,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
   const messages = getMessages();
 
-  const [project, allProjects] = await Promise.all([
+  const [project, allProjects, profile] = await Promise.all([
     container.getProjectBySlug.execute(slug),
     container.getPublishedProjects.execute(),
+    container.getProfile.execute(),
   ]);
 
   if (!project) {
@@ -61,7 +62,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         nextProject={nextProject}
         messages={messages}
       />
-      <CtaCardSection messages={messages} />
+      <CtaCardSection messages={messages} customContent={profile.ctaBanner} />
     </div>
   );
 }

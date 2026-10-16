@@ -21,7 +21,19 @@ export default async function HomePage() {
     container.getPublishedProjects.execute(),
   ]);
 
-  const availabilityText = resolveLocalized(profile.availabilityStatus).text;
+  const isAvailable = Boolean(profile.isAvailableForFreelance);
+  const rawAvailability = resolveLocalized(profile.availabilityStatus).text;
+  const availabilityText =
+    rawAvailability &&
+    !(
+      !isAvailable &&
+      (rawAvailability === "Available for Full-time & Selected Freelance" ||
+        rawAvailability === "Available for full-time & freelance projects")
+    )
+      ? rawAvailability
+      : isAvailable
+      ? "Available for Full-time & Selected Freelance"
+      : "Limited Availability / Waitlist";
 
   // Filter and order selected projects if featuredProjectIds are set
   let featuredProjects = projects;
@@ -41,6 +53,7 @@ export default async function HomePage() {
         messages={messages}
         metrics={profile.keyMetrics}
         availability={availabilityText}
+        isAvailable={isAvailable}
         avatarUrl={profile.avatarUrl}
         roleText={profile.heroRole ? resolveLocalized(profile.heroRole).text : undefined}
         headlineText={profile.heroHeadline ? resolveLocalized(profile.heroHeadline).text : undefined}

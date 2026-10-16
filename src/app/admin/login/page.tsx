@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Shield,
@@ -12,7 +12,35 @@ import {
   ArrowLeft,
   Loader2,
   AlertCircle,
+  Clock,
 } from "lucide-react";
+
+function SessionStatusBanner() {
+  const searchParams = useSearchParams();
+  const reason = searchParams.get("reason");
+  const expired = searchParams.get("expired");
+
+  if (!reason && !expired) return null;
+
+  let message = "Sesi Anda telah berakhir. Silakan login kembali.";
+  if (reason === "idle") {
+    message =
+      "Sesi Anda telah berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.";
+  } else if (reason === "absolute") {
+    message =
+      "Batas waktu sesi 2 jam telah tercapai. Demi keamanan, silakan login kembali.";
+  }
+
+  return (
+    <div
+      role="status"
+      className="mb-5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-400 text-xs flex items-center gap-2.5 animate-in fade-in"
+    >
+      <Clock className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+      <span>{message}</span>
+    </div>
+  );
+}
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -100,6 +128,10 @@ export default function AdminLoginPage() {
               </p>
             </div>
           </div>
+
+          <Suspense fallback={null}>
+            <SessionStatusBanner />
+          </Suspense>
 
           {error && (
             <div

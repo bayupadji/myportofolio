@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Lightbox } from "@/presentation/components/ui/Lightbox";
+import { Toaster } from "@/presentation/components/ui/Toast";
 import { QueryProvider } from "@/presentation/providers/QueryProvider";
 
 const fontSans = Plus_Jakarta_Sans({
@@ -46,8 +47,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B0D12" },
+    { media: "(prefers-color-scheme: light)", color: "#F8FAFC" },
+    { media: "(prefers-color-scheme: dark)", color: "#0C1017" },
   ],
 };
 
@@ -86,6 +87,7 @@ export default function RootLayout({
         <QueryProvider>
           {children}
           <Lightbox />
+          <Toaster />
         </QueryProvider>
       </body>
     </html>

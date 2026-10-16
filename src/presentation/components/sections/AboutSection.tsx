@@ -41,6 +41,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     "Light-dev",
   ];
 
+  const summaryText = resolveLocalized(profile.summary, locale).text.trim();
+  const headlineText = resolveLocalized(profile.headline, locale).text.trim();
+  const isHtml = /<[a-z][\s\S]*>/i.test(summaryText);
+
   return (
     <div className="w-full py-12 sm:py-20">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
@@ -52,13 +56,30 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <span>{messages.about.badge}</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text)] mb-6 text-balance leading-tight">
-              {messages.about.title}
+              {headlineText || messages.about.title}
             </h1>
 
             <div className="space-y-4 text-base sm:text-lg text-[var(--text)] leading-relaxed">
-              <p className="text-pretty">{messages.about.bio1}</p>
-              <p className="text-pretty">{messages.about.bio2}</p>
-              <p className="text-[var(--text-muted)] text-pretty">{messages.about.bio3}</p>
+              {summaryText ? (
+                isHtml ? (
+                  <div
+                    className="space-y-3 leading-relaxed [&>p]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5"
+                    dangerouslySetInnerHTML={{ __html: summaryText }}
+                  />
+                ) : (
+                  summaryText.split("\n\n").map((para, i) => (
+                    <p key={i} className="text-pretty">
+                      {para}
+                    </p>
+                  ))
+                )
+              ) : (
+                <>
+                  <p className="text-pretty">{messages.about.bio1}</p>
+                  <p className="text-pretty">{messages.about.bio2}</p>
+                  <p className="text-[var(--text-muted)] text-pretty">{messages.about.bio3}</p>
+                </>
+              )}
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">

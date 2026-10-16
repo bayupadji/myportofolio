@@ -91,17 +91,23 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-        {filteredProjects.map((project) => {
-          const title = resolveLocalized(project.title, locale).text;
-          const summary = resolveLocalized(project.summary, locale).text;
-          const primaryMetric = project.metrics[0];
+      {filteredProjects.length === 0 ? (
+        <div data-testid="empty-work-state" className="p-12 text-center border border-dashed border-[var(--border)] rounded-2xl">
+          <p className="text-[var(--text-muted)] text-sm">No projects found in this category.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          {filteredProjects.map((project) => {
+            const title = resolveLocalized(project.title, locale).text;
+            const summary = resolveLocalized(project.summary, locale).text;
+            const primaryMetric = project.metrics[0];
 
-          return (
-            <CardSpotlight
-              key={project.id}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-2xs transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[var(--accent)] hover:shadow-xl flex flex-col group overflow-hidden"
-            >
+            return (
+              <CardSpotlight
+                key={project.id}
+                data-testid="project-card"
+                className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-2xs transition-all duration-300 ease-out hover:-translate-y-2 hover:border-[var(--accent)] hover:shadow-xl flex flex-col group overflow-hidden"
+              >
               {/* Prototype / Application Window Header Bar */}
               <div
                 aria-hidden="true"
@@ -213,6 +219,7 @@ export const WorkGrid: React.FC<WorkGridProps> = ({ projects, locale, messages }
           );
         })}
       </div>
+      )}
 
       {/* Quick View Modal */}
       <ProjectQuickViewModal

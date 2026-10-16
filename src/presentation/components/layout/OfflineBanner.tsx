@@ -33,6 +33,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({ messages }) => {
   return (
     <div
       role="status"
+      data-testid="offline-banner"
       aria-live="polite"
       className="w-full bg-amber-500/15 border-b border-amber-500/30 text-amber-900 dark:text-amber-200 px-4 py-2 text-xs font-medium flex items-center justify-center gap-2"
     >

@@ -4,6 +4,7 @@ import { DrizzleExperienceRepository } from "./drizzle/repositories/DrizzleExper
 import { DrizzleSkillRepository } from "./drizzle/repositories/DrizzleSkillRepository";
 import { DrizzleServiceRepository } from "./drizzle/repositories/DrizzleServiceRepository";
 import { DrizzleMessageRepository } from "./drizzle/repositories/DrizzleMessageRepository";
+import { DrizzleAnalyticsRepository } from "./drizzle/repositories/DrizzleAnalyticsRepository";
 import {
   GetPublishedProjects,
   GetProjectBySlug,
@@ -20,12 +21,17 @@ import {
   SubmitContactMessage,
   GetAdminMessages,
 } from "@/application/use-cases/OtherUseCases";
+import {
+  RecordPageView,
+  GetTrafficAnalytics,
+} from "@/application/use-cases/AnalyticsUseCases";
 import { ProjectRepository } from "@/domain/repositories/ProjectRepository";
 import { ProfileRepository } from "@/domain/repositories/ProfileRepository";
 import { ExperienceRepository } from "@/domain/repositories/ExperienceRepository";
 import { SkillRepository } from "@/domain/repositories/SkillRepository";
 import { ServiceRepository } from "@/domain/repositories/ServiceRepository";
 import { MessageRepository } from "@/domain/repositories/MessageRepository";
+import { AnalyticsRepository } from "@/domain/repositories/AnalyticsRepository";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { Project } from "@/domain/entities/Project";
 import { Profile } from "@/domain/entities/Profile";
@@ -41,6 +47,7 @@ class Container {
   private skillRepo: SkillRepository;
   private serviceRepo: ServiceRepository;
   private messageRepo: MessageRepository;
+  private analyticsRepo: AnalyticsRepository;
 
   // Use cases
   public readonly getPublishedProjects: GetPublishedProjects;
@@ -53,6 +60,8 @@ class Container {
   public readonly getServices: GetServices;
   public readonly submitContactMessage: SubmitContactMessage;
   public readonly getAdminMessages: GetAdminMessages;
+  public readonly recordPageView: RecordPageView;
+  public readonly getTrafficAnalytics: GetTrafficAnalytics;
 
   constructor() {
     // Instantiate local SQLite Drizzle repositories
@@ -62,6 +71,7 @@ class Container {
     this.skillRepo = new DrizzleSkillRepository();
     this.serviceRepo = new DrizzleServiceRepository();
     this.messageRepo = new DrizzleMessageRepository();
+    this.analyticsRepo = new DrizzleAnalyticsRepository();
 
     // Instantiate use cases
     this.getPublishedProjects = new GetPublishedProjects(this.projectRepo);
@@ -74,6 +84,8 @@ class Container {
     this.getServices = new GetServices(this.serviceRepo);
     this.submitContactMessage = new SubmitContactMessage(this.messageRepo);
     this.getAdminMessages = new GetAdminMessages(this.messageRepo);
+    this.recordPageView = new RecordPageView(this.analyticsRepo);
+    this.getTrafficAnalytics = new GetTrafficAnalytics(this.analyticsRepo);
   }
 
   async updateProjectStatus(id: string, status: PublishStatus): Promise<void> {

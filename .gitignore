@@ -50,3 +50,8 @@ portfolio.db*
 /public/uploads/*
 !/public/uploads/.gitkeep
 
+# playwright e2e testing
+/playwright-report/
+/test-results/
+/e2e/.auth/
+

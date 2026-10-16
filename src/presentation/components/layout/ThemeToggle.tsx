@@ -58,6 +58,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
   return (
     <button
       onClick={cycleTheme}
+      data-testid="theme-toggle-btn"
       className={className || defaultClasses}
       aria-label={`Current theme: ${theme}. Click to change theme.`}
       title={`Theme: ${theme.toUpperCase()} (Click to toggle)`}

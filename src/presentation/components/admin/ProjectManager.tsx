@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   FolderGit2,
   Plus,
@@ -22,6 +23,7 @@ import { Project, ProjectSection } from "@/domain/entities/Project";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
 import { WysiwygEditor } from "@/presentation/components/ui/WysiwygEditor";
+import { toast } from "@/presentation/components/ui/Toast";
 import {
   useAdminProjects,
   useUpdateProjectStatusMutation,
@@ -36,7 +38,9 @@ interface ProjectManagerProps {
 export const ProjectManager: React.FC<ProjectManagerProps> = ({
   initialProjects,
 }) => {
+  const router = useRouter();
   const { data: projects = initialProjects } = useAdminProjects(initialProjects);
+
   const updateStatusMutation = useUpdateProjectStatusMutation();
   const saveProjectMutation = useSaveProjectMutation();
   const deleteProjectMutation = useDeleteProjectMutation();
@@ -65,11 +69,19 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
   });
 
   const handleToggleStatus = async (id: string, currentStatus: PublishStatus) => {
+    const target = projects.find((p) => p.id === id);
+    const targetTitle = target?.title.en || "Case Study";
     const newStatus: PublishStatus = currentStatus === "published" ? "draft" : "published";
     try {
       await updateStatusMutation.mutateAsync({ id, status: newStatus });
+      toast.info(
+        `"${targetTitle}" is now marked as ${newStatus}.`,
+        "Status Updated"
+      );
+      router.refresh();
     } catch (err) {
       console.error("Failed to toggle status", err);
+      toast.error("Failed to update project status. Please try again.");
     }
   };
 
@@ -78,8 +90,11 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
 
     try {
       await deleteProjectMutation.mutateAsync(id);
+      toast.success(`Project "${title}" was permanently deleted.`, "Project Deleted");
+      router.refresh();
     } catch (err) {
       console.error("Failed to delete project", err);
+      toast.error("Failed to delete project. Please try again.");
     }
   };
 
@@ -181,11 +196,20 @@ export const ProjectManager: React.FC<ProjectManagerProps> = ({
     setEditorError(null);
 
     try {
+      const isNew = !projects.some((p) => p.id === editingProject.id);
       await saveProjectMutation.mutateAsync(editingProject);
       setIsEditorOpen(false);
+      toast.success(
+        isNew
+          ? `Project "${editingProject.title.en}" created successfully.`
+          : `Project "${editingProject.title.en}" updated successfully.`,
+        isNew ? "Case Study Created" : "Case Study Updated"
+      );
+      router.refresh();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "An error occurred";
       setEditorError(msg);
+      toast.error(msg, "Save Failed");
     } finally {
       setIsSaving(false);
     }

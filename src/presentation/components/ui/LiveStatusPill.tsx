@@ -5,6 +5,7 @@ import { Clock, Info } from "lucide-react";
 
 export interface LiveStatusPillProps {
   availability: string;
+  isAvailable?: boolean;
   localTimeLabel?: string;
   activeHoursLabel?: string;
   className?: string;
@@ -12,6 +13,7 @@ export interface LiveStatusPillProps {
 
 export const LiveStatusPill: React.FC<LiveStatusPillProps> = ({
   availability,
+  isAvailable = true,
   localTimeLabel = "Jakarta (WIB · GMT+7)",
   activeHoursLabel = "Active 09:00 - 18:00 WIB · Responds within 24h",
   className = "",
@@ -51,8 +53,16 @@ export const LiveStatusPill: React.FC<LiveStatusPillProps> = ({
       >
         {/* Pulsing indicator */}
         <span className="relative flex h-2 w-2 shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          <span
+            className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+              isAvailable ? "bg-emerald-400" : "bg-amber-400"
+            }`}
+          />
+          <span
+            className={`relative inline-flex rounded-full h-2 w-2 ${
+              isAvailable ? "bg-emerald-500" : "bg-amber-500"
+            }`}
+          />
         </span>
 
         {/* Availability status */}
@@ -86,7 +96,11 @@ export const LiveStatusPill: React.FC<LiveStatusPillProps> = ({
               <div className="text-[var(--text-muted)] leading-relaxed">
                 {activeHoursLabel}
               </div>
-              <div className="pt-1 text-[11px] text-[var(--accent)] font-medium">
+              <div
+                className={`pt-1 text-[11px] font-medium ${
+                  isAvailable ? "text-emerald-500" : "text-amber-500"
+                }`}
+              >
                 {availability}
               </div>
             </div>

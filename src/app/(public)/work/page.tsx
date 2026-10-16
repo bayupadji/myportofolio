@@ -12,7 +12,10 @@ export const metadata = {
 
 export default async function WorkPage() {
   const messages = getMessages();
-  const projects = await container.getPublishedProjects.execute();
+  const [projects, profile] = await Promise.all([
+    container.getPublishedProjects.execute(),
+    container.getProfile.execute(),
+  ]);
 
   return (
     <div className="flex flex-col w-full">
@@ -36,7 +39,7 @@ export default async function WorkPage() {
           />
         </div>
       </div>
-      <CtaCardSection messages={messages} />
+      <CtaCardSection messages={messages} customContent={profile.ctaBanner} />
     </div>
   );
 }

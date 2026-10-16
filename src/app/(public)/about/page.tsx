@@ -27,7 +27,7 @@ export default async function AboutPage() {
         skills={skills}
         messages={messages}
       />
-      <CtaCardSection messages={messages} />
+      <CtaCardSection messages={messages} customContent={profile.ctaBanner} />
     </div>
   );
 }

@@ -16,6 +16,8 @@ export async function saveSkillAction(skill: Skill) {
     await container.saveSkill(skill);
 
     revalidatePath("/about");
+    revalidatePath("/admin/about");
+    revalidatePath("/admin");
 
     return { success: true, skill };
   } catch (err: unknown) {
@@ -35,6 +37,8 @@ export async function deleteSkillAction(id: string) {
     await container.deleteSkill(id);
 
     revalidatePath("/about");
+    revalidatePath("/admin/about");
+    revalidatePath("/admin");
 
     return { success: true, id };
   } catch (err: unknown) {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Sparkles,
   BarChart3,
@@ -18,6 +19,7 @@ import {
 import { Profile, HeroMetric, ProcessStepItem, CtaBannerContent } from "@/domain/entities/Profile";
 import { Project } from "@/domain/entities/Project";
 import { ImageUploadDropzone } from "./ImageUploadDropzone";
+import { toast } from "@/presentation/components/ui/Toast";
 import { useUpdateProfileMutation } from "@/presentation/hooks/useAdminQueries";
 
 interface LandingPageManagerProps {
@@ -29,6 +31,7 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
   initialProfile,
   allProjects,
 }) => {
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const updateProfileMutation = useUpdateProfileMutation();
@@ -108,6 +111,35 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
     }));
   };
 
+  const handleToggleFreelance = () => {
+    const nextState = !profile.isAvailableForFreelance;
+    let nextStatus = profile.availabilityStatus?.en || "";
+    if (
+      !nextState &&
+      (!nextStatus ||
+        nextStatus.includes("Available for Full-time") ||
+        nextStatus.includes("Available for Q4"))
+    ) {
+      nextStatus = "Limited Availability / Waitlist";
+    } else if (
+      nextState &&
+      (!nextStatus || nextStatus.includes("Limited Availability"))
+    ) {
+      nextStatus = "Available for Full-time & Selected Freelance";
+    }
+    setProfile((prev) => ({
+      ...prev,
+      isAvailableForFreelance: nextState,
+      availabilityStatus: { en: nextStatus, id: nextStatus },
+    }));
+    toast.info(
+      nextState
+        ? "Freelance availability enabled (Open for Work)."
+        : "Freelance availability set to Limited.",
+      "Availability Toggled"
+    );
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavedSuccess(false);
@@ -115,14 +147,17 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
     try {
       await updateProfileMutation.mutateAsync(profile);
       setSavedSuccess(true);
+      toast.success("Landing page settings saved successfully.", "Settings Saved");
+      router.refresh();
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to save landing page settings", err);
+      toast.error("Failed to save landing page settings. Please try again.");
     }
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl">
+    <div className="space-y-6 w-full">
       {/* Header & Global Save Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
         <div>
@@ -185,48 +220,75 @@ export const LandingPageManager: React.FC<LandingPageManagerProps> = ({
 
           {openSections.hero && (
             <div className="p-6 pt-2 border-t border-[var(--border)] space-y-5 bg-[var(--background)]/40">
-              {/* Availability Toggle */}
-              <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-[var(--accent)]" />
-                    <span className="font-bold text-xs text-[var(--text)]">
-                      Freelance & Work Availability
+              {/* Availability Toggle & Custom Text */}
+              <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-[var(--accent)]" />
+                      <span className="font-bold text-xs text-[var(--text)]">
+                        Freelance & Work Availability
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-[var(--text-muted)] block mt-0.5">
+                      Controls the live pulsating status pill in the hero header.
                     </span>
                   </div>
-                  <span className="text-[11px] text-[var(--text-muted)] block mt-0.5">
-                    Controls the live green pulsating status pill in the hero header.
-                  </span>
+
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`font-semibold text-xs px-2.5 py-1 rounded-full ${
+                        profile.isAvailableForFreelance
+                          ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                          : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                      }`}
+                    >
+                      {profile.isAvailableForFreelance
+                        ? "Available for Projects"
+                        : "Limited Availability"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleToggleFreelance}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                        profile.isAvailableForFreelance ? "bg-[var(--accent)]" : "bg-zinc-600"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                          profile.isAvailableForFreelance ? "translate-x-5" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`font-semibold text-xs px-2.5 py-1 rounded-full ${
-                      profile.isAvailableForFreelance
-                        ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
-                        : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                    }`}
-                  >
-                    {profile.isAvailableForFreelance ? "Available for Q4" : "Limited Availability"}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() =>
+                <div className="pt-3 border-t border-[var(--border)]/70 space-y-1">
+                  <label className="block font-semibold text-xs text-[var(--text)]">
+                    Hero Status Pill Text
+                  </label>
+                  <p className="text-[11px] text-[var(--text-muted)] mb-1">
+                    The text displayed in the pulsing status pill in the hero header.
+                  </p>
+                  <input
+                    type="text"
+                    value={profile.availabilityStatus?.en || ""}
+                    onChange={(e) =>
                       setProfile({
                         ...profile,
-                        isAvailableForFreelance: !profile.isAvailableForFreelance,
+                        availabilityStatus: {
+                          en: e.target.value,
+                          id: e.target.value,
+                        },
                       })
                     }
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                      profile.isAvailableForFreelance ? "bg-[var(--accent)]" : "bg-zinc-600"
-                    }`}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
-                        profile.isAvailableForFreelance ? "translate-x-5" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
+                    placeholder={
+                      profile.isAvailableForFreelance
+                        ? "Available for Full-time & Selected Freelance"
+                        : "Limited Availability / Waitlist"
+                    }
+                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--text)] font-medium text-xs"
+                  />
                 </div>
               </div>
 

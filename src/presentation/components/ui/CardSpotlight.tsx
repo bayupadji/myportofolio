@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, MouseEvent } from "react";
 
-export interface CardSpotlightProps {
+export interface CardSpotlightProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   size?: number;
@@ -16,6 +16,7 @@ export const CardSpotlight: React.FC<CardSpotlightProps> = ({
   children,
   className = "",
   size = 280,
+  ...rest
 }) => {
   const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -45,6 +46,7 @@ export const CardSpotlight: React.FC<CardSpotlightProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`relative overflow-hidden ${className}`}
+      {...rest}
     >
       {/* Card Content */}
       <div className="relative z-1 flex flex-col flex-1 h-full w-full">

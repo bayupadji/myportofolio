@@ -16,6 +16,7 @@ export interface HeroProps {
   messages: Messages;
   metrics: HeroMetric[];
   availability: string;
+  isAvailable?: boolean;
   avatarUrl?: string;
   roleText?: string;
   headlineText?: string;
@@ -27,6 +28,7 @@ export const Hero: React.FC<HeroProps> = ({
   messages,
   metrics,
   availability,
+  isAvailable = true,
   avatarUrl,
   roleText,
   headlineText,
@@ -49,6 +51,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="mb-6 animate-in fade-in duration-300">
               <LiveStatusPill
                 availability={availability}
+                isAvailable={isAvailable}
                 localTimeLabel={messages.hero.localTime}
                 activeHoursLabel={messages.hero.activeWorkingHours}
               />
@@ -66,7 +69,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <>
                   {headlineText}
                   <span className="text-[var(--text-muted)] font-bold text-2xl sm:text-4xl block mt-2 text-balance">
-                    {valueStatementText || messages.hero.valueStatement}
+                    {messages.hero.valueStatement}
                   </span>
                 </>
               ) : (
@@ -86,7 +89,7 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Designer Core Craft Spec Pills */}
             <div className="flex flex-wrap items-center gap-2 mb-8 text-xs font-mono">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] shadow-2xs">
-                <span className="text-[var(--accent)] font-semibold">❖</span> Figma Variables
+                <span className="text-[var(--highlight)] font-semibold">❖</span> Figma Variables
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] shadow-2xs">
                 <span className="text-emerald-500 font-semibold">📐</span> Design Tokens

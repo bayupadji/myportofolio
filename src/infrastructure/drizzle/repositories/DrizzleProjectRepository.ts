@@ -4,20 +4,9 @@ import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { db } from "../db";
 import { projectsTable } from "../schema";
 import { eq, asc, and } from "drizzle-orm";
-import { seedDatabaseIfEmpty } from "../seed";
 
 export class DrizzleProjectRepository implements ProjectRepository {
-  private initialized = false;
-
-  private async ensureInit() {
-    if (!this.initialized) {
-      await seedDatabaseIfEmpty();
-      this.initialized = true;
-    }
-  }
-
   async getPublished(): Promise<Project[]> {
-    await this.ensureInit();
     const rows = await db
       .select()
       .from(projectsTable)
@@ -28,7 +17,6 @@ export class DrizzleProjectRepository implements ProjectRepository {
   }
 
   async getBySlug(slug: string, publishedOnly = true): Promise<Project | null> {
-    await this.ensureInit();
     const condition = publishedOnly
       ? and(eq(projectsTable.slug, slug), eq(projectsTable.status, "published"))
       : eq(projectsTable.slug, slug);
@@ -43,7 +31,6 @@ export class DrizzleProjectRepository implements ProjectRepository {
   }
 
   async getAll(): Promise<Project[]> {
-    await this.ensureInit();
     const rows = await db
       .select()
       .from(projectsTable)
@@ -53,7 +40,6 @@ export class DrizzleProjectRepository implements ProjectRepository {
   }
 
   async updateStatus(id: string, status: PublishStatus): Promise<void> {
-    await this.ensureInit();
     await db
       .update(projectsTable)
       .set({ status })
@@ -61,66 +47,39 @@ export class DrizzleProjectRepository implements ProjectRepository {
   }
 
   async save(project: Project): Promise<void> {
-    await this.ensureInit();
-    const [existing] = await db
-      .select({ id: projectsTable.id })
-      .from(projectsTable)
-      .where(eq(projectsTable.id, project.id))
-      .limit(1);
+    const values = {
+      id: project.id,
+      slug: project.slug,
+      title: project.title,
+      summary: project.summary,
+      role: project.role,
+      duration: project.duration,
+      team: project.team,
+      platforms: project.platforms,
+      tools: project.tools,
+      category: project.category,
+      coverUrl: project.coverUrl,
+      metrics: project.metrics,
+      tldr: project.tldr,
+      sections: project.sections,
+      solutionStates: project.solutionStates,
+      learnings: project.learnings,
+      status: project.status,
+      isSampleProject: project.isSampleProject,
+      order: project.order,
+      publishedAt: project.publishedAt,
+    };
 
-    if (existing) {
-      await db
-        .update(projectsTable)
-        .set({
-          slug: project.slug,
-          title: project.title,
-          summary: project.summary,
-          role: project.role,
-          duration: project.duration,
-          team: project.team,
-          platforms: project.platforms,
-          tools: project.tools,
-          category: project.category,
-          coverUrl: project.coverUrl,
-          metrics: project.metrics,
-          tldr: project.tldr,
-          sections: project.sections,
-          solutionStates: project.solutionStates,
-          learnings: project.learnings,
-          status: project.status,
-          isSampleProject: project.isSampleProject,
-          order: project.order,
-          publishedAt: project.publishedAt,
-        })
-        .where(eq(projectsTable.id, project.id));
-    } else {
-      await db.insert(projectsTable).values({
-        id: project.id,
-        slug: project.slug,
-        title: project.title,
-        summary: project.summary,
-        role: project.role,
-        duration: project.duration,
-        team: project.team,
-        platforms: project.platforms,
-        tools: project.tools,
-        category: project.category,
-        coverUrl: project.coverUrl,
-        metrics: project.metrics,
-        tldr: project.tldr,
-        sections: project.sections,
-        solutionStates: project.solutionStates,
-        learnings: project.learnings,
-        status: project.status,
-        isSampleProject: project.isSampleProject,
-        order: project.order,
-        publishedAt: project.publishedAt,
+    await db
+      .insert(projectsTable)
+      .values(values)
+      .onConflictDoUpdate({
+        target: projectsTable.id,
+        set: values,
       });
-    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.ensureInit();
     await db.delete(projectsTable).where(eq(projectsTable.id, id));
   }
 }

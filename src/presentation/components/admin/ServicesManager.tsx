@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   Trash2,
@@ -10,6 +11,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Service } from "@/domain/entities/Service";
+import { toast } from "@/presentation/components/ui/Toast";
 import {
   useSaveServiceMutation,
   useDeleteServiceMutation,
@@ -22,6 +24,7 @@ interface ServicesManagerProps {
 export const ServicesManager: React.FC<ServicesManagerProps> = ({
   initialServices,
 }) => {
+  const router = useRouter();
   const [services, setServices] = useState<Service[]>(initialServices);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,8 +62,11 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
     try {
       await deleteServiceMutation.mutateAsync(id);
       setServices((prev) => prev.filter((s) => s.id !== id));
+      toast.success(`Service "${title}" was permanently deleted.`, "Service Deleted");
+      router.refresh();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to delete service. Please try again.");
     }
   };
 
@@ -79,6 +85,7 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
         slug,
       };
 
+      const isNew = !services.some((s) => s.id === payload.id);
       await saveServiceMutation.mutateAsync(payload);
       setServices((prev) => {
         const exists = prev.some((s) => s.id === payload.id);
@@ -88,13 +95,21 @@ export const ServicesManager: React.FC<ServicesManagerProps> = ({
         return [...prev, payload];
       });
       setIsModalOpen(false);
+      toast.success(
+        isNew
+          ? `Service "${payload.title.en}" created successfully.`
+          : `Service "${payload.title.en}" updated successfully.`,
+        isNew ? "Service Created" : "Service Updated"
+      );
+      router.refresh();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to save service. Please try again.");
     }
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl">
+    <div className="space-y-6 w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[var(--border)]">
         <div>

@@ -146,10 +146,10 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
               title={`${name} — ${role}`}
             >
               {/* Figma Corner Handles (4 points) */}
-              <span className="absolute -top-1.5 -left-1.5 h-3 w-3 rounded-xs border border-[var(--accent)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
-              <span className="absolute -top-1.5 -right-1.5 h-3 w-3 rounded-xs border border-[var(--accent)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
-              <span className="absolute -bottom-1.5 -left-1.5 h-3 w-3 rounded-xs border border-[var(--accent)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
-              <span className="absolute -bottom-1.5 -right-1.5 h-3 w-3 rounded-xs border border-[var(--accent)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute -top-1.5 -left-1.5 h-3 w-3 rounded-xs border border-[var(--highlight)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute -top-1.5 -right-1.5 h-3 w-3 rounded-xs border border-[var(--highlight)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute -bottom-1.5 -left-1.5 h-3 w-3 rounded-xs border border-[var(--highlight)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute -bottom-1.5 -right-1.5 h-3 w-3 rounded-xs border border-[var(--highlight)] bg-[var(--surface)] shadow-xs opacity-75 group-hover:opacity-100 transition-opacity" />
 
               {/* Designer Canvas Header bar with spec coordinates */}
               <div
@@ -157,7 +157,7 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
                 className="flex items-center justify-between px-2 pt-1 pb-2.5 border-b border-[var(--border-subtle)] text-[10px] font-mono text-[var(--text-muted)]"
               >
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[var(--accent)] font-semibold">❖</span>
+                  <span className="text-[var(--highlight)] font-semibold">❖</span>
                   <span className="font-semibold text-[var(--text)] tracking-tight">
                     {isAbout ? "Frame: AboutMe" : "Component: HeroLead"}
                   </span>
@@ -228,12 +228,12 @@ export const HeroPhoto: React.FC<HeroPhotoProps> = ({
           </div>
           <div className="text-[10px] sm:text-[11px] text-[var(--text-muted)] space-y-0.5">
             <div>
-              <span className="text-[var(--accent)] font-semibold">conversion</span>
+              <span className="text-[var(--highlight)] font-semibold">conversion</span>
               <span>: </span>
               <span className="text-[var(--text)] font-semibold tabular-nums">+38% Lift</span>
             </div>
             <div>
-              <span className="text-[var(--accent)] font-semibold">tokens</span>
+              <span className="text-[var(--highlight)] font-semibold">tokens</span>
               <span>: </span>
               <span className="text-[var(--text)] font-semibold">120+ Components</span>
             </div>

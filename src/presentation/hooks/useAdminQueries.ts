@@ -34,10 +34,12 @@ import {
 // Projects
 
 export function useAdminProjects(initialData?: Project[]) {
+  const queryClient = useQueryClient();
+
   return useQuery<Project[]>({
     queryKey: queryKeys.projects,
     initialData,
-    queryFn: async () => initialData || [],
+    queryFn: () => queryClient.getQueryData<Project[]>(queryKeys.projects) || initialData || [],
   });
 }
 
@@ -135,9 +137,17 @@ export function useUpdateAvailabilityMutation() {
     }) => {
       const res = await updateAvailabilityAction(statusEn, statusId, isFreelance);
       if (!res.success) throw new Error(res.error || "Failed to update availability");
-      return res;
+      return { statusEn, statusId, isFreelance };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueryData<Profile>(queryKeys.profile, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          isAvailableForFreelance: data.isFreelance,
+          availabilityStatus: { en: data.statusEn, id: data.statusId },
+        };
+      });
       queryClient.invalidateQueries({ queryKey: queryKeys.profile });
     },
   });

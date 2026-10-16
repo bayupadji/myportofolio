@@ -16,6 +16,9 @@ export async function saveServiceAction(service: Service) {
     await container.saveService(service);
 
     revalidatePath("/services");
+    revalidatePath("/");
+    revalidatePath("/admin/services");
+    revalidatePath("/admin");
 
     return { success: true, service };
   } catch (err: unknown) {
@@ -35,6 +38,9 @@ export async function deleteServiceAction(id: string) {
     await container.deleteService(id);
 
     revalidatePath("/services");
+    revalidatePath("/");
+    revalidatePath("/admin/services");
+    revalidatePath("/admin");
 
     return { success: true, id };
   } catch (err: unknown) {

@@ -13,6 +13,90 @@ declare global {
   var __portfolio_sqlite_raw: Database.Database | undefined;
 }
 
+function seedInitialAnalytics(sqlite: Database.Database) {
+  try {
+    const row = sqlite.prepare("SELECT COUNT(*) as count FROM page_views").get() as { count: number } | undefined;
+    if (row && row.count > 0) return;
+
+    const insert = sqlite.prepare(`
+      INSERT INTO page_views (id, path, referrer, visitor_hash, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+
+    const now = new Date();
+    const paths = [
+      { path: "/", weight: 38 },
+      { path: "/work", weight: 24 },
+      { path: "/work/fintech-payment-experience", weight: 14 },
+      { path: "/about", weight: 12 },
+      { path: "/services", weight: 8 },
+      { path: "/contact", weight: 4 },
+    ];
+
+    const referrers = [
+      { source: "https://www.linkedin.com/", weight: 36 },
+      { source: null, weight: 32 }, // Direct
+      { source: "https://github.com/", weight: 16 },
+      { source: "https://www.google.com/", weight: 10 },
+      { source: "https://x.com/", weight: 6 },
+    ];
+
+    const insertMany = sqlite.transaction(() => {
+      for (let dayOffset = 29; dayOffset >= 0; dayOffset--) {
+        const date = new Date(now.getTime() - dayOffset * 24 * 60 * 60 * 1000);
+        const dayOfWeek = date.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+        // Realistic variation with upward growth trend
+        const baseHits = isWeekend ? 38 : 68;
+        const trendBonus = Math.floor((30 - dayOffset) * 0.9);
+        const randomHits = Math.floor(baseHits + trendBonus + Math.sin(dayOffset * 0.8) * 12 + Math.random() * 15);
+
+        const uniqueVisitorsCount = Math.max(12, Math.floor(randomHits * (0.58 + Math.random() * 0.12)));
+        const dailyVisitors = Array.from({ length: uniqueVisitorsCount }, (_, i) => `vis-${dayOffset}-${i}`);
+
+        for (let hit = 0; hit < randomHits; hit++) {
+          const id = `pv-${dayOffset}-${hit}-${Math.random().toString(36).substring(2, 7)}`;
+
+          // Path
+          const randP = Math.random() * 100;
+          let cumulativeP = 0;
+          let selectedPath = "/";
+          for (const p of paths) {
+            cumulativeP += p.weight;
+            if (randP <= cumulativeP) {
+              selectedPath = p.path;
+              break;
+            }
+          }
+
+          // Referrer
+          const randR = Math.random() * 100;
+          let cumulativeR = 0;
+          let selectedRef: string | null = null;
+          for (const r of referrers) {
+            cumulativeR += r.weight;
+            if (randR <= cumulativeR) {
+              selectedRef = r.source;
+              break;
+            }
+          }
+
+          const visitorHash = dailyVisitors[hit % dailyVisitors.length];
+          const hitTime = new Date(date);
+          hitTime.setHours(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
+
+          insert.run(id, selectedPath, selectedRef, visitorHash, hitTime.toISOString());
+        }
+      }
+    });
+
+    insertMany();
+  } catch (e) {
+    console.error("Failed to seed initial analytics:", e);
+  }
+}
+
 function initializeDatabase(): {
   db: BetterSQLite3Database<typeof schema>;
   sqlite: Database.Database;
@@ -133,10 +217,27 @@ function initializeDatabase(): {
       role TEXT NOT NULL DEFAULT 'admin',
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS page_views (
+      id TEXT PRIMARY KEY,
+      path TEXT NOT NULL,
+      referrer TEXT,
+      visitor_hash TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_page_views_created_at ON page_views (created_at);
+    CREATE INDEX IF NOT EXISTS idx_page_views_path ON page_views (path);
   `);
 
   const initialUsername = (process.env.ADMIN_USERNAME || "skyviadmin").trim();
-  const initialPassword = process.env.ADMIN_PASSWORD || "skyvi1234";
+  const initialPassword = process.env.ADMIN_PASSWORD;
+
+  if (!initialPassword && process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_PASSWORD environment variable is required in production.");
+  }
+
+  const passwordToSeed = initialPassword || "skyvi1234";
 
   try {
     sqlite
@@ -148,12 +249,19 @@ function initializeDatabase(): {
       .run(
         `admin-${initialUsername}`,
         initialUsername,
-        hashPassword(initialPassword),
+        hashPassword(passwordToSeed),
         "admin",
         new Date().toISOString()
       );
   } catch (err) {
     console.error("Error ensuring initial admin user:", err);
+  }
+
+  // Seed initial 30 days of traffic analytics if table is fresh
+  try {
+    seedInitialAnalytics(sqlite);
+  } catch (err) {
+    console.error("Error seeding initial analytics:", err);
   }
 
   const db = drizzle(sqlite, { schema });
@@ -191,6 +299,13 @@ export function verifyPassword(password: string, combinedHash: string): boolean 
 }
 
 const { db, sqlite } = initializeDatabase();
+
+// Seed initial content once on startup if the database is fresh
+import("./seed").then(({ seedDatabaseIfEmpty }) => {
+  seedDatabaseIfEmpty().catch((err) => {
+    console.error("Error seeding initial database content:", err);
+  });
+});
 
 export { db, sqlite };
 

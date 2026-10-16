@@ -11,12 +11,16 @@ export const metadata = {
 
 export default async function ServicesPage() {
   const messages = getMessages();
-  const services = await container.getServices.execute();
+  const [services, profile] = await Promise.all([
+    container.getServices.execute(),
+    container.getProfile.execute(),
+  ]);
 
   return (
     <ServicesSection
       services={services}
       messages={messages}
+      isAvailableForFreelance={profile.isAvailableForFreelance}
     />
   );
 }

@@ -12,9 +12,13 @@ import { ThemeToggle } from "./ThemeToggle";
 export interface MobileDrawerProps {
   locale?: Locale;
   messages: Messages;
+  cvUrl?: string;
 }
 
-export const MobileDrawer: React.FC<MobileDrawerProps> = ({ messages }) => {
+export const MobileDrawer: React.FC<MobileDrawerProps> = ({
+  messages,
+  cvUrl = "/cv/Bayu-Product-Designer-Resume.pdf",
+}) => {
   const { isMobileDrawerOpen, setMobileDrawerOpen } = useUiStore();
   const drawerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -50,6 +54,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ messages }) => {
   return (
     <div
       role="dialog"
+      data-testid="mobile-drawer"
       aria-modal="true"
       aria-label="Navigation drawer"
       className="fixed inset-0 z-50 flex sm:hidden bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
@@ -102,7 +107,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ messages }) => {
           </div>
 
           <a
-            href="/cv/Bayu-Product-Designer-Resume.pdf"
+            href={cvUrl}
             download
             className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-[16px] border border-[var(--border)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-hover)] min-h-[44px]"
           >

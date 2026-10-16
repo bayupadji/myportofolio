@@ -1,59 +1,60 @@
 @import "tailwindcss";
 
 :root {
-  /* ==========================================================================
-     TYPOGRAPHY CONFIGURATION (Ubah jenis font dengan mudah di sini)
-     ========================================================================== */
+  /* Typography */
   --font-sans: var(--font-sans-loaded, "Plus Jakarta Sans"), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-mono-loaded, "JetBrains Mono"), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-heading: var(--font-sans);
 
-  /* Color Tokens - Light */
-  --background: #FAFAFA;
+  /* Color tokens - light */
+  --background: #F8FAFC;
   --surface: #FFFFFF;
   --surface-hover: #F1F5F9;
   --surface-elevated: #FFFFFF;
-  --border: #E5E7EB;
+  --border: #E2E8F0;
   --border-subtle: #F1F5F9;
   --text: #0F172A;
-  --text-muted: #475569;
-  --accent: #4F46E5;
-  --accent-hover: #4338CA;
+  --text-muted: #64748B;
+  --accent: #4D7C0F;
+  --accent-hover: #65A30D;
   --accent-contrast: #FFFFFF;
+  --highlight: #65A30D;
   --success: #15803D;
   --error: #DC2626;
-  --ring-focus: rgba(79, 70, 229, 0.45);
+  --ring-focus: rgba(77, 124, 15, 0.35);
 
-  /* Liquid Glass Island Header Tokens - Light (Clean translucent glass) */
-  --header-glass-bg: rgba(255, 255, 255, 0.32);
-  --header-glass-bg-scrolled: rgba(255, 255, 255, 0.52);
-  --header-glass-border: rgba(255, 255, 255, 0.65);
+  /* Liquid glass island header - light */
+  --header-glass-bg: rgba(255, 255, 255, 0.45);
+  --header-glass-bg-scrolled: rgba(255, 255, 255, 0.65);
+  --header-glass-border: rgba(226, 232, 240, 0.65);
   --header-glass-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08), 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.85);
   --header-glass-shadow-scrolled: 0 20px 42px -10px rgba(15, 23, 42, 0.12), 0 6px 20px -2px rgba(15, 23, 42, 0.06), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.9);
-  --header-nav-track-bg: rgba(241, 245, 249, 0.28);
-  --header-nav-track-border: rgba(229, 231, 235, 0.45);
+  --header-nav-track-bg: rgba(241, 245, 249, 0.45);
+  --header-nav-track-border: rgba(226, 232, 240, 0.6);
 }
 
 html.dark {
-  --background: #0B0D12;
-  --surface: #12151C;
-  --surface-hover: #1B202B;
-  --surface-elevated: #161A23;
-  --border: #232733;
-  --border-subtle: #1C202C;
-  --text: #F1F5F9;
+  /* Color tokens - dark */
+  --background: #0C1017;
+  --surface: #161E2A;
+  --surface-hover: #1F293B;
+  --surface-elevated: #1E2838;
+  --border: #222F3E;
+  --border-subtle: #1A2332;
+  --text: #F8FAFC;
   --text-muted: #94A3B8;
-  --accent: #818CF8;
-  --accent-hover: #A5B4FC;
-  --accent-contrast: #0B0D12;
+  --accent: #A3E635;
+  --accent-hover: #84CC16;
+  --accent-contrast: #0C1017;
+  --highlight: #84CC16;
   --success: #4ADE80;
   --error: #F87171;
-  --ring-focus: rgba(129, 140, 248, 0.45);
+  --ring-focus: rgba(163, 230, 53, 0.35);
 
-  /* Liquid Glass Island Header Tokens - Dark (Deep crystalline glass) */
-  --header-glass-bg: rgba(18, 21, 28, 0.36);
-  --header-glass-bg-scrolled: rgba(18, 21, 28, 0.56);
-  --header-glass-border: rgba(255, 255, 255, 0.12);
+  /* Liquid glass island header - dark */
+  --header-glass-bg: rgba(22, 30, 42, 0.45);
+  --header-glass-bg-scrolled: rgba(22, 30, 42, 0.7);
+  --header-glass-border: rgba(255, 255, 255, 0.1);
   --header-glass-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.14);
   --header-glass-shadow-scrolled: 0 24px 54px -10px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.18);
   --header-nav-track-bg: rgba(255, 255, 255, 0.04);
@@ -72,6 +73,7 @@ html.dark {
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-contrast: var(--accent-contrast);
+  --color-highlight: var(--highlight);
   --color-success: var(--success);
   --color-error: var(--error);
 

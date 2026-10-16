@@ -7,10 +7,11 @@ export const metadata = {
 };
 
 export default async function AdminOverviewPage() {
-  const [projects, messages, profile] = await Promise.all([
+  const [projects, messages, profile, trafficSummary] = await Promise.all([
     container.getAllProjects.execute(),
     container.getAdminMessages.execute(),
     container.getProfile.execute(),
+    container.getTrafficAnalytics.execute(30),
   ]);
 
   return (
@@ -18,6 +19,7 @@ export default async function AdminOverviewPage() {
       projects={projects}
       messages={messages}
       profile={profile}
+      trafficSummary={trafficSummary}
     />
   );
 }
