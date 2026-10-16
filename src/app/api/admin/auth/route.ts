@@ -4,6 +4,12 @@ import { eq } from "drizzle-orm";
 import { db, verifyPassword } from "@/infrastructure/drizzle/db";
 import { adminUsersTable } from "@/infrastructure/drizzle/schema";
 
+import {
+  createSessionToken,
+  AUTH_COOKIE_NAME,
+  SESSION_MAX_AGE_SEC,
+} from "@/infrastructure/auth/session";
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -16,7 +22,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Query admin user from SQLite using Drizzle ORM
     const user = await db
       .select()
       .from(adminUsersTable)
@@ -31,25 +36,24 @@ export async function POST(req: Request) {
     }
 
     const cookieStore = await cookies();
-    const sessionToken = `authenticated:${Date.now()}`;
+    const sessionToken = createSessionToken(user.username);
 
-    // Clean up any old path-specific cookies
     cookieStore.delete({
-      name: "portfolio_admin_auth",
+      name: AUTH_COOKIE_NAME,
       path: "/admin",
     });
 
-    cookieStore.set("portfolio_admin_auth", sessionToken, {
+    cookieStore.set(AUTH_COOKIE_NAME, sessionToken, {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 5 * 60, // 5 menit (300 detik)
+      maxAge: SESSION_MAX_AGE_SEC,
       secure: process.env.NODE_ENV === "production",
     });
 
     return NextResponse.json({
       success: true,
-      message: "Autentikasi berhasil. Sesi aktif selama 5 menit.",
+      message: "Autentikasi berhasil.",
       user: {
         username: user.username,
         role: user.role,
@@ -64,11 +68,11 @@ export async function POST(req: Request) {
 export async function DELETE() {
   const cookieStore = await cookies();
   cookieStore.delete({
-    name: "portfolio_admin_auth",
+    name: AUTH_COOKIE_NAME,
     path: "/",
   });
   cookieStore.delete({
-    name: "portfolio_admin_auth",
+    name: AUTH_COOKIE_NAME,
     path: "/admin",
   });
   return NextResponse.json({ success: true, message: "Berhasil logout" });

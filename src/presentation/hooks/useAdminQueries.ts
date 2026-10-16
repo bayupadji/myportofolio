@@ -31,7 +31,7 @@ import {
   deleteMessageAction,
 } from "../actions/messageActions";
 
-// =================== Projects ===================
+// Projects
 
 export function useAdminProjects(initialData?: Project[]) {
   return useQuery<Project[]>({
@@ -102,7 +102,7 @@ export function useDeleteProjectMutation() {
   });
 }
 
-// =================== Profile ===================
+// Profile
 
 export function useUpdateProfileMutation() {
   const queryClient = useQueryClient();
@@ -143,7 +143,7 @@ export function useUpdateAvailabilityMutation() {
   });
 }
 
-// =================== Experience ===================
+// Experience
 
 export function useSaveExperienceMutation() {
   const queryClient = useQueryClient();
@@ -175,7 +175,7 @@ export function useDeleteExperienceMutation() {
   });
 }
 
-// =================== Skills ===================
+// Skills
 
 export function useSaveSkillMutation() {
   const queryClient = useQueryClient();
@@ -207,7 +207,7 @@ export function useDeleteSkillMutation() {
   });
 }
 
-// =================== Services ===================
+// Services
 
 export function useSaveServiceMutation() {
   const queryClient = useQueryClient();
@@ -239,7 +239,7 @@ export function useDeleteServiceMutation() {
   });
 }
 
-// =================== Messages ===================
+// Messages
 
 export function useUpdateMessageStatusMutation() {
   const queryClient = useQueryClient();

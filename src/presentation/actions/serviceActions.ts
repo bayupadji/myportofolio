@@ -3,9 +3,12 @@
 import { container } from "@/infrastructure/container";
 import { Service } from "@/domain/entities/Service";
 import { revalidatePath } from "next/cache";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export async function saveServiceAction(service: Service) {
   try {
+    await assertAdminSession();
+
     if (!service.id || !service.slug || !service.title?.en) {
       throw new Error("Missing required service fields.");
     }
@@ -23,6 +26,8 @@ export async function saveServiceAction(service: Service) {
 
 export async function deleteServiceAction(id: string) {
   try {
+    await assertAdminSession();
+
     if (!id) {
       throw new Error("Service ID is required.");
     }

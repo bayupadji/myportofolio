@@ -274,31 +274,47 @@ export const CaseStudyDetail: React.FC<CaseStudyDetailProps> = ({
                     </div>
                   )}
 
-                  {/* Section Visual Media */}
-                  <div className="my-6">
-                    <div
-                      className="group relative rounded-xl border border-[var(--border)] overflow-hidden cursor-zoom-in bg-[var(--surface-hover)]"
-                      onClick={() =>
-                        openLightbox({
-                          url: project.coverUrl,
-                          alt: secTitle,
-                          caption: `${secTitle} - ${title}`,
-                        })
-                      }
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={project.coverUrl}
-                        alt={secTitle}
-                        className="w-full h-auto object-cover max-h-[460px] group-hover:scale-[1.02] transition-transform duration-300"
-                        loading="lazy"
-                      />
-                      <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-white text-xs flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-                        <ZoomIn className="w-3.5 h-3.5" />
-                        <span>{messages.caseStudy.clickToEnlarge}</span>
-                      </div>
+                  {sec.media && sec.media.length > 0 && (
+                    <div className="my-6 space-y-4">
+                      {sec.media.map((m, mIdx) => {
+                        const mediaAlt = resolveLocalized(m.alt, locale).text || secTitle;
+                        const mediaCaption = m.caption
+                          ? resolveLocalized(m.caption, locale).text
+                          : "";
+                        return (
+                          <div key={mIdx}>
+                            <div
+                              className="group relative rounded-xl border border-[var(--border)] overflow-hidden cursor-zoom-in bg-[var(--surface-hover)]"
+                              onClick={() =>
+                                openLightbox({
+                                  url: m.url,
+                                  alt: mediaAlt,
+                                  caption: mediaCaption || `${secTitle} - ${title}`,
+                                })
+                              }
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={m.url}
+                                alt={mediaAlt}
+                                className="w-full h-auto object-cover max-h-[500px] group-hover:scale-[1.01] transition-transform duration-300"
+                                loading="lazy"
+                              />
+                              <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-white text-xs flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                                <ZoomIn className="w-3.5 h-3.5" />
+                                <span>{messages.caseStudy.clickToEnlarge}</span>
+                              </div>
+                            </div>
+                            {mediaCaption && (
+                              <p className="mt-2 text-xs text-[var(--text-muted)] text-center italic">
+                                {mediaCaption}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  </div>
+                  )}
                 </section>
               );
             })}

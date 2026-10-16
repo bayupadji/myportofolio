@@ -6,6 +6,7 @@ import {
   CompressionResult,
   DocumentUploadResult,
 } from "@/infrastructure/storage/localFileStorage";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export interface UploadImageActionResponse {
   success: boolean;
@@ -19,15 +20,13 @@ export interface UploadDocumentActionResponse {
   error?: string;
 }
 
-/**
- * Server Action for uploading images.
- * Runs Sharp server-side to downscale (max-width 1200px), convert to WebP, and compress (quality 80%).
- */
 export async function uploadImageAction(
   formData: FormData,
   folder: UploadSubfolder = "projects"
 ): Promise<UploadImageActionResponse> {
   try {
+    await assertAdminSession();
+
     const file = formData.get("file") as File | null;
     if (!file) {
       return { success: false, error: "No image file provided." };
@@ -69,6 +68,8 @@ export async function uploadDocumentAction(
   folder: UploadSubfolder = "cv"
 ): Promise<UploadDocumentActionResponse> {
   try {
+    await assertAdminSession();
+
     const file = formData.get("file") as File | null;
     if (!file) {
       return { success: false, error: "No document file provided." };

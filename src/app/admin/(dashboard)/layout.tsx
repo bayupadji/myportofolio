@@ -1,9 +1,10 @@
 import React from "react";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { container } from "@/infrastructure/container";
 import { AdminSidebar } from "@/presentation/components/admin/AdminSidebar";
 import { AdminTopBar } from "@/presentation/components/admin/AdminTopBar";
+
+import { isAdminAuthenticated } from "@/infrastructure/auth/session";
 
 export const metadata = {
   title: "Admin Dashboard · Bayu Portfolio CMS",
@@ -18,11 +19,9 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get("portfolio_admin_auth");
+  const isAuthenticated = await isAdminAuthenticated();
 
-  // Protect all dashboard routes (session expires automatically after 5 minutes)
-  if (!authCookie || !authCookie.value) {
+  if (!isAuthenticated) {
     redirect("/admin/login?expired=1");
   }
 

@@ -65,7 +65,7 @@ export class SubmitContactMessage {
     }
 
     const newMessage: Message = {
-      id: "msg-" + Date.now().toString(),
+      id: `msg-${crypto.randomUUID()}`,
       name: input.name.trim(),
       email: input.email.trim(),
       topic: input.topic || "other",

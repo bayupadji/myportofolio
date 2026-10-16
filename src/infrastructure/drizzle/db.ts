@@ -135,24 +135,25 @@ function initializeDatabase(): {
     );
   `);
 
-  // Ensure default admin user 'skyviadmin' exists with password 'skyvi1234' (atomic for multi-worker builds)
+  const initialUsername = (process.env.ADMIN_USERNAME || "skyviadmin").trim();
+  const initialPassword = process.env.ADMIN_PASSWORD || "skyvi1234";
+
   try {
     sqlite
       .prepare(`
         INSERT INTO admin_users (id, username, password_hash, role, created_at)
         VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(username) DO UPDATE SET
-          password_hash = excluded.password_hash
+        ON CONFLICT(username) DO NOTHING
       `)
       .run(
-        "admin-skyviadmin",
-        "skyviadmin",
-        hashPassword("skyvi1234"),
+        `admin-${initialUsername}`,
+        initialUsername,
+        hashPassword(initialPassword),
         "admin",
         new Date().toISOString()
       );
   } catch (err) {
-    console.error("Error ensuring skyviadmin user:", err);
+    console.error("Error ensuring initial admin user:", err);
   }
 
   const db = drizzle(sqlite, { schema });

@@ -3,9 +3,12 @@
 import { container } from "@/infrastructure/container";
 import { Skill } from "@/domain/entities/Skill";
 import { revalidatePath } from "next/cache";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export async function saveSkillAction(skill: Skill) {
   try {
+    await assertAdminSession();
+
     if (!skill.id || !skill.name) {
       throw new Error("Missing required skill fields.");
     }
@@ -23,6 +26,8 @@ export async function saveSkillAction(skill: Skill) {
 
 export async function deleteSkillAction(id: string) {
   try {
+    await assertAdminSession();
+
     if (!id) {
       throw new Error("Skill ID is required.");
     }

@@ -238,11 +238,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </span>
         </div>
 
-        {/* Database & Session security specs indicator */}
         <div className="px-3 py-1.5 rounded-xl border border-[var(--border)]/60 bg-[var(--background)] flex items-center justify-between text-[10px] text-[var(--text-muted)] font-mono">
-          <span className="flex items-center gap-1.5" title="Sesi login otomatis kedaluwarsa setelah 5 menit">
+          <span className="flex items-center gap-1.5" title="Sesi login aman dengan HMAC Signed Token">
             <Lock className="w-3 h-3 text-[var(--accent)]" />
-            <span>Sesi: 5 Menit</span>
+            <span>Sesi Terproteksi</span>
           </span>
           <span className="flex items-center gap-1 text-[var(--success)]">
             <CheckCircle2 className="w-2.5 h-2.5" />

@@ -3,9 +3,12 @@
 import { container } from "@/infrastructure/container";
 import { Experience } from "@/domain/entities/Experience";
 import { revalidatePath } from "next/cache";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export async function saveExperienceAction(experience: Experience) {
   try {
+    await assertAdminSession();
+
     if (!experience.id || !experience.company) {
       throw new Error("Missing required experience fields.");
     }
@@ -24,6 +27,8 @@ export async function saveExperienceAction(experience: Experience) {
 
 export async function deleteExperienceAction(id: string) {
   try {
+    await assertAdminSession();
+
     if (!id) {
       throw new Error("Experience ID is required.");
     }

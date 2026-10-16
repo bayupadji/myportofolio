@@ -4,9 +4,12 @@ import { container } from "@/infrastructure/container";
 import { Project } from "@/domain/entities/Project";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { revalidatePath } from "next/cache";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export async function saveProjectAction(project: Project) {
   try {
+    await assertAdminSession();
+
     if (!project.id || !project.slug || !project.title?.en) {
       throw new Error("Missing required project fields: id, slug, or title.");
     }
@@ -27,6 +30,8 @@ export async function saveProjectAction(project: Project) {
 
 export async function updateProjectStatusAction(id: string, status: PublishStatus) {
   try {
+    await assertAdminSession();
+
     if (!id || !status) {
       throw new Error("Project ID and status are required.");
     }
@@ -46,6 +51,8 @@ export async function updateProjectStatusAction(id: string, status: PublishStatu
 
 export async function deleteProjectAction(id: string) {
   try {
+    await assertAdminSession();
+
     if (!id) {
       throw new Error("Project ID is required.");
     }

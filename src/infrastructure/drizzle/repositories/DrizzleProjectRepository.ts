@@ -3,7 +3,7 @@ import { Project } from "@/domain/entities/Project";
 import { PublishStatus } from "@/domain/value-objects/PublishStatus";
 import { db } from "../db";
 import { projectsTable } from "../schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and } from "drizzle-orm";
 import { seedDatabaseIfEmpty } from "../seed";
 
 export class DrizzleProjectRepository implements ProjectRepository {
@@ -27,12 +27,16 @@ export class DrizzleProjectRepository implements ProjectRepository {
     return rows as Project[];
   }
 
-  async getBySlug(slug: string): Promise<Project | null> {
+  async getBySlug(slug: string, publishedOnly = true): Promise<Project | null> {
     await this.ensureInit();
+    const condition = publishedOnly
+      ? and(eq(projectsTable.slug, slug), eq(projectsTable.status, "published"))
+      : eq(projectsTable.slug, slug);
+
     const [row] = await db
       .select()
       .from(projectsTable)
-      .where(eq(projectsTable.slug, slug))
+      .where(condition)
       .limit(1);
 
     return (row as Project) || null;

@@ -7,21 +7,29 @@ import { X } from "lucide-react";
 export const Lightbox: React.FC = () => {
   const { activeLightbox, closeLightbox } = useUiStore();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (activeLightbox) {
+      previousActiveElementRef.current = document.activeElement as HTMLElement | null;
       closeBtnRef.current?.focus();
+
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
           closeLightbox();
+        } else if (e.key === "Tab") {
+          e.preventDefault();
+          closeBtnRef.current?.focus();
         }
       };
+
       window.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
 
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
         document.body.style.overflow = "";
+        previousActiveElementRef.current?.focus();
       };
     }
   }, [activeLightbox, closeLightbox]);

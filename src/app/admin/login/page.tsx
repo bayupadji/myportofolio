@@ -12,12 +12,11 @@ import {
   ArrowLeft,
   Loader2,
   AlertCircle,
-  CheckCircle2,
 } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("skyviadmin");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -177,26 +176,6 @@ export default function AdminLoginPage() {
                     <Eye className="w-4 h-4" />
                   )}
                 </button>
-              </div>
-            </div>
-
-            {/* Credential Helper Spec Chip */}
-            <div className="p-3 rounded-xl bg-[var(--surface-hover)] border border-[var(--border)] text-[11px] text-[var(--text-muted)] font-mono space-y-1">
-              <div className="flex items-center gap-1.5 text-[var(--text)] font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Kredensial Default Terkonfigurasi:</span>
-              </div>
-              <div className="pl-5 space-y-0.5">
-                <div>
-                  User: <code className="text-[var(--accent)] font-bold">skyviadmin</code>
-                </div>
-                <div>
-                  Pass: <code className="text-[var(--accent)] font-bold">skyvi1234</code>
-                </div>
-                <div className="pt-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                  <span>&bull;</span>
-                  <span>Sesi login aman: Otomatis kedaluwarsa per 5 menit</span>
-                </div>
               </div>
             </div>
 

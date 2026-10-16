@@ -2,6 +2,7 @@
 
 import { container } from "@/infrastructure/container";
 import { MessageTopic } from "@/domain/entities/Message";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export async function submitContactMessageAction(input: {
   name: string;
@@ -33,6 +34,7 @@ export async function updateMessageStatusAction(
   status: "unread" | "read" | "replied"
 ) {
   try {
+    await assertAdminSession();
     await container.updateMessageStatus(id, status);
     return { success: true, id, status };
   } catch (err: unknown) {
@@ -43,6 +45,7 @@ export async function updateMessageStatusAction(
 
 export async function deleteMessageAction(id: string) {
   try {
+    await assertAdminSession();
     await container.deleteMessage(id);
     return { success: true, id };
   } catch (err: unknown) {

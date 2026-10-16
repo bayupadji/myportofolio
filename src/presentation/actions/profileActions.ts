@@ -3,9 +3,12 @@
 import { container } from "@/infrastructure/container";
 import { Profile } from "@/domain/entities/Profile";
 import { revalidatePath } from "next/cache";
+import { assertAdminSession } from "@/infrastructure/auth/session";
 
 export async function updateProfileAction(profile: Profile) {
   try {
+    await assertAdminSession();
+
     if (!profile.id || !profile.name) {
       throw new Error("Missing required profile fields.");
     }
@@ -30,6 +33,7 @@ export async function updateAvailabilityAction(
   isFreelance: boolean
 ) {
   try {
+    await assertAdminSession();
     await container.updateAvailability.execute(statusEn, statusId, isFreelance);
 
     revalidatePath("/");
