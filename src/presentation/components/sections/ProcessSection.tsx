@@ -258,9 +258,11 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
       const prevEnd = (index - 1) / peelableCount;
       const straightness = clamp((scrollProgress - prevEnd) / (1 - prevEnd || 0.1));
       const currentAngle = initialAngle * (1 - straightness);
+      const transformStr = `translate3d(0px, 0px, 0px) rotate(${currentAngle.toFixed(2)}deg) scale(1)`;
 
       return {
-        transform: `translate3d(0px, 0px, 0px) rotate(${currentAngle.toFixed(2)}deg) scale(1)`,
+        transform: transformStr,
+        WebkitTransform: transformStr,
         opacity: 1,
         zIndex: 10,
       };
@@ -280,9 +282,11 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
         const t = clamp((scrollProgress - (index - 1) * segSpan) / (segSpan * 0.85));
         currentAngle = initialAngle * (1 - t * 0.8);
       }
+      const transformStr = `translate3d(0px, 0px, 0px) rotate(${currentAngle.toFixed(2)}deg) scale(1)`;
 
       return {
-        transform: `translate3d(0px, 0px, 0px) rotate(${currentAngle.toFixed(2)}deg) scale(1)`,
+        transform: transformStr,
+        WebkitTransform: transformStr,
         opacity: 1,
         zIndex: baseZIndex,
       };
@@ -290,8 +294,10 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
 
     if (scrollProgress >= segEnd) {
       // Fully peeled off to the left
+      const transformStr = `translate3d(-125%, -25%, 0px) rotate(-16deg) scale(0.9)`;
       return {
-        transform: `translate3d(-125%, -25%, 0px) rotate(-16deg) scale(0.9)`,
+        transform: transformStr,
+        WebkitTransform: transformStr,
         opacity: 0,
         pointerEvents: "none",
         zIndex: baseZIndex,
@@ -307,9 +313,11 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
     const rotate = initialAngle - ease * 16;
     const scale = 1 - ease * 0.08;
     const opacity = clamp(1 - Math.pow(t, 2));
+    const transformStr = `translate3d(${translateX.toFixed(1)}%, ${translateY.toFixed(1)}%, 0px) rotate(${rotate.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
 
     return {
-      transform: `translate3d(${translateX.toFixed(1)}%, ${translateY.toFixed(1)}%, 0px) rotate(${rotate.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
+      transform: transformStr,
+      WebkitTransform: transformStr,
       opacity,
       zIndex: baseZIndex + 5,
       pointerEvents: t > 0.4 ? "none" : "auto",
@@ -340,7 +348,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
   };
 
   return (
-    <section className="relative w-full border-b border-[var(--border)] bg-[var(--surface-hover)]/30 overflow-clip">
+    <section className="relative w-full border-b border-[var(--border)] bg-[var(--surface-hover)]/30">
       {/* =========================================================================
           DESKTOP VIEW: PINNED DECK INSIDE STANDARD 1200PX CONTAINER (>= 1024px)
           ========================================================================= */}
@@ -350,7 +358,10 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
         style={{ height: `calc(100vh + ${N * 85}vh)` }}
       >
         {/* Sticky Viewport - positioned at top-20 (below header) without header collision */}
-        <div className="sticky top-20 h-[calc(100vh-5rem)] w-full flex items-center overflow-hidden">
+        <div
+          className="sticky top-20 h-[calc(100vh-5rem)] w-full flex items-center overflow-hidden"
+          style={{ position: "-webkit-sticky" as React.CSSProperties["position"] }}
+        >
           {/* Ambient Lighting & Glow */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-[var(--accent)]/5 blur-[140px] pointer-events-none rounded-full"
@@ -408,12 +419,10 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
               >
                 <style>{`
                   @keyframes process-orbit-spin {
-                    to {
-                      stroke-dashoffset: -26px;
+                    0% {
+                      stroke-dashoffset: 0;
                     }
-                  }
-                  @keyframes process-orbit-spin-rev {
-                    to {
+                    100% {
                       stroke-dashoffset: 26px;
                     }
                   }
@@ -436,7 +445,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
                   style={{
                     stroke: "var(--accent)",
                     opacity: 0.45,
-                    animation: "process-orbit-spin 1.8s linear infinite",
+                    animation: "process-orbit-spin 1.8s linear infinite reverse",
                   }}
                 />
                 {/* Secondary outer subtle dashed orbit */}
@@ -452,7 +461,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
                   style={{
                     stroke: "var(--accent)",
                     opacity: 0.25,
-                    animation: "process-orbit-spin-rev 2.6s linear infinite",
+                    animation: "process-orbit-spin 2.6s linear infinite",
                   }}
                 />
               </svg>
@@ -461,7 +470,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
                 <div
                   key={idx}
                   style={getCardStyle(idx)}
-                  className="absolute inset-0 m-auto w-full max-w-[490px] h-[320px] sm:h-[340px] transition-transform duration-75 ease-out will-change-transform"
+                  className="absolute inset-0 m-auto w-full max-w-[490px] h-[320px] sm:h-[340px] will-change-transform"
                 >
                   <StepCard
                     step={step}
@@ -507,7 +516,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
       {/* =========================================================================
           MOBILE VIEW: HORIZONTAL SNAP CAROUSEL (< 1024px)
           ========================================================================= */}
-      <div className="block lg:hidden py-16 sm:py-24">
+      <div className="block lg:hidden py-16 sm:py-24 overflow-hidden">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="max-w-xl mb-8">
@@ -543,7 +552,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
                 className="process-orbit-line"
                 style={{
                   stroke: "var(--accent)",
-                  animation: "process-orbit-spin 2s linear infinite",
+                  animation: "process-orbit-spin 2s linear infinite reverse",
                 }}
               />
             </svg>

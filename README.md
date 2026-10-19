@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bayu — Product Designer (UI/UX) Portfolio & Studio CMS
 
-## Getting Started
+A high-craft personal portfolio website and studio content management system built for a **generalist Product Designer (UI/UX)**. Engineered to demonstrate design rigor, proven business impact, and modern frontend architecture.
 
-First, run the development server:
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) (Strict Mode) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) + CSS Token Variables |
+| **Database & ORM** | [SQLite](https://sqlite.org/) (via `better-sqlite3` in WAL mode) + [Drizzle ORM](https://orm.drizzle.team/) |
+| **Server State** | [TanStack Query v5](https://tanstack.com/query) |
+| **UI State** | [Zustand](https://github.com/pmndrs/zustand) |
+| **E2E Testing** | [Playwright](https://playwright.dev/) (Chromium, auth session caching, auto-cleanup) |
+| **Unit Testing** | Node.js Test Runner via `tsx` |
+| **Design System** | WCAG 2.2 AA accessible, 8px grid system, Dark/Light/System theme tokens |
+
+---
+
+## 🏛️ Architecture: Pragmatic Clean Architecture
+
+The codebase adheres strictly to Clean Architecture separation of concerns:
+
+```
+src/
+  ├── domain/          # Enterprise business rules (Entities, Value Objects, Repository Interfaces)
+  ├── application/     # Application use cases & DTOs (No framework dependencies)
+  ├── infrastructure/  # External adapters (SQLite/Drizzle repositories, FileStorage, Auth sessions)
+  ├── presentation/    # UI Layer (Components, Layout, Hooks, Server Actions, Zustand stores)
+  └── app/             # Thin Next.js App Router endpoints & layouts
+```
+
+- **Dependency Rule:** `presentation` → `application` → `domain` ← `infrastructure`.
+- **Public & Admin Isolation:** Public routes render Server Components (SSG/ISR) for optimal SEO & sub-second load times; private CMS routes at `/admin` enforce role verification and idle timeout sessions.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Installation
+
+```bash
+npm install
+```
+
+### 2. Environment Variables
+
+Create `.env.local` based on `.env.example`:
+
+```bash
+# Admin credentials (development)
+ADMIN_USERNAME=skyviadmin
+ADMIN_PASSWORD=skyvi1234
+AUTH_SECRET=dev_portfolio_secret_key_8f7b2c9e4a1d6f3e5b8a0c2d4e6f8a1b
+```
+
+### 3. Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the live portfolio.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Testing Suite
 
-## Learn More
+### Unit Testing
+Runs domain rule validations, session token HMAC checks, rate limiting, and PDF MIME header tests:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### End-to-End (E2E) Testing with Playwright
+Covers 10 Critical User Journeys (CUJ) including Happy Paths and realistic Failure States:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Run all E2E tests headless
+npm run test:e2e
 
-## Deploy on Vercel
+# Interactive Time-Travel Debugging UI mode
+npm run test:e2e:ui
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# CI mode with retries and GitHub/HTML reports
+npm run test:e2e:ci
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🔒 Admin CMS Studio (`/admin`)
+
+- **Secure Login:** Rate-limited authentication with HMAC SHA-256 session tokens.
+- **Session Protection:** 30-minute idle sliding timeout + 2-hour absolute expiration window.
+- **Case Studies Manager:** Live Markdown editor, TL;DR framing, metric callouts, and publish/draft toggles.
+- **Freelance Availability:** 1-click status switch syncing live status ribbon across public navigation.
+- **Inbound Messages:** Anti-spam honeypot filtering with direct client brief inbox.
+- **Audience & Traffic Intelligence:** Real-time privacy-friendly analytics chart (7-day / 30-day views).
+
+---
+
+## 📄 License
+
+Private & Proprietary. All rights reserved © 2026 Bayu.
